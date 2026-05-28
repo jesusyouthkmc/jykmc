@@ -18,7 +18,7 @@
       font-family: 'Playfair Display', serif;
     }
     .hero-bg {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)), url('hero-bg.jpg');
+      background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url('hero-bg.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -38,7 +38,10 @@
       box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
     }
     .logo-img {
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)) 
+              drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+      width: 58px;
+      height: 58px;
     }
   </style>
 </head>
@@ -48,7 +51,7 @@
   <nav class="bg-white border-b sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <img src="logo.png" alt="Jesus Youth KMC Logo" class="logo-img w-12 h-12 object-contain">
+        <img src="logo.png" alt="Jesus Youth KMC Logo" class="logo-img object-contain">
         <div>
           <h1 class="heading-font text-2xl font-bold tracking-tight text-zinc-900">JESUS YOUTH</h1>
           <p class="text-xs text-amber-600 -mt-1 font-medium">KMC</p>
@@ -79,10 +82,10 @@
         <span class="font-semibold">Jesus Youth Movement</span>
       </div>
       
-      <h1 class="heading-font text-7xl md:text-8xl font-bold leading-none mb-6">
+      <h1 class="heading-font text-7xl md:text-8xl font-bold leading-none mb-6 drop-shadow-2xl">
         JESUS YOUTH<br>KMC
       </h1>
-      <p class="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-white/90">
+      <p class="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-white/90 drop-shadow-md">
         Young hearts on fire for Christ • Medical College Campus Ministry
       </p>
       
@@ -100,8 +103,8 @@
       </div>
     </div>
 
-    <!-- Improved Scroll Indicator -->
-    <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10">
+    <!-- Scroll Indicator - Moved Lower -->
+    <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10">
       <p class="text-xs tracking-[2px] mb-3 opacity-90 font-medium text-white drop-shadow-md">SCROLL TO EXPLORE</p>
       <div class="w-6 h-10 border-2 border-white/80 rounded-full flex items-center justify-center bg-white/10 backdrop-blur-sm">
         <div class="w-1 h-3 bg-white rounded-full animate-bounce"></div>
