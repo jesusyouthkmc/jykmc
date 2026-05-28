@@ -24,153 +24,177 @@
       opacity: 1;
       transform: translateY(0);
     }
-    .hero-pattern {
-      background-image: radial-gradient(circle at 10% 20%, rgba(255,245,220,0.1) 2%, transparent 2.5%),
-                        radial-gradient(circle at 85% 70%, rgba(255,200,150,0.08) 1.8%, transparent 2%);
-      background-size: 45px 45px, 38px 38px;
+    /* Glossy orange gradient background */
+    .glossy-orange-bg {
+      background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
+      position: relative;
     }
+    .glossy-orange-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(125deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 40%);
+      pointer-events: none;
+    }
+    /* Glass morphism header with curved edges */
+    .curved-glass-header {
+      background: rgba(255, 140, 66, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+    /* Card hover effect */
     .card-hover {
       transition: all 0.25s ease;
     }
     .card-hover:hover {
       transform: translateY(-6px);
-      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
+    }
+    /* Mobile menu with orange theme */
+    .mobile-menu-glass {
+      background: rgba(255, 140, 66, 0.98);
+      backdrop-filter: blur(10px);
     }
   </style>
 </head>
-<body class="bg-white text-gray-800">
+<body class="glossy-orange-bg text-white">
 
-  <!-- simple top bar / floating header -->
-  <header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50 transition-all duration-300">
+  <!-- Floating header with curved edges -->
+  <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
-      <!-- Logo Image - make sure 'logo.png' is in the same folder -->
+      <!-- Logo Image -->
       <a href="#home" class="flex items-center">
-        <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
+        <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto brightness-0 invert">
       </a>
       <nav class="hidden md:flex space-x-6 text-sm font-medium">
-        <a href="#home" class="text-gray-700 hover:text-amber-700 transition">Home</a>
-        <a href="#gathering" class="text-gray-700 hover:text-amber-700 transition">Gathering</a>
-        <a href="#ministries" class="text-gray-700 hover:text-amber-700 transition">Ministries</a>
-        <a href="#resources" class="text-gray-700 hover:text-amber-700 transition">Resources</a>
-        <a href="#join" class="text-gray-700 hover:text-amber-700 transition">Join</a>
+        <a href="#home" class="text-white hover:text-amber-200 transition">Home</a>
+        <a href="#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
+        <a href="#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
+        <a href="#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
-      <button id="menuBtn" class="md:hidden text-2xl text-amber-700 focus:outline-none">
+      <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none">
         <i class="fas fa-bars"></i>
       </button>
     </div>
     <!-- mobile menu drawer -->
-    <div id="mobileMenu" class="fixed top-0 left-0 w-full h-screen bg-white/95 backdrop-blur-md z-50 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+    <div id="mobileMenu" class="fixed top-0 left-0 w-full h-screen mobile-menu-glass z-50 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
       <div class="flex justify-end p-5">
-        <button id="closeMenu" class="text-3xl text-gray-600">&times;</button>
+        <button id="closeMenu" class="text-3xl text-white">&times;</button>
       </div>
       <nav class="flex flex-col items-center gap-6 text-xl font-semibold mt-10">
-        <a href="#home" class="mobile-nav-link text-gray-800 hover:text-amber-700">Home</a>
-        <a href="#gathering" class="mobile-nav-link text-gray-800 hover:text-amber-700">Gathering</a>
-        <a href="#ministries" class="mobile-nav-link text-gray-800 hover:text-amber-700">Ministries</a>
-        <a href="#resources" class="mobile-nav-link text-gray-800 hover:text-amber-700">Resources</a>
-        <a href="#join" class="mobile-nav-link text-gray-800 hover:text-amber-700">Join</a>
+        <a href="#home" class="mobile-nav-link text-white hover:text-amber-200">Home</a>
+        <a href="#gathering" class="mobile-nav-link text-white hover:text-amber-200">Gathering</a>
+        <a href="#ministries" class="mobile-nav-link text-white hover:text-amber-200">Ministries</a>
+        <a href="#resources" class="mobile-nav-link text-white hover:text-amber-200">Resources</a>
+        <a href="#join" class="mobile-nav-link text-white hover:text-amber-200">Join</a>
       </nav>
     </div>
   </header>
 
   <main>
     <!-- HERO SECTION -->
-    <section id="home" class="min-h-screen flex items-center relative bg-gradient-to-br from-amber-50 via-white to-orange-50 hero-pattern pt-20">
+    <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-12 md:py-20 text-center md:text-left w-full">
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="fade-up">
-            <p class="text-amber-700 font-semibold tracking-wide text-sm uppercase mb-3">A Subsidiary of Jesus Youth Movement</p>
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 leading-tight">
-              JESUS YOUTH <span class="text-amber-700">KMC</span>
+            <p class="text-amber-100 font-semibold tracking-wide text-sm uppercase mb-3">A Subsidiary of Jesus Youth Movement</p>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
+              JESUS YOUTH <span class="text-amber-200">KMC</span>
             </h1>
-            <p class="text-xl text-gray-600 mt-4 max-w-lg mx-auto md:mx-0">Young hearts on fire for Christ • Medical College Campus Ministry</p>
+            <p class="text-xl text-amber-50 mt-4 max-w-lg mx-auto md:mx-0">Young hearts on fire for Christ • Medical College Campus Ministry</p>
             <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-              <a href="#gathering" class="bg-amber-700 hover:bg-amber-800 text-white px-7 py-3 rounded-full font-semibold transition shadow-md">Explore <i class="fas fa-arrow-right ml-1"></i></a>
-              <a href="#join" class="border border-amber-700 text-amber-700 hover:bg-amber-50 px-7 py-3 rounded-full font-semibold transition">Join family</a>
+              <a href="#gathering" class="bg-white text-orange-600 hover:bg-amber-50 px-7 py-3 rounded-full font-semibold transition shadow-lg">Explore <i class="fas fa-arrow-right ml-1"></i></a>
+              <a href="#join" class="border-2 border-white text-white hover:bg-white/10 px-7 py-3 rounded-full font-semibold transition">Join family</a>
             </div>
           </div>
           <div class="hidden md:block relative">
-            <div class="bg-amber-200/40 rounded-full w-72 h-72 blur-3xl absolute -z-10 top-10 right-10"></div>
-            <i class="fas fa-cross text-amber-800 text-9xl opacity-20 absolute bottom-0 right-0"></i>
-            <div class="text-center p-6 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl">
-              <p class="text-3xl font-bold text-amber-800">🔥</p>
-              <p class="italic text-gray-700 mt-2">“I can do all things through Christ who strengthens me”</p>
-              <p class="text-sm text-gray-500">— Philippians 4:13</p>
+            <div class="bg-white/20 rounded-full w-72 h-72 blur-3xl absolute -z-10 top-10 right-10"></div>
+            <i class="fas fa-cross text-white text-9xl opacity-10 absolute bottom-0 right-0"></i>
+            <div class="text-center p-6 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30 shadow-xl">
+              <p class="text-3xl font-bold text-white">🔥</p>
+              <p class="italic text-white mt-2">“I can do all things through Christ who strengthens me”</p>
+              <p class="text-sm text-amber-100">— Philippians 4:13</p>
             </div>
           </div>
         </div>
         <div class="absolute bottom-8 left-0 right-0 text-center animate-bounce">
-          <a href="#gathering" class="text-amber-600 text-sm flex flex-col items-center gap-1">SCROLL TO EXPLORE <i class="fas fa-chevron-down"></i></a>
+          <a href="#gathering" class="text-white text-sm flex flex-col items-center gap-1">SCROLL TO EXPLORE <i class="fas fa-chevron-down"></i></a>
         </div>
       </div>
     </section>
 
     <!-- WEEKLY GATHERING -->
-    <section id="gathering" class="py-20 md:py-28 bg-white">
+    <section id="gathering" class="py-20 md:py-28 bg-white/10 backdrop-blur-sm">
       <div class="max-w-5xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
-          <span class="text-amber-600 text-sm font-semibold tracking-wider">WEEKLY GATHERING</span>
-          <h2 class="text-4xl md:text-5xl font-bold mt-2 text-gray-900">Come as you are.</h2>
-          <p class="text-xl text-gray-600 mt-2">Grow in faith together.</p>
+          <span class="text-amber-200 text-sm font-semibold tracking-wider">WEEKLY GATHERING</span>
+          <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">Come as you are.</h2>
+          <p class="text-xl text-amber-50 mt-2">Grow in faith together.</p>
         </div>
-        <div class="bg-amber-50/60 rounded-3xl p-6 md:p-10 shadow-md border border-amber-100 fade-up transition-all">
+        <div class="bg-white/20 backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-lg border border-white/30 fade-up transition-all">
           <div class="grid md:grid-cols-3 gap-6 text-center md:text-left">
             <div>
-              <i class="far fa-calendar-alt text-amber-700 text-3xl mb-3"></i>
-              <p class="font-bold text-lg">Every Wednesday</p>
-              <p class="text-gray-600">6:30 PM – 8:00 PM</p>
+              <i class="far fa-calendar-alt text-white text-3xl mb-3"></i>
+              <p class="font-bold text-lg text-white">Every Wednesday</p>
+              <p class="text-amber-50">6:30 PM – 8:00 PM</p>
             </div>
             <div>
-              <i class="fas fa-place-of-worship text-amber-700 text-3xl mb-3"></i>
-              <p class="font-bold text-lg">St. Luke's Convent</p>
-              <p class="text-gray-600">Near Medical College Bus Stand, Kottayam</p>
+              <i class="fas fa-place-of-worship text-white text-3xl mb-3"></i>
+              <p class="font-bold text-lg text-white">St. Luke's Convent</p>
+              <p class="text-amber-50">Near Medical College Bus Stand, Kottayam</p>
             </div>
             <div>
-              <i class="fas fa-heart text-amber-700 text-3xl mb-3"></i>
-              <p class="font-bold text-lg">Worship • Fellowship • Transformation</p>
-              <p class="text-gray-600">A place of belonging</p>
+              <i class="fas fa-heart text-white text-3xl mb-3"></i>
+              <p class="font-bold text-lg text-white">Worship • Fellowship • Transformation</p>
+              <p class="text-amber-50">A place of belonging</p>
             </div>
           </div>
-          <div class="mt-8 text-center border-t border-amber-200 pt-6">
-            <p class="italic text-amber-800">“Where two or three gather in my name, there am I with them.” — Matthew 18:20</p>
+          <div class="mt-8 text-center border-t border-white/30 pt-6">
+            <p class="italic text-amber-100">“Where two or three gather in my name, there am I with them.” — Matthew 18:20</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- MINISTRIES -->
-    <section id="ministries" class="py-20 bg-gradient-to-b from-white to-amber-50/40">
+    <section id="ministries" class="py-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-14 fade-up">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900">Our Ministries</h2>
-          <p class="text-gray-600 text-lg mt-2">Serving Christ in different ways</p>
+          <h2 class="text-4xl md:text-5xl font-bold text-white">Our Ministries</h2>
+          <p class="text-amber-50 text-lg mt-2">Serving Christ in different ways</p>
         </div>
         <div class="grid md:grid-cols-3 gap-8">
           <!-- Intercession Ministry -->
-          <div class="bg-white rounded-2xl p-6 shadow-md card-hover fade-up border border-amber-100">
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🙏</div>
-            <h3 class="text-2xl font-bold text-gray-800">Intercession Ministry</h3>
-            <p class="text-amber-600 text-sm font-semibold mt-1">Every Tuesday</p>
-            <p class="mt-3 text-gray-600 italic">“Pray without ceasing.”</p>
-            <p class="text-gray-500 text-sm mt-1">— 1 Thessalonians 5:17</p>
+            <h3 class="text-2xl font-bold text-white">Intercession Ministry</h3>
+            <p class="text-amber-200 text-sm font-semibold mt-1">Every Tuesday</p>
+            <p class="mt-3 text-amber-50 italic">“Pray without ceasing.”</p>
+            <p class="text-amber-100 text-sm mt-1">— 1 Thessalonians 5:17</p>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           <!-- Music Ministry -->
-          <div class="bg-white rounded-2xl p-6 shadow-md card-hover fade-up border border-amber-100">
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🎵</div>
-            <h3 class="text-2xl font-bold text-gray-800">Music Ministry</h3>
-            <p class="text-amber-600 text-sm font-semibold mt-1">Every Monday</p>
-            <p class="mt-3 text-gray-600 italic">“Oh come, let us sing to the LORD...”</p>
-            <p class="text-gray-500 text-sm mt-1">— Psalm 95:1</p>
+            <h3 class="text-2xl font-bold text-white">Music Ministry</h3>
+            <p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p>
+            <p class="mt-3 text-amber-50 italic">“Oh come, let us sing to the LORD...”</p>
+            <p class="text-amber-100 text-sm mt-1">— Psalm 95:1</p>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           <!-- Pro-Life Ministry -->
-          <div class="bg-white rounded-2xl p-6 shadow-md card-hover fade-up border border-amber-100">
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🕊️</div>
-            <h3 class="text-2xl font-bold text-gray-800">Pro-Life Ministry</h3>
-            <p class="text-amber-600 text-sm font-semibold mt-1">Every Friday</p>
-            <p class="mt-3 text-gray-600 italic">“Before I formed you in the womb I knew you…”</p>
-            <p class="text-gray-500 text-sm mt-1">— Jeremiah 1:5</p>
+            <h3 class="text-2xl font-bold text-white">Pro-Life Ministry</h3>
+            <p class="text-amber-200 text-sm font-semibold mt-1">Every Friday</p>
+            <p class="mt-3 text-amber-50 italic">“Before I formed you in the womb I knew you…”</p>
+            <p class="text-amber-100 text-sm mt-1">— Jeremiah 1:5</p>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
         </div>
@@ -178,53 +202,53 @@
     </section>
 
     <!-- FREE RESOURCES (wallpapers) -->
-    <section id="resources" class="py-20 bg-white">
+    <section id="resources" class="py-20 bg-white/10 backdrop-blur-sm">
       <div class="max-w-5xl mx-auto px-5 md:px-8 text-center">
         <div class="fade-up">
-          <span class="bg-amber-100 text-amber-800 text-sm px-4 py-1 rounded-full font-medium">Free gift</span>
-          <h2 class="text-4xl md:text-5xl font-bold mt-4 text-gray-900">Bible Verse Phone Wallpapers</h2>
-          <p class="text-gray-600 text-lg max-w-2xl mx-auto mt-3">Beautiful, faith-filled wallpapers to keep God's Word with you every day.</p>
+          <span class="bg-white/30 text-white text-sm px-4 py-1 rounded-full font-medium backdrop-blur-sm">Free gift</span>
+          <h2 class="text-4xl md:text-5xl font-bold mt-4 text-white">Bible Verse Phone Wallpapers</h2>
+          <p class="text-amber-50 text-lg max-w-2xl mx-auto mt-3">Beautiful, faith-filled wallpapers to keep God's Word with you every day.</p>
           <div class="mt-8">
-            <a href="#" class="inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-800 text-white font-semibold px-8 py-3 rounded-full shadow-md transition text-lg">
+            <a href="#" class="inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-md transition text-lg">
               <i class="fas fa-download"></i> Download Wallpapers
             </a>
           </div>
-          <div class="mt-6 text-sm text-gray-400">* high-res, mobile optimized | free for personal use</div>
+          <div class="mt-6 text-sm text-amber-100">* high-res, mobile optimized | free for personal use</div>
         </div>
       </div>
     </section>
 
     <!-- JOIN THE FAMILY + CALL TO ACTION -->
-    <section id="join" class="py-20 bg-amber-900 text-white relative overflow-hidden">
-      <div class="absolute inset-0 opacity-10">
-        <i class="fas fa-dove text-9xl absolute -bottom-10 -left-10"></i>
-        <i class="fas fa-cross text-8xl absolute top-10 right-10"></i>
+    <section id="join" class="py-20 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-20">
+        <i class="fas fa-dove text-9xl absolute -bottom-10 -left-10 text-white"></i>
+        <i class="fas fa-cross text-8xl absolute top-10 right-10 text-white"></i>
       </div>
       <div class="max-w-4xl mx-auto px-5 md:px-8 text-center relative z-10">
         <div class="fade-up">
-          <i class="fas fa-users text-5xl text-amber-300 mb-4"></i>
-          <h2 class="text-4xl md:text-5xl font-bold">Join the Family</h2>
-          <p class="text-amber-100 text-lg md:text-xl max-w-2xl mx-auto mt-4">Be part of a vibrant community of young believers growing in faith, prayer and mission on the Medical College campus.</p>
+          <i class="fas fa-users text-5xl text-white mb-4"></i>
+          <h2 class="text-4xl md:text-5xl font-bold text-white">Join the Family</h2>
+          <p class="text-amber-50 text-lg md:text-xl max-w-2xl mx-auto mt-4">Be part of a vibrant community of young believers growing in faith, prayer and mission on the Medical College campus.</p>
           <div class="flex flex-wrap justify-center gap-5 mt-10">
-            <a href="#" class="bg-white text-amber-800 px-8 py-3 rounded-full font-bold shadow-md hover:bg-amber-50 transition">Get in touch <i class="fas fa-arrow-right ml-1"></i></a>
+            <a href="#" class="bg-white text-orange-600 px-8 py-3 rounded-full font-bold shadow-md hover:bg-amber-50 transition">Get in touch <i class="fas fa-arrow-right ml-1"></i></a>
             <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition">WhatsApp group</a>
           </div>
-          <p class="text-amber-200 text-sm mt-8">📍 Kottayam Medical College Campus & St. Luke's Convent</p>
+          <p class="text-amber-100 text-sm mt-8">📍 Kottayam Medical College Campus & St. Luke's Convent</p>
         </div>
       </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-gray-900 text-gray-400 py-10 text-center text-sm">
+    <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-5">
         <p class="font-semibold text-white">Jesus Youth KMC — Medical College Campus Ministry</p>
-        <p class="mt-2">A Subsidiary of Jesus Youth Movement | Young hearts on fire for Christ</p>
-        <div class="flex justify-center gap-5 mt-4 text-amber-500 text-lg">
-          <i class="fab fa-instagram hover:text-white transition cursor-pointer"></i>
-          <i class="fab fa-whatsapp hover:text-white transition cursor-pointer"></i>
-          <i class="fab fa-youtube hover:text-white transition cursor-pointer"></i>
+        <p class="mt-2 text-amber-100">A Subsidiary of Jesus Youth Movement | Young hearts on fire for Christ</p>
+        <div class="flex justify-center gap-5 mt-4 text-white text-lg">
+          <i class="fab fa-instagram hover:text-amber-200 transition cursor-pointer"></i>
+          <i class="fab fa-whatsapp hover:text-amber-200 transition cursor-pointer"></i>
+          <i class="fab fa-youtube hover:text-amber-200 transition cursor-pointer"></i>
         </div>
-        <p class="mt-6 text-gray-500 text-xs">© 2025 Jesus Youth KMC · All glory to God</p>
+        <p class="mt-6 text-white/60 text-xs">© 2025 Jesus Youth KMC · All glory to God</p>
       </div>
     </footer>
   </main>
