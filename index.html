@@ -40,21 +40,38 @@
       pointer-events: none;
     }
     
-    /* Background Logo Watermark - Large, to the side, half visible, original colors */
+    /* Background Logo Watermark - Responsive for orientation */
     .bg-logo {
       position: fixed;
-      bottom: 20px;
-      right: -100px;
-      width: 70%;
-      max-width: 800px;
-      opacity: 0.15;
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
     }
     
-    /* For different screen sizes, adjust position */
-    @media (min-width: 768px) {
+    /* Default portrait mode */
+    @media (orientation: portrait) {
+      .bg-logo {
+        bottom: 20px;
+        right: -100px;
+        width: 70%;
+        max-width: 800px;
+        opacity: 0.15;
+      }
+    }
+    
+    /* Landscape mode adjustments */
+    @media (orientation: landscape) {
+      .bg-logo {
+        bottom: -50px;
+        right: -80px;
+        width: 40%;
+        max-width: 500px;
+        opacity: 0.12;
+      }
+    }
+    
+    /* Tablet portrait */
+    @media (min-width: 768px) and (orientation: portrait) {
       .bg-logo {
         right: -150px;
         bottom: 50px;
@@ -63,12 +80,34 @@
       }
     }
     
+    /* Tablet landscape */
+    @media (min-width: 768px) and (orientation: landscape) {
+      .bg-logo {
+        right: -120px;
+        bottom: -30px;
+        width: 35%;
+        max-width: 450px;
+        opacity: 0.1;
+      }
+    }
+    
+    /* Desktop */
     @media (min-width: 1024px) {
       .bg-logo {
         right: -200px;
         bottom: 80px;
         width: 50%;
         opacity: 0.1;
+      }
+    }
+    
+    /* Desktop landscape override */
+    @media (min-width: 1024px) and (orientation: landscape) {
+      .bg-logo {
+        right: -150px;
+        bottom: 40px;
+        width: 35%;
+        max-width: 500px;
       }
     }
     
@@ -191,7 +230,7 @@
 </head>
 <body class="glossy-orange-bg">
   
-  <!-- Background Watermark Logo - Large, to the side, half visible, original colors -->
+  <!-- Background Watermark Logo - Responsive for orientation -->
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
 
   <!-- Floating header with curved edges -->
