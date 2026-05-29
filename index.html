@@ -40,19 +40,18 @@
       pointer-events: none;
     }
     
-    /* Background Logo Watermark - Now scrolls with page */
+    /* Background Logo Watermark - Responsive for orientation */
     .bg-logo {
-      position: absolute;
+      position: fixed;
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
-      transition: opacity 0.5s ease;
     }
     
     /* Default portrait mode */
     @media (orientation: portrait) {
       .bg-logo {
-        top: 300px;
+        bottom: 20px;
         right: -100px;
         width: 70%;
         max-width: 800px;
@@ -63,7 +62,7 @@
     /* Landscape mode adjustments */
     @media (orientation: landscape) {
       .bg-logo {
-        top: 200px;
+        bottom: -50px;
         right: -80px;
         width: 40%;
         max-width: 500px;
@@ -75,7 +74,7 @@
     @media (min-width: 768px) and (orientation: portrait) {
       .bg-logo {
         right: -150px;
-        top: 400px;
+        bottom: 50px;
         width: 60%;
         opacity: 0.12;
       }
@@ -85,7 +84,7 @@
     @media (min-width: 768px) and (orientation: landscape) {
       .bg-logo {
         right: -120px;
-        top: 250px;
+        bottom: -30px;
         width: 35%;
         max-width: 450px;
         opacity: 0.1;
@@ -96,7 +95,7 @@
     @media (min-width: 1024px) {
       .bg-logo {
         right: -200px;
-        top: 500px;
+        bottom: 80px;
         width: 50%;
         opacity: 0.1;
       }
@@ -106,22 +105,16 @@
     @media (min-width: 1024px) and (orientation: landscape) {
       .bg-logo {
         right: -150px;
-        top: 300px;
+        bottom: 40px;
         width: 35%;
         max-width: 500px;
       }
-    }
-    
-    /* Fade out logo when near join section */
-    .bg-logo.fade-out {
-      opacity: 0 !important;
     }
     
     /* Ensure content stays above background logo */
     .content-wrapper {
       position: relative;
       z-index: 1;
-      background: transparent;
     }
     
     /* Glass morphism header with curved edges */
@@ -237,8 +230,8 @@
 </head>
 <body class="glossy-orange-bg">
   
-  <!-- Background Watermark Logo - Now scrolls with page -->
-  <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo" id="backgroundLogo">
+  <!-- Background Watermark Logo - Responsive for orientation -->
+  <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
 
   <!-- Floating header with curved edges -->
   <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
@@ -510,29 +503,6 @@
     document.querySelectorAll('.mobile-nav-link').forEach(link => {
       link.addEventListener('click', closeMenuFunction);
     });
-
-    // Fade out background logo when approaching join section
-    const backgroundLogo = document.getElementById('backgroundLogo');
-    const joinSection = document.getElementById('join');
-    
-    function checkLogoVisibility() {
-      if (!backgroundLogo || !joinSection) return;
-      
-      const joinRect = joinSection.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      
-      // When join section enters the viewport, start fading out
-      if (joinRect.top <= viewportHeight * 0.7) {
-        backgroundLogo.classList.add('fade-out');
-      } else {
-        backgroundLogo.classList.remove('fade-out');
-      }
-    }
-    
-    // Listen to scroll events
-    window.addEventListener('scroll', checkLogoVisibility);
-    window.addEventListener('resize', checkLogoVisibility);
-    checkLogoVisibility(); // Initial check
 
     // Intersection Observer for fade-up animation
     const fadeElements = document.querySelectorAll('.fade-up');
