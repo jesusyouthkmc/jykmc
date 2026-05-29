@@ -46,7 +46,8 @@
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: transform 0.3s ease;
+      will-change: transform;
     }
     
     /* Default portrait mode */
@@ -427,7 +428,7 @@
     <section id="join" class="py-20 relative overflow-hidden">
       <div class="absolute inset-0 opacity-20">
         <i class="fas fa-dove text-9xl absolute -bottom-10 -left-10 text-white"></i>
-        <i class="fas fa-cross text-8xl absolute top-10 right-10 text-white"></i>
+        <i class="fas fa-cross text-8xl absolute top-10 right-10 text-white" id="crossIcon"></i>
       </div>
       <div class="max-w-4xl mx-auto px-5 md:px-8 text-center relative z-10">
         <div class="fade-up">
@@ -505,36 +506,29 @@
       link.addEventListener('click', closeMenuFunction);
     });
 
-    // Scroll-controlled background logo movement
+    // Scroll-controlled background logo movement - PAN UP only, no fade
     const bgLogo = document.getElementById('backgroundLogo');
-    const joinSection = document.getElementById('join');
+    const crossIcon = document.getElementById('crossIcon');
     
     function handleLogoScroll() {
-      if (!bgLogo || !joinSection) return;
+      if (!bgLogo || !crossIcon) return;
       
-      const joinRect = joinSection.getBoundingClientRect();
+      const crossRect = crossIcon.getBoundingClientRect();
+      const logoRect = bgLogo.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      const joinTop = joinRect.top;
-      const joinBottom = joinRect.bottom;
       
-      // Calculate how close we are to the join section
-      let opacity = 1;
-      let translateY = 0;
+      // Check if cross is in viewport and if logo is overlapping or about to overlap
+      const crossVisible = crossRect.top < windowHeight && crossRect.bottom > 0;
       
-      // When join section enters the viewport, start fading and moving the logo
-      if (joinTop < windowHeight && joinBottom > 0) {
-        const scrollProgress = Math.min(1, Math.max(0, (windowHeight - joinTop) / windowHeight));
-        // Fade out as we scroll into the join section
-        opacity = Math.max(0, 1 - (scrollProgress * 1.5));
-        // Move the logo down/away
-        translateY = scrollProgress * 100;
+      if (crossVisible && logoRect.bottom > crossRect.top) {
+        // Calculate how much to move the logo up to avoid the cross
+        const overlap = logoRect.bottom - crossRect.top;
+        const translateDistance = Math.min(overlap + 50, 300); // Move up enough to clear cross, max 300px
         
-        bgLogo.style.opacity = opacity * 0.15; // Base opacity is 0.15, multiplied by remaining visibility
-        bgLogo.style.transform = `translateY(${translateY}px)`;
+        bgLogo.style.transform = `translateY(-${translateDistance}px)`;
       } else {
-        // Restore when not in join section
-        bgLogo.style.opacity = '';
-        bgLogo.style.transform = '';
+        // Reset position when no conflict
+        bgLogo.style.transform = `translateY(0px)`;
       }
     }
     
@@ -550,8 +544,9 @@
       }
     });
     
-    // Also run on load
+    // Also run on load and resize
     window.addEventListener('load', handleLogoScroll);
+    window.addEventListener('resize', handleLogoScroll);
 
     // Intersection Observer for fade-up animation
     const fadeElements = document.querySelectorAll('.fade-up');
