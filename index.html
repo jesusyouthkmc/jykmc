@@ -264,6 +264,17 @@
       margin-left: 8px;
       letter-spacing: 0.5px;
     }
+    
+    /* Prayer button animation */
+    @keyframes prayerClick {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+    
+    .prayer-click {
+      animation: prayerClick 0.2s ease;
+    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -287,6 +298,7 @@
         </a>
         <a href="#resources" class="text-white hover:text-amber-200 transition">Resources</a>
         <a href="#join" class="text-white hover:text-amber-200 transition">Join</a>
+        <a href="#support" class="text-white hover:text-amber-200 transition">Support</a>
       </nav>
       <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none">
         <i class="fas fa-bars"></i>
@@ -323,6 +335,10 @@
       <a href="#join" class="mobile-nav-link">
         <i class="fas fa-users"></i>
         <span>Join</span>
+      </a>
+      <a href="#support" class="mobile-nav-link">
+        <i class="fas fa-hands-praying"></i>
+        <span>Support</span>
       </a>
     </nav>
   </div>
@@ -531,6 +547,31 @@
       </div>
     </section>
 
+    <!-- SUPPORT US SECTION - Global Prayer Counter -->
+    <section id="support" class="py-20 md:py-28">
+      <div class="max-w-3xl mx-auto px-5 md:px-8">
+        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
+          <div class="text-5xl mb-4">💝</div>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Support Us</h2>
+          <p class="text-amber-100 text-lg mb-8">Your prayers are the foundation of our ministry. Every Hail Mary lifts us up!</p>
+          
+          <!-- Global Prayer Counter -->
+          <div class="bg-white/5 rounded-2xl p-8 mb-8">
+            <div class="text-6xl font-bold text-amber-200 mb-2" id="prayerCount">Loading...</div>
+            <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
+          </div>
+          
+          <!-- Prayer Button -->
+          <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition transform hover:scale-105 inline-flex items-center gap-3 text-lg">
+            <i class="fas fa-hands-praying"></i>
+            Pray a Hail Mary 🙏
+          </button>
+          
+          <p class="text-white/60 text-sm mt-6">"The fervent prayer of a righteous person is very powerful." — James 5:16</p>
+        </div>
+      </div>
+    </section>
+
     <!-- FOOTER -->
     <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-5">
@@ -598,6 +639,56 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
     
     fadeElements.forEach(el => observer.observe(el));
+
+    // GLOBAL PRAYER COUNTER - Your Google Sheets URL
+    const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
+    
+    const prayerCountDisplay = document.getElementById('prayerCount');
+    const prayerButton = document.getElementById('prayerButton');
+    
+    // Function to fetch current count
+    async function fetchPrayerCount() {
+      try {
+        const response = await fetch(GOOGLE_SHEETS_API);
+        const data = await response.json();
+        prayerCountDisplay.textContent = data.count;
+      } catch (error) {
+        console.error('Error fetching prayer count:', error);
+        prayerCountDisplay.textContent = 'Error';
+      }
+    }
+    
+    // Function to increment prayer count
+    async function incrementPrayerCount() {
+      try {
+        const response = await fetch(GOOGLE_SHEETS_API, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        prayerCountDisplay.textContent = data.count;
+        
+        // Add animation effect
+        prayerButton.classList.add('prayer-click');
+        setTimeout(() => {
+          prayerButton.classList.remove('prayer-click');
+        }, 200);
+        
+        prayerCountDisplay.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          prayerCountDisplay.style.transform = 'scale(1)';
+        }, 200);
+        
+      } catch (error) {
+        console.error('Error incrementing prayer count:', error);
+        alert('Unable to save your prayer. Please try again later.');
+      }
+    }
+    
+    // Load initial count
+    fetchPrayerCount();
+    
+    // Add click event to button
+    prayerButton.addEventListener('click', incrementPrayerCount);
 
     // fix for mobile viewport height
     function setVH() {
