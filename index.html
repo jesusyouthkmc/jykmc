@@ -265,52 +265,24 @@
       letter-spacing: 0.5px;
     }
     
-    /* Smoother prayer button animations */
-    @keyframes prayerClick {
-      0% { 
+    /* Simple button click effect - no bounce */
+    @keyframes buttonClick {
+      0% {
         transform: scale(1);
-        background-color: white;
       }
-      40% { 
-        transform: scale(0.92);
-        background-color: #fef3c7;
+      50% {
+        transform: scale(0.97);
       }
-      70% {
-        transform: scale(1.03);
-      }
-      100% { 
+      100% {
         transform: scale(1);
-        background-color: white;
       }
     }
     
     .prayer-click {
-      animation: prayerClick 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+      animation: buttonClick 0.15s ease-out;
     }
     
     /* Odometer-style counter animation */
-    .odometer-digit {
-      display: inline-block;
-      position: relative;
-      overflow: hidden;
-      animation: rollDown 0.4s ease-out;
-    }
-    
-    @keyframes rollDown {
-      0% {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    
-    .counter-roll {
-      animation: counterRoll 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
-    }
-    
     @keyframes counterRoll {
       0% {
         transform: scale(1);
@@ -329,6 +301,10 @@
         letter-spacing: normal;
         color: #fde68a;
       }
+    }
+    
+    .counter-roll {
+      animation: counterRoll 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
   </style>
 </head>
@@ -591,8 +567,8 @@
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Prayer Button -->
-          <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition transform hover:scale-105 text-lg">
+          <!-- Prayer Button with simple click effect -->
+          <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition hover:scale-105 text-lg">
             Pray a Hail Mary 🙏
           </button>
           
@@ -703,7 +679,6 @@
     const prayerButton = document.getElementById('prayerButton');
     
     let currentCount = 0;
-    let animationTimeout = null;
     
     // Function to animate number change with odometer effect
     function updateNumberWithRoll(newNumber) {
@@ -732,17 +707,17 @@
       }
     }
     
-    // Function to increment prayer count with odometer effect
+    // Function to increment prayer count with simple button effect
     function incrementPrayerCount() {
       // Update the number with rolling animation
       currentCount++;
       updateNumberWithRoll(currentCount);
       
-      // Add button click animation
+      // Add simple button click animation
       prayerButton.classList.add('prayer-click');
       setTimeout(() => {
         prayerButton.classList.remove('prayer-click');
-      }, 300);
+      }, 150);
       
       // Send to server in background
       fetch(GOOGLE_SHEETS_API, { method: 'POST' })
