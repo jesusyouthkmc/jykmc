@@ -278,7 +278,8 @@
     
     /* Smooth counter transition */
     .counter-number {
-      transition: all 0.25s ease-out;
+      transition: all 0.2s ease-out;
+      display: inline-block;
     }
   </style>
 </head>
@@ -525,7 +526,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - With Smooth Fade Transition -->
+    <!-- SUPPORT US SECTION - With 1 second cooldown -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -646,7 +647,7 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // SIMPLE SMOOTH COUNTER
+    // SIMPLE SMOOTH COUNTER WITH 1 SECOND COOLDOWN
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const counterDisplay = document.getElementById('prayerCountDisplay');
@@ -654,6 +655,7 @@
     
     let currentValue = 0;
     let isUpdating = false;
+    let lastClickTime = 0;
     
     // Smooth number transition
     function updateCounterWithFade(newValue) {
@@ -689,10 +691,24 @@
       }
     }
     
-    // Increment prayer count with smooth fade
+    // Increment prayer count with smooth fade - 1 second cooldown
     async function incrementPrayerCount() {
+      const now = Date.now();
+      const timeSinceLastClick = now - lastClickTime;
+      
+      // Check if enough time has passed (1000ms = 1 second)
+      if (timeSinceLastClick < 1000) {
+        // Optional: add a quick shake or visual feedback that button is on cooldown
+        prayerButton.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          prayerButton.style.transform = 'scale(1)';
+        }, 100);
+        return;
+      }
+      
       if (isUpdating) return;
       isUpdating = true;
+      lastClickTime = now;
       
       // Optimistic update with smooth fade animation
       const newValue = currentValue + 1;
