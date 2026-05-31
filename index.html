@@ -265,7 +265,7 @@
       letter-spacing: 0.5px;
     }
     
-    /* Simple button click effect - no bounce */
+    /* Simple button click effect */
     @keyframes buttonClick {
       0% {
         transform: scale(1);
@@ -282,29 +282,42 @@
       animation: buttonClick 0.15s ease-out;
     }
     
-    /* Odometer-style counter animation */
-    @keyframes counterRoll {
+    /* Odometer Container */
+    .odometer-container {
+      display: inline-flex;
+      direction: ltr;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .odometer-digit {
+      display: inline-block;
+      min-width: 0.6em;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    
+    @keyframes rollUp {
       0% {
-        transform: scale(1);
-        letter-spacing: normal;
+        transform: translateY(0);
+        opacity: 1;
       }
-      30% {
-        transform: scale(1.2);
-        letter-spacing: 8px;
-        color: #fde68a;
+      40% {
+        transform: translateY(-100%);
+        opacity: 0;
       }
-      70% {
-        transform: scale(0.95);
+      60% {
+        transform: translateY(100%);
+        opacity: 0;
       }
       100% {
-        transform: scale(1);
-        letter-spacing: normal;
-        color: #fde68a;
+        transform: translateY(0);
+        opacity: 1;
       }
     }
     
-    .counter-roll {
-      animation: counterRoll 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+    .odometer-digit.rolling-up {
+      animation: rollUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
     }
   </style>
 </head>
@@ -562,12 +575,12 @@
           <!-- Global Prayer Counter with Odometer Effect -->
           <div class="bg-white/5 rounded-2xl p-8 mb-8">
             <div class="text-6xl font-bold text-amber-200 mb-2">
-              <span id="prayerCount">Loading...</span>
+              <span id="prayerCountDisplay">Loading...</span>
             </div>
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Prayer Button with simple click effect -->
+          <!-- Prayer Button -->
           <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition hover:scale-105 text-lg">
             Pray a Hail Mary 🙏
           </button>
@@ -672,26 +685,68 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // ODOMETER-STYLE PRAYER COUNTER
+    // ODOMETER PRAYER COUNTER with 1-second cooldown
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
-    const prayerCountDisplay = document.getElementById('prayerCount');
+    const prayerCountDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
     
     let currentCount = 0;
+    let isCooldown = false;
     
-    // Function to animate number change with odometer effect
-    function updateNumberWithRoll(newNumber) {
-      // Add the rolling animation class
-      prayerCountDisplay.classList.add('counter-roll');
-      
-      // Update the number
-      prayerCountDisplay.textContent = newNumber;
-      
-      // Remove animation class after it completes
+    // Function to animate a changed digit with rolling effect
+    function animateDigitChange(element, newValue) {
+      element.classList.add('rolling-up');
       setTimeout(() => {
-        prayerCountDisplay.classList.remove('counter-roll');
-      }, 500);
+        element.classList.remove('rolling-up');
+      }, 300);
+    }
+    
+    // Function to update the number with odometer-style rolling for changed digits
+    function updateNumberWithOdometer(newNumber) {
+      const oldNumber = currentCount;
+      const oldStr = oldNumber.toString();
+      const newStr = newNumber.toString();
+      
+      // Get all digit elements
+      const digits = prayerCountDisplay.querySelectorAll('.odometer-digit');
+      
+      if (digits.length === 0) {
+        // First time setup
+        prayerCountDisplay.innerHTML = '';
+        const container = document.createElement('div');
+        container.className = 'odometer-container';
+        
+        for (let i = 0; i < newStr.length; i++) {
+          const digitSpan = document.createElement('span');
+          digitSpan.className = 'odometer-digit';
+          digitSpan.textContent = newStr[i];
+          container.appendChild(digitSpan);
+        }
+        prayerCountDisplay.appendChild(container);
+      } else {
+        // Update existing digits with animation where changed
+        for (let i = 0; i < digits.length; i++) {
+          const oldDigit = oldStr[i] || '';
+          const newDigit = newStr[i] || '';
+          
+          if (oldDigit !== newDigit && newDigit !== '') {
+            animateDigitChange(digits[i], newDigit);
+            digits[i].textContent = newDigit;
+          }
+        }
+        
+        // Handle length changes (adding new digits)
+        if (newStr.length > digits.length) {
+          const container = prayerCountDisplay.querySelector('.odometer-container');
+          for (let i = digits.length; i < newStr.length; i++) {
+            const digitSpan = document.createElement('span');
+            digitSpan.className = 'odometer-digit';
+            digitSpan.textContent = newStr[i];
+            container.appendChild(digitSpan);
+          }
+        }
+      }
     }
     
     // Function to fetch current count
@@ -700,20 +755,26 @@
         const response = await fetch(GOOGLE_SHEETS_API);
         const data = await response.json();
         currentCount = data.count;
-        prayerCountDisplay.textContent = currentCount;
+        updateNumberWithOdometer(currentCount);
       } catch (error) {
         console.error('Error fetching prayer count:', error);
         prayerCountDisplay.textContent = 'Error';
       }
     }
     
-    // Function to increment prayer count with simple button effect
+    // Function to increment prayer count with cooldown
     function incrementPrayerCount() {
-      // Update the number with rolling animation
-      currentCount++;
-      updateNumberWithRoll(currentCount);
+      // Prevent clicking during cooldown
+      if (isCooldown) return;
       
-      // Add simple button click animation
+      // Set cooldown
+      isCooldown = true;
+      
+      // Update the number with odometer animation
+      currentCount++;
+      updateNumberWithOdometer(currentCount);
+      
+      // Add button click animation
       prayerButton.classList.add('prayer-click');
       setTimeout(() => {
         prayerButton.classList.remove('prayer-click');
@@ -726,16 +787,21 @@
           // Sync with server value (in case of any discrepancy)
           if (data.count !== currentCount) {
             currentCount = data.count;
-            updateNumberWithRoll(currentCount);
+            updateNumberWithOdometer(currentCount);
           }
         })
         .catch(error => {
           console.error('Error incrementing prayer count:', error);
-          // Revert on error with a sad animation
+          // Revert on error
           currentCount--;
-          updateNumberWithRoll(currentCount);
+          updateNumberWithOdometer(currentCount);
           alert('Unable to save your prayer. Please try again later.');
         });
+      
+      // Release cooldown after 1 second
+      setTimeout(() => {
+        isCooldown = false;
+      }, 1000);
     }
     
     // Load initial count
