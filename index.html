@@ -265,15 +265,50 @@
       letter-spacing: 0.5px;
     }
     
-    /* Prayer button animation */
+    /* Smoother prayer button animations */
     @keyframes prayerClick {
-      0% { transform: scale(1); }
-      50% { transform: scale(0.95); }
-      100% { transform: scale(1); }
+      0% { 
+        transform: scale(1);
+        background-color: white;
+      }
+      40% { 
+        transform: scale(0.92);
+        background-color: #fef3c7;
+      }
+      70% {
+        transform: scale(1.03);
+      }
+      100% { 
+        transform: scale(1);
+        background-color: white;
+      }
     }
     
     .prayer-click {
-      animation: prayerClick 0.2s ease;
+      animation: prayerClick 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+    
+    /* Smooth counter animation */
+    @keyframes counterPop {
+      0% { 
+        transform: scale(1);
+        opacity: 1;
+      }
+      30% { 
+        transform: scale(1.15);
+        color: #fde68a;
+      }
+      70% {
+        transform: scale(0.98);
+      }
+      100% { 
+        transform: scale(1);
+        color: #fde68a;
+      }
+    }
+    
+    .counter-pop {
+      animation: counterPop 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
   </style>
 </head>
@@ -520,7 +555,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - Global Prayer Counter (Moved before Join) -->
+    <!-- SUPPORT US SECTION - Global Prayer Counter with Optimistic Updates -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -534,8 +569,8 @@
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Prayer Button - Icon removed -->
-          <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition transform hover:scale-105 inline-flex items-center gap-3 text-lg">
+          <!-- Prayer Button - Optimistic update for instant feedback -->
+          <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition transform hover:scale-105 text-lg">
             Pray a Hail Mary 🙏
           </button>
           
@@ -639,47 +674,77 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // GLOBAL PRAYER COUNTER - Your Google Sheets URL
+    // GLOBAL PRAYER COUNTER - With Optimistic Updates for Instant Feedback
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const prayerCountDisplay = document.getElementById('prayerCount');
     const prayerButton = document.getElementById('prayerButton');
+    
+    let currentCount = 0;
+    let isUpdating = false;
     
     // Function to fetch current count
     async function fetchPrayerCount() {
       try {
         const response = await fetch(GOOGLE_SHEETS_API);
         const data = await response.json();
-        prayerCountDisplay.textContent = data.count;
+        currentCount = data.count;
+        prayerCountDisplay.textContent = currentCount;
       } catch (error) {
         console.error('Error fetching prayer count:', error);
         prayerCountDisplay.textContent = 'Error';
       }
     }
     
-    // Function to increment prayer count
+    // Function to add animation to counter
+    function animateCounter() {
+      prayerCountDisplay.classList.remove('counter-pop');
+      // Force reflow to restart animation
+      void prayerCountDisplay.offsetWidth;
+      prayerCountDisplay.classList.add('counter-pop');
+    }
+    
+    // Function to increment prayer count with optimistic update
     async function incrementPrayerCount() {
+      // Prevent multiple rapid clicks
+      if (isUpdating) return;
+      isUpdating = true;
+      
+      // OPTIMISTIC UPDATE - Update UI immediately
+      const newCount = currentCount + 1;
+      currentCount = newCount;
+      prayerCountDisplay.textContent = newCount;
+      
+      // Add animations immediately for instant feedback
+      animateCounter();
+      
+      // Add button click animation
+      prayerButton.classList.add('prayer-click');
+      setTimeout(() => {
+        prayerButton.classList.remove('prayer-click');
+      }, 300);
+      
+      // Send request to server in background
       try {
         const response = await fetch(GOOGLE_SHEETS_API, {
           method: 'POST'
         });
         const data = await response.json();
-        prayerCountDisplay.textContent = data.count;
         
-        // Add animation effect
-        prayerButton.classList.add('prayer-click');
-        setTimeout(() => {
-          prayerButton.classList.remove('prayer-click');
-        }, 200);
-        
-        prayerCountDisplay.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-          prayerCountDisplay.style.transform = 'scale(1)';
-        }, 200);
-        
+        // Sync with server value (in case of any discrepancy)
+        if (data.count !== currentCount) {
+          currentCount = data.count;
+          prayerCountDisplay.textContent = currentCount;
+          animateCounter(); // Animate again if server value differs
+        }
       } catch (error) {
         console.error('Error incrementing prayer count:', error);
+        // Revert on error
+        currentCount--;
+        prayerCountDisplay.textContent = currentCount;
         alert('Unable to save your prayer. Please try again later.');
+      } finally {
+        isUpdating = false;
       }
     }
     
