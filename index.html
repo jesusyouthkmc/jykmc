@@ -279,7 +279,6 @@
     /* Smooth counter transition */
     .counter-number {
       transition: all 0.2s ease-out;
-      display: inline-block;
     }
   </style>
 </head>
@@ -526,7 +525,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - With 1 second cooldown -->
+    <!-- SUPPORT US SECTION - With Smooth Fade Transition (No Click Delay) -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -542,7 +541,7 @@
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Prayer Button -->
+          <!-- Prayer Button - No delay between clicks -->
           <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition text-lg">
             Pray a Hail Mary 🙏
           </button>
@@ -647,104 +646,100 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // SIMPLE SMOOTH COUNTER WITH 1 SECOND COOLDOWN
+    // SIMPLE SMOOTH COUNTER - NO DELAY BETWEEN CLICKS
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
     
     let currentValue = 0;
-    let isUpdating = false;
-    let lastClickTime = 0;
+    let pendingClicks = 0;
+    let isProcessing = false;
     
     // Smooth number transition
-    function updateCounterWithFade(newValue) {
-      // Add fade animation
+    function animateCounter() {
       counterDisplay.style.opacity = '0.5';
       counterDisplay.style.transform = 'scale(0.95)';
       
-      // Update number after a tiny delay
       setTimeout(() => {
-        counterDisplay.textContent = newValue;
         counterDisplay.style.opacity = '1';
         counterDisplay.style.transform = 'scale(1)';
       }, 100);
+    }
+    
+    // Update display immediately
+    function updateDisplay(value) {
+      counterDisplay.textContent = value;
+    }
+    
+    // Process pending clicks in background
+    async function processClickQueue() {
+      if (isProcessing) return;
+      isProcessing = true;
       
-      currentValue = newValue;
+      while (pendingClicks > 0) {
+        const clicksToSend = pendingClicks;
+        pendingClicks = 0;
+        
+        try {
+          // Send the total accumulated clicks
+          for (let i = 0; i < clicksToSend; i++) {
+            await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
+          }
+          
+          // Fetch the latest count from server
+          const response = await fetch(GOOGLE_SHEETS_API);
+          const data = await response.json();
+          
+          // Sync with server value if it's different from our local value
+          if (data.count !== currentValue) {
+            currentValue = data.count;
+            updateDisplay(currentValue);
+          }
+        } catch (error) {
+          console.error('Error sending clicks:', error);
+          // Don't revert - keep optimistic value
+        }
+      }
+      
+      isProcessing = false;
     }
     
-    // Simple update without animation (for initial load)
-    function updateCounterDirect(newValue) {
-      counterDisplay.textContent = newValue;
-      currentValue = newValue;
-    }
-    
-    // Fetch current count from server
+    // Fetch current count from server on load
     async function fetchPrayerCount() {
       try {
         const response = await fetch(GOOGLE_SHEETS_API);
         const data = await response.json();
-        updateCounterDirect(data.count);
+        currentValue = data.count;
+        updateDisplay(currentValue);
       } catch (error) {
         console.error('Error fetching prayer count:', error);
         counterDisplay.textContent = 'Error';
       }
     }
     
-    // Increment prayer count with smooth fade - 1 second cooldown
-    async function incrementPrayerCount() {
-      const now = Date.now();
-      const timeSinceLastClick = now - lastClickTime;
+    // Increment prayer count - NO DELAY!
+    function incrementPrayerCount() {
+      // Optimistic update - update immediately
+      currentValue++;
+      updateDisplay(currentValue);
+      animateCounter();
       
-      // Check if enough time has passed (1000ms = 1 second)
-      if (timeSinceLastClick < 1000) {
-        // Optional: add a quick shake or visual feedback that button is on cooldown
-        prayerButton.style.transform = 'scale(0.98)';
-        setTimeout(() => {
-          prayerButton.style.transform = 'scale(1)';
-        }, 100);
-        return;
-      }
-      
-      if (isUpdating) return;
-      isUpdating = true;
-      lastClickTime = now;
-      
-      // Optimistic update with smooth fade animation
-      const newValue = currentValue + 1;
-      updateCounterWithFade(newValue);
-      
-      // Simple button click animation
+      // Button click animation
       prayerButton.classList.add('btn-click');
       setTimeout(() => {
         prayerButton.classList.remove('btn-click');
       }, 150);
       
-      // Send to server
-      try {
-        const response = await fetch(GOOGLE_SHEETS_API, {
-          method: 'POST'
-        });
-        const data = await response.json();
-        
-        // Sync with server value
-        if (data.count !== currentValue) {
-          updateCounterWithFade(data.count);
-        }
-      } catch (error) {
-        console.error('Error incrementing prayer count:', error);
-        // Revert on error
-        updateCounterWithFade(currentValue - 1);
-        alert('Unable to save your prayer. Please try again later.');
-      } finally {
-        isUpdating = false;
-      }
+      // Queue the click for background processing
+      pendingClicks++;
+      processClickQueue();
     }
     
     // Load initial count
     fetchPrayerCount();
     
-    // Add click event to button
+    // Add click event to button (no delay!)
     prayerButton.addEventListener('click', incrementPrayerCount);
 
     // fix for mobile viewport height
