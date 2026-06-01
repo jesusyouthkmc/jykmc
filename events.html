@@ -219,6 +219,31 @@
       width: 80px;
       margin: 20px auto;
     }
+    
+    /* Icon styling */
+    .section-icon {
+      font-size: 2.5rem;
+      color: #fde68a;
+      margin-bottom: 0.75rem;
+    }
+    
+    .event-icon {
+      font-size: 3rem;
+      color: #fde68a;
+    }
+    
+    /* Custom SVG Monstrance Icon */
+    .monstrance-icon {
+      width: 3rem;
+      height: 3rem;
+      display: inline-block;
+    }
+    
+    .monstrance-icon svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -308,20 +333,58 @@
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
-          <i class="fas fa-sync-alt text-4xl text-amber-200 mb-3"></i>
+          <i class="fas fa-sync-alt section-icon"></i>
           <h2 class="text-3xl md:text-4xl font-bold text-white">Recurring Events</h2>
           <div class="section-divider"></div>
           <p class="text-amber-100 text-lg">Regular moments of grace that mark our monthly rhythm</p>
         </div>
         
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil -->
+          <!-- Monthly Night Vigil with Custom Monstrance SVG -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-              <div class="text-6xl">🌙</div>
+              <div class="monstrance-icon">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Radiant beams -->
+                  <g stroke="#fde68a" stroke-width="2" stroke-linecap="round">
+                    <line x1="50" y1="8" x2="50" y2="18"/>
+                    <line x1="50" y1="82" x2="50" y2="92"/>
+                    <line x1="8" y1="50" x2="18" y2="50"/>
+                    <line x1="82" y1="50" x2="92" y2="50"/>
+                    <line x1="20" y1="20" x2="27" y2="27"/>
+                    <line x1="73" y1="73" x2="80" y2="80"/>
+                    <line x1="20" y1="80" x2="27" y2="73"/>
+                    <line x1="73" y1="27" x2="80" y2="20"/>
+                    <!-- Diagonal beams -->
+                    <line x1="35" y1="12" x2="38" y2="20"/>
+                    <line x1="65" y1="12" x2="62" y2="20"/>
+                    <line x1="35" y1="88" x2="38" y2="80"/>
+                    <line x1="65" y1="88" x2="62" y2="80"/>
+                    <line x1="12" y1="35" x2="20" y2="38"/>
+                    <line x1="12" y1="65" x2="20" y2="62"/>
+                    <line x1="88" y1="35" x2="80" y2="38"/>
+                    <line x1="88" y1="65" x2="80" y2="62"/>
+                  </g>
+                  <!-- Outer circle (monstrance lunette) -->
+                  <circle cx="50" cy="48" r="22" stroke="#fde68a" stroke-width="3" fill="none"/>
+                  <!-- Inner circle (Host) -->
+                  <circle cx="50" cy="48" r="12" fill="#fde68a" opacity="0.3"/>
+                  <circle cx="50" cy="48" r="8" stroke="#fde68a" stroke-width="2" fill="none"/>
+                  <!-- Center Host detail -->
+                  <circle cx="50" cy="48" r="3" fill="#fde68a"/>
+                  <!-- Cross on top -->
+                  <line x1="50" y1="26" x2="50" y2="18" stroke="#fde68a" stroke-width="2.5"/>
+                  <line x1="46" y1="22" x2="54" y2="22" stroke="#fde68a" stroke-width="2.5"/>
+                  <!-- Stem -->
+                  <line x1="50" y1="70" x2="50" y2="78" stroke="#fde68a" stroke-width="3"/>
+                  <!-- Base -->
+                  <path d="M42 78 Q50 82 58 78" stroke="#fde68a" stroke-width="2.5" fill="none"/>
+                  <line x1="44" y1="82" x2="56" y2="82" stroke="#fde68a" stroke-width="2.5"/>
+                </svg>
+              </div>
               <div class="flex-1 text-center md:text-left">
                 <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
-                <p class="text-amber-200 text-sm mb-4">📍 KMC Campus | 📅 First Saturday of every month</p>
+                <p class="text-amber-200 text-sm mb-4"><i class="fas fa-map-marker-alt mr-1"></i> KMC Campus | <i class="far fa-calendar-alt ml-2 mr-1"></i> First Saturday of every month</p>
                 <p class="text-white/80 leading-relaxed">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</p>
               </div>
             </div>
@@ -334,7 +397,7 @@
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
-          <i class="fas fa-calendar-alt text-4xl text-amber-200 mb-3"></i>
+          <i class="fas fa-calendar-alt section-icon"></i>
           <h2 class="text-3xl md:text-4xl font-bold text-white">Annual Events</h2>
           <div class="section-divider"></div>
           <p class="text-amber-100 text-lg">Special gatherings that mark our yearly journey together</p>
@@ -343,25 +406,25 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Annual Retreat -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
-            <div class="text-5xl mb-3">🤲</div>
-            <h3 class="text-xl font-bold text-white mb-2">Annual Retreat</h3>
-            <p class="text-white/70 text-sm mb-3">📅 Usually in June/July</p>
+            <i class="fas fa-hands-praying event-icon"></i>
+            <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Retreat</h3>
+            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Usually in June/July</p>
             <p class="text-white/70 leading-relaxed">A time of prayer, formation, and spiritual renewal for members. A weekend away to encounter God, deepen our faith, and recharge for the mission ahead.</p>
           </div>
           
           <!-- Freshers Programme -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
-            <div class="text-5xl mb-3">🎓</div>
-            <h3 class="text-xl font-bold text-white mb-2">Freshers Programme</h3>
-            <p class="text-white/70 text-sm mb-3">📅 Beginning of academic year</p>
+            <i class="fas fa-user-graduate event-icon"></i>
+            <h3 class="text-xl font-bold text-white mb-2 mt-3">Freshers Programme</h3>
+            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Beginning of academic year</p>
             <p class="text-white/70 leading-relaxed">Welcoming new students into our family and introducing them to the mission and community. A time of icebreakers, sharing, and warm fellowship.</p>
           </div>
           
           <!-- Annual Trip -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
-            <div class="text-5xl mb-3">🚌</div>
-            <h3 class="text-xl font-bold text-white mb-2">Annual Trip</h3>
-            <p class="text-white/70 text-sm mb-3">📅 Summer break / After exams</p>
+            <i class="fas fa-bus event-icon"></i>
+            <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Trip</h3>
+            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Summer break / After exams</p>
             <p class="text-white/70 leading-relaxed">A time for fellowship, friendship, and creating memories together. A day or weekend of fun, bonding, and enjoying God's creation as a community.</p>
           </div>
         </div>
@@ -372,7 +435,7 @@
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
-          <i class="fas fa-walking text-4xl text-amber-200 mb-3"></i>
+          <i class="fas fa-walking section-icon"></i>
           <h2 class="text-3xl md:text-4xl font-bold text-white">Pilgrimages</h2>
           <div class="section-divider"></div>
           <p class="text-amber-100 text-lg">Walking in faith, journeying together</p>
@@ -381,17 +444,17 @@
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <!-- Athirampuzha Pilgrimage -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
-            <div class="text-5xl mb-3">🙏</div>
-            <h3 class="text-xl font-bold text-white mb-2">Athirampuzha Pilgrimage</h3>
-            <p class="text-white/70 text-sm mb-3">🚶 On foot pilgrimage</p>
+            <i class="fas fa-church event-icon"></i>
+            <h3 class="text-xl font-bold text-white mb-2 mt-3">Athirampuzha Pilgrimage</h3>
+            <p class="text-white/70 text-sm mb-3"><i class="fas fa-walking mr-1"></i> On foot pilgrimage</p>
             <p class="text-white/70 leading-relaxed">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</p>
           </div>
           
           <!-- Lenten Way of the Cross Pilgrimage -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
-            <div class="text-5xl mb-3">☦️</div>
-            <h3 class="text-xl font-bold text-white mb-2">Lenten Way of the Cross Pilgrimage</h3>
-            <p class="text-white/70 text-sm mb-3">📅 Lenten season (weeks before Holy Week)</p>
+            <i class="fas fa-cross event-icon"></i>
+            <h3 class="text-xl font-bold text-white mb-2 mt-3">Lenten Way of the Cross Pilgrimage</h3>
+            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Lenten season (weeks before Holy Week)</p>
             <p class="text-white/70 leading-relaxed">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</p>
           </div>
         </div>
