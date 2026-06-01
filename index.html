@@ -265,7 +265,7 @@
       letter-spacing: 0.5px;
     }
     
-    /* Button that transforms into loading bar */
+    /* ============ UPDATED PRAYER BUTTON STYLES - CSS POWERED ============ */
     .prayer-button-container {
       position: relative;
       display: inline-block;
@@ -277,7 +277,7 @@
       font-weight: 600;
       padding: 16px 32px;
       border-radius: 50px;
-      transition: all 0.3s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
       border: none;
       font-size: 1.125rem;
@@ -286,10 +286,9 @@
       overflow: hidden;
     }
     
-    .prayer-btn.loading {
-      padding: 16px 32px;
-      color: transparent;
-      cursor: wait;
+    .prayer-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
     }
     
     .loading-bar-fill {
@@ -300,57 +299,80 @@
       width: 0%;
       background: linear-gradient(90deg, #fde68a, #FF8C42, #FF6B35);
       border-radius: 50px;
-      transition: width 0.1s linear;
       z-index: 0;
+      transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      pointer-events: none;
     }
     
-    .btn-text {
-      position: relative;
-      z-index: 1;
-      transition: opacity 0.2s;
+    /* Loading state - CSS handles the smooth animation */
+    .prayer-btn.loading .loading-bar-fill {
+      width: 100% !important;
+      transition: width 2s linear;
     }
     
     .prayer-btn.loading .btn-text {
       opacity: 0;
+      transition: opacity 0.15s ease;
     }
     
     .prayer-btn:disabled {
-      cursor: not-allowed;
+      cursor: wait;
     }
     
-    /* Odometer animation styles */
-    .odometer-digit {
-      display: inline-block;
-      position: relative;
-      overflow: hidden;
-      min-width: 0.6em;
-      text-align: center;
+    /* Loading glow animation */
+    @keyframes loadingGlow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+      }
     }
     
-    .odometer-digit .digit-old {
-      display: block;
-      transform: translateY(0);
-      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    .prayer-btn.loading {
+      animation: loadingGlow 1s infinite;
     }
     
-    .odometer-digit .digit-new {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transform: translateY(100%);
-      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    /* CSS number flip animation */
+    .number-flip {
+      animation: flipUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
     
-    .odometer-digit.animating .digit-old {
-      transform: translateY(-100%);
+    @keyframes flipUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) rotateX(90deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
     }
     
-    .odometer-digit.animating .digit-new {
-      transform: translateY(0);
+    /* Number pulse animation */
+    .number-pulse {
+      animation: gentlePulse 0.5s ease;
     }
     
-    /* Counter wrapper */
+    @keyframes gentlePulse {
+      0% {
+        transform: scale(1);
+        text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+      }
+      50% {
+        transform: scale(1.08);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      }
+      100% {
+        transform: scale(1);
+        text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+      }
+    }
+    
+    /* Counter wrapper gradient text */
     .counter-wrapper {
       display: inline-block;
       background: linear-gradient(135deg, #fde68a, #FF8C42);
@@ -609,7 +631,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - With Button Loading Bar and Odometer -->
+    <!-- SUPPORT US SECTION - Updated with CSS animations -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -625,7 +647,7 @@
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Button that transforms into loading bar -->
+          <!-- Button with CSS-powered animations -->
           <div class="prayer-button-container">
             <button id="prayerButton" class="prayer-btn">
               <div id="loadingBarFill" class="loading-bar-fill"></div>
@@ -733,7 +755,7 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // PRAYER COUNTER WITH BUTTON LOADING BAR AND ODOMETER
+    // ============ PRAYER COUNTER - CSS POWERED ANIMATIONS ============
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const counterDisplay = document.getElementById('prayerCountDisplay');
@@ -743,91 +765,37 @@
     let currentValue = 0;
     let isProcessing = false;
     
-    // Odometer animation function
-    function updateCounterWithOdometer(newValue) {
-      const oldValue = currentValue;
-      const oldStr = oldValue.toString();
-      const newStr = newValue.toString();
+    // Update display with CSS animations
+    function updateDisplayWithCSSAnimation(newValue) {
+      if (!counterDisplay) return;
       
-      // If lengths are different, simple replace
-      if (oldStr.length !== newStr.length) {
-        counterDisplay.textContent = newValue;
-        currentValue = newValue;
-        return;
-      }
+      // Remove animation classes to reset
+      counterDisplay.classList.remove('number-flip', 'number-pulse');
       
-      // Create odometer digits
-      let html = '<span class="counter-wrapper">';
-      for (let i = 0; i < newStr.length; i++) {
-        const oldDigit = oldStr[i];
-        const newDigit = newStr[i];
-        
-        if (oldDigit !== newDigit) {
-          html += `
-            <span class="odometer-digit" data-old="${oldDigit}" data-new="${newDigit}">
-              <span class="digit-old">${oldDigit}</span>
-              <span class="digit-new">${newDigit}</span>
-            </span>
-          `;
-        } else {
-          html += `<span style="display: inline-block; min-width: 0.6em; text-align: center;">${newDigit}</span>`;
-        }
-      }
-      html += '</span>';
+      // Force reflow to restart animation
+      void counterDisplay.offsetWidth;
       
-      counterDisplay.innerHTML = html;
+      // Update the number with comma formatting
+      counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
       
-      // Trigger animation after DOM update
-      setTimeout(() => {
-        const digits = document.querySelectorAll('.odometer-digit');
-        digits.forEach(digit => {
-          const oldSpan = digit.querySelector('.digit-old');
-          const newSpan = digit.querySelector('.digit-new');
-          if (oldSpan && newSpan) {
-            oldSpan.style.transform = 'translateY(-100%)';
-            newSpan.style.transform = 'translateY(0)';
-          }
-          digit.classList.add('animating');
-        });
-      }, 10);
+      // Apply animations
+      counterDisplay.classList.add('number-flip', 'number-pulse');
       
-      // Clean up after animation
+      // Remove animation classes after they complete
       setTimeout(() => {
         if (counterDisplay) {
-          counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue}</span>`;
+          counterDisplay.classList.remove('number-flip', 'number-pulse');
         }
-      }, 400);
+      }, 500);
       
       currentValue = newValue;
     }
     
-    // Update display without animation (for initial load)
+    // Direct display update (no animation - for initial load)
     function updateDisplayDirect(value) {
-      counterDisplay.innerHTML = `<span class="counter-wrapper">${value}</span>`;
+      if (!counterDisplay) return;
+      counterDisplay.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`;
       currentValue = value;
-    }
-    
-    // Animate button loading bar
-    async function animateButtonLoading() {
-      return new Promise((resolve) => {
-        prayerButton.classList.add('loading');
-        prayerButton.disabled = true;
-        
-        let width = 0;
-        const interval = setInterval(() => {
-          width += 2;
-          loadingBarFill.style.width = width + '%';
-          if (width >= 100) {
-            clearInterval(interval);
-            setTimeout(() => {
-              prayerButton.classList.remove('loading');
-              prayerButton.disabled = false;
-              loadingBarFill.style.width = '0%';
-              resolve();
-            }, 200);
-          }
-        }, 20);
-      });
     }
     
     // Fetch current count from server
@@ -838,17 +806,21 @@
         updateDisplayDirect(data.count);
       } catch (error) {
         console.error('Error fetching prayer count:', error);
-        counterDisplay.innerHTML = '<span class="counter-wrapper">Error</span>';
+        counterDisplay.innerHTML = '<span class="counter-wrapper">—</span>';
       }
     }
     
-    // Increment prayer count
+    // Increment prayer count with CSS animations
     async function incrementPrayerCount() {
       if (isProcessing) return;
       isProcessing = true;
       
-      // Animate button loading bar
-      await animateButtonLoading();
+      // Add loading class - CSS handles the smooth bar animation
+      prayerButton.classList.add('loading');
+      prayerButton.disabled = true;
+      
+      // CSS transition will smoothly animate to 100% over 2 seconds
+      loadingBarFill.style.width = '100%';
       
       try {
         // Send request to server
@@ -857,11 +829,24 @@
         });
         const data = await response.json();
         
-        // Update counter with odometer animation
-        updateCounterWithOdometer(data.count);
+        // Small delay to let the CSS animation feel satisfying
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Remove loading state
+        prayerButton.classList.remove('loading');
+        prayerButton.disabled = false;
+        
+        // Reset loading bar (CSS transition handles the smooth reset)
+        loadingBarFill.style.width = '0%';
+        
+        // Animate the number update with CSS
+        updateDisplayWithCSSAnimation(data.count);
         
       } catch (error) {
         console.error('Error incrementing prayer count:', error);
+        prayerButton.classList.remove('loading');
+        prayerButton.disabled = false;
+        loadingBarFill.style.width = '0%';
         alert('Unable to save your prayer. Please try again later.');
       } finally {
         isProcessing = false;
