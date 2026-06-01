@@ -265,18 +265,37 @@
       letter-spacing: 0.5px;
     }
     
-    /* Simple button click animation */
-    @keyframes btnClick {
-      0% { transform: scale(1); }
-      50% { transform: scale(0.97); }
-      100% { transform: scale(1); }
+    /* Loading Bar Styles */
+    .loading-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 12px;
+      display: none;
     }
     
-    .btn-click {
-      animation: btnClick 0.15s ease-out;
+    .loading-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #fde68a, #ff8c42);
+      border-radius: 4px;
+      transition: width 0.3s ease-out;
     }
     
-    /* Smooth counter transition */
+    .loading-bar-container.active {
+      display: block;
+    }
+    
+    /* Button disabled state */
+    .prayer-button-disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    /* Counter animation */
     .counter-number {
       transition: all 0.2s ease-out;
     }
@@ -530,7 +549,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - With Smooth Fade Transition (No Click Delay) -->
+    <!-- SUPPORT US SECTION - With Loading Bar -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -538,7 +557,7 @@
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Support Us</h2>
           <p class="text-amber-100 text-lg mb-8">Your prayers are the foundation of our ministry. Every Hail Mary lifts us up!</p>
           
-          <!-- Global Prayer Counter with Smooth Fade -->
+          <!-- Global Prayer Counter -->
           <div class="bg-white/5 rounded-2xl p-8 mb-8">
             <div class="text-6xl font-bold text-amber-200 mb-2">
               <span id="prayerCountDisplay" class="counter-number">0</span>
@@ -546,7 +565,12 @@
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Prayer Button - No delay between clicks -->
+          <!-- Loading Bar -->
+          <div id="loadingBarContainer" class="loading-bar-container">
+            <div id="loadingBar" class="loading-bar"></div>
+          </div>
+          
+          <!-- Prayer Button -->
           <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition text-lg">
             Pray a Hail Mary 🙏
           </button>
@@ -651,17 +675,43 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // SIMPLE SMOOTH COUNTER - NO DELAY BETWEEN CLICKS
+    // PRAYER COUNTER WITH LOADING BAR
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
+    const loadingBarContainer = document.getElementById('loadingBarContainer');
+    const loadingBar = document.getElementById('loadingBar');
     
     let currentValue = 0;
-    let pendingClicks = 0;
     let isProcessing = false;
     
-    // Smooth number transition
+    // Animate loading bar
+    async function animateLoadingBar() {
+      loadingBarContainer.classList.add('active');
+      loadingBar.style.width = '0%';
+      
+      // Animate to 100% over 2 seconds
+      await new Promise(resolve => {
+        let width = 0;
+        const interval = setInterval(() => {
+          width += 5;
+          loadingBar.style.width = width + '%';
+          if (width >= 100) {
+            clearInterval(interval);
+            resolve();
+          }
+        }, 100);
+      });
+      
+      // Hide loading bar after completion
+      setTimeout(() => {
+        loadingBarContainer.classList.remove('active');
+        loadingBar.style.width = '0%';
+      }, 300);
+    }
+    
+    // Smooth counter animation
     function animateCounter() {
       counterDisplay.style.opacity = '0.5';
       counterDisplay.style.transform = 'scale(0.95)';
@@ -669,48 +719,15 @@
       setTimeout(() => {
         counterDisplay.style.opacity = '1';
         counterDisplay.style.transform = 'scale(1)';
-      }, 100);
+      }, 150);
     }
     
-    // Update display immediately
+    // Update display
     function updateDisplay(value) {
       counterDisplay.textContent = value;
     }
     
-    // Process pending clicks in background
-    async function processClickQueue() {
-      if (isProcessing) return;
-      isProcessing = true;
-      
-      while (pendingClicks > 0) {
-        const clicksToSend = pendingClicks;
-        pendingClicks = 0;
-        
-        try {
-          // Send the total accumulated clicks
-          for (let i = 0; i < clicksToSend; i++) {
-            await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
-          }
-          
-          // Fetch the latest count from server
-          const response = await fetch(GOOGLE_SHEETS_API);
-          const data = await response.json();
-          
-          // Sync with server value if it's different from our local value
-          if (data.count !== currentValue) {
-            currentValue = data.count;
-            updateDisplay(currentValue);
-          }
-        } catch (error) {
-          console.error('Error sending clicks:', error);
-          // Don't revert - keep optimistic value
-        }
-      }
-      
-      isProcessing = false;
-    }
-    
-    // Fetch current count from server on load
+    // Fetch current count from server
     async function fetchPrayerCount() {
       try {
         const response = await fetch(GOOGLE_SHEETS_API);
@@ -723,28 +740,50 @@
       }
     }
     
-    // Increment prayer count - NO DELAY!
-    function incrementPrayerCount() {
-      // Optimistic update - update immediately
-      currentValue++;
-      updateDisplay(currentValue);
-      animateCounter();
+    // Increment prayer count with loading bar
+    async function incrementPrayerCount() {
+      if (isProcessing) return;
+      isProcessing = true;
       
-      // Button click animation
-      prayerButton.classList.add('btn-click');
-      setTimeout(() => {
-        prayerButton.classList.remove('btn-click');
-      }, 150);
+      // Disable button visually
+      prayerButton.classList.add('prayer-button-disabled');
+      prayerButton.disabled = true;
       
-      // Queue the click for background processing
-      pendingClicks++;
-      processClickQueue();
+      // Start loading bar animation
+      animateLoadingBar();
+      
+      // Small delay to let loading bar start
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      try {
+        // Send request to server
+        const response = await fetch(GOOGLE_SHEETS_API, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        
+        // Update counter
+        currentValue = data.count;
+        updateDisplay(currentValue);
+        animateCounter();
+        
+      } catch (error) {
+        console.error('Error incrementing prayer count:', error);
+        alert('Unable to save your prayer. Please try again later.');
+      } finally {
+        // Re-enable button after 2.5 seconds (loading bar duration)
+        setTimeout(() => {
+          prayerButton.classList.remove('prayer-button-disabled');
+          prayerButton.disabled = false;
+          isProcessing = false;
+        }, 2500);
+      }
     }
     
     // Load initial count
     fetchPrayerCount();
     
-    // Add click event to button (no delay!)
+    // Add click event to button
     prayerButton.addEventListener('click', incrementPrayerCount);
 
     // fix for mobile viewport height
