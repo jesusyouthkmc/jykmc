@@ -265,39 +265,99 @@
       letter-spacing: 0.5px;
     }
     
-    /* Loading Bar Styles */
-    .loading-bar-container {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
+    /* Button that transforms into loading bar */
+    .prayer-button-container {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .prayer-btn {
+      background: white;
+      color: #FF6B35;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-size: 1.125rem;
+      min-width: 220px;
+      position: relative;
       overflow: hidden;
-      margin-top: 12px;
-      display: none;
     }
     
-    .loading-bar {
-      width: 0%;
+    .prayer-btn.loading {
+      padding: 16px 32px;
+      color: transparent;
+      cursor: wait;
+    }
+    
+    .loading-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
-      background: linear-gradient(90deg, #fde68a, #ff8c42);
-      border-radius: 4px;
-      transition: width 0.3s ease-out;
+      width: 0%;
+      background: linear-gradient(90deg, #fde68a, #FF8C42, #FF6B35);
+      border-radius: 50px;
+      transition: width 0.1s linear;
+      z-index: 0;
     }
     
-    .loading-bar-container.active {
-      display: block;
+    .btn-text {
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.2s;
     }
     
-    /* Button disabled state */
-    .prayer-button-disabled {
-      opacity: 0.6;
+    .prayer-btn.loading .btn-text {
+      opacity: 0;
+    }
+    
+    .prayer-btn:disabled {
       cursor: not-allowed;
-      transform: none !important;
     }
     
-    /* Counter animation */
-    .counter-number {
-      transition: all 0.2s ease-out;
+    /* Odometer animation styles */
+    .odometer-digit {
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      min-width: 0.6em;
+      text-align: center;
+    }
+    
+    .odometer-digit .digit-old {
+      display: block;
+      transform: translateY(0);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    
+    .odometer-digit .digit-new {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    
+    .odometer-digit.animating .digit-old {
+      transform: translateY(-100%);
+    }
+    
+    .odometer-digit.animating .digit-new {
+      transform: translateY(0);
+    }
+    
+    /* Counter wrapper */
+    .counter-wrapper {
+      display: inline-block;
+      background: linear-gradient(135deg, #fde68a, #FF8C42);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -549,7 +609,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - With Loading Bar -->
+    <!-- SUPPORT US SECTION - With Button Loading Bar and Odometer -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -557,23 +617,21 @@
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Support Us</h2>
           <p class="text-amber-100 text-lg mb-8">Your prayers are the foundation of our ministry. Every Hail Mary lifts us up!</p>
           
-          <!-- Global Prayer Counter -->
+          <!-- Global Prayer Counter with Gradient Text -->
           <div class="bg-white/5 rounded-2xl p-8 mb-8">
-            <div class="text-6xl font-bold text-amber-200 mb-2">
-              <span id="prayerCountDisplay" class="counter-number">0</span>
+            <div class="text-6xl font-bold mb-2">
+              <span id="prayerCountDisplay" class="counter-wrapper">0</span>
             </div>
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
           
-          <!-- Loading Bar -->
-          <div id="loadingBarContainer" class="loading-bar-container">
-            <div id="loadingBar" class="loading-bar"></div>
+          <!-- Button that transforms into loading bar -->
+          <div class="prayer-button-container">
+            <button id="prayerButton" class="prayer-btn">
+              <div id="loadingBarFill" class="loading-bar-fill"></div>
+              <span class="btn-text">🙏 Pray a Hail Mary</span>
+            </button>
           </div>
-          
-          <!-- Prayer Button -->
-          <button id="prayerButton" class="bg-white text-orange-600 hover:bg-amber-50 font-semibold px-10 py-4 rounded-full shadow-lg transition text-lg">
-            Pray a Hail Mary 🙏
-          </button>
           
           <p class="text-white/60 text-sm mt-6">"The fervent prayer of a righteous person is very powerful." — James 5:16</p>
         </div>
@@ -675,56 +733,101 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // PRAYER COUNTER WITH LOADING BAR
+    // PRAYER COUNTER WITH BUTTON LOADING BAR AND ODOMETER
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
-    const loadingBarContainer = document.getElementById('loadingBarContainer');
-    const loadingBar = document.getElementById('loadingBar');
+    const loadingBarFill = document.getElementById('loadingBarFill');
     
     let currentValue = 0;
     let isProcessing = false;
     
-    // Animate loading bar
-    async function animateLoadingBar() {
-      loadingBarContainer.classList.add('active');
-      loadingBar.style.width = '0%';
+    // Odometer animation function
+    function updateCounterWithOdometer(newValue) {
+      const oldValue = currentValue;
+      const oldStr = oldValue.toString();
+      const newStr = newValue.toString();
       
-      // Animate to 100% over 2 seconds
-      await new Promise(resolve => {
+      // If lengths are different, simple replace
+      if (oldStr.length !== newStr.length) {
+        counterDisplay.textContent = newValue;
+        currentValue = newValue;
+        return;
+      }
+      
+      // Create odometer digits
+      let html = '<span class="counter-wrapper">';
+      for (let i = 0; i < newStr.length; i++) {
+        const oldDigit = oldStr[i];
+        const newDigit = newStr[i];
+        
+        if (oldDigit !== newDigit) {
+          html += `
+            <span class="odometer-digit" data-old="${oldDigit}" data-new="${newDigit}">
+              <span class="digit-old">${oldDigit}</span>
+              <span class="digit-new">${newDigit}</span>
+            </span>
+          `;
+        } else {
+          html += `<span style="display: inline-block; min-width: 0.6em; text-align: center;">${newDigit}</span>`;
+        }
+      }
+      html += '</span>';
+      
+      counterDisplay.innerHTML = html;
+      
+      // Trigger animation after DOM update
+      setTimeout(() => {
+        const digits = document.querySelectorAll('.odometer-digit');
+        digits.forEach(digit => {
+          const oldSpan = digit.querySelector('.digit-old');
+          const newSpan = digit.querySelector('.digit-new');
+          if (oldSpan && newSpan) {
+            oldSpan.style.transform = 'translateY(-100%)';
+            newSpan.style.transform = 'translateY(0)';
+          }
+          digit.classList.add('animating');
+        });
+      }, 10);
+      
+      // Clean up after animation
+      setTimeout(() => {
+        if (counterDisplay) {
+          counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue}</span>`;
+        }
+      }, 400);
+      
+      currentValue = newValue;
+    }
+    
+    // Update display without animation (for initial load)
+    function updateDisplayDirect(value) {
+      counterDisplay.innerHTML = `<span class="counter-wrapper">${value}</span>`;
+      currentValue = value;
+    }
+    
+    // Animate button loading bar
+    async function animateButtonLoading() {
+      return new Promise((resolve) => {
+        prayerButton.classList.add('loading');
+        prayerButton.disabled = true;
+        
         let width = 0;
         const interval = setInterval(() => {
-          width += 5;
-          loadingBar.style.width = width + '%';
+          width += 2;
+          loadingBarFill.style.width = width + '%';
           if (width >= 100) {
             clearInterval(interval);
-            resolve();
+            setTimeout(() => {
+              prayerButton.classList.remove('loading');
+              prayerButton.disabled = false;
+              loadingBarFill.style.width = '0%';
+              resolve();
+            }, 200);
           }
-        }, 100);
+        }, 20);
       });
-      
-      // Hide loading bar after completion
-      setTimeout(() => {
-        loadingBarContainer.classList.remove('active');
-        loadingBar.style.width = '0%';
-      }, 300);
-    }
-    
-    // Smooth counter animation
-    function animateCounter() {
-      counterDisplay.style.opacity = '0.5';
-      counterDisplay.style.transform = 'scale(0.95)';
-      
-      setTimeout(() => {
-        counterDisplay.style.opacity = '1';
-        counterDisplay.style.transform = 'scale(1)';
-      }, 150);
-    }
-    
-    // Update display
-    function updateDisplay(value) {
-      counterDisplay.textContent = value;
     }
     
     // Fetch current count from server
@@ -732,28 +835,20 @@
       try {
         const response = await fetch(GOOGLE_SHEETS_API);
         const data = await response.json();
-        currentValue = data.count;
-        updateDisplay(currentValue);
+        updateDisplayDirect(data.count);
       } catch (error) {
         console.error('Error fetching prayer count:', error);
-        counterDisplay.textContent = 'Error';
+        counterDisplay.innerHTML = '<span class="counter-wrapper">Error</span>';
       }
     }
     
-    // Increment prayer count with loading bar
+    // Increment prayer count
     async function incrementPrayerCount() {
       if (isProcessing) return;
       isProcessing = true;
       
-      // Disable button visually
-      prayerButton.classList.add('prayer-button-disabled');
-      prayerButton.disabled = true;
-      
-      // Start loading bar animation
-      animateLoadingBar();
-      
-      // Small delay to let loading bar start
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Animate button loading bar
+      await animateButtonLoading();
       
       try {
         // Send request to server
@@ -762,21 +857,14 @@
         });
         const data = await response.json();
         
-        // Update counter
-        currentValue = data.count;
-        updateDisplay(currentValue);
-        animateCounter();
+        // Update counter with odometer animation
+        updateCounterWithOdometer(data.count);
         
       } catch (error) {
         console.error('Error incrementing prayer count:', error);
         alert('Unable to save your prayer. Please try again later.');
       } finally {
-        // Re-enable button after 2.5 seconds (loading bar duration)
-        setTimeout(() => {
-          prayerButton.classList.remove('prayer-button-disabled');
-          prayerButton.disabled = false;
-          isProcessing = false;
-        }, 2500);
+        isProcessing = false;
       }
     }
     
