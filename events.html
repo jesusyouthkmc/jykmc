@@ -244,6 +244,24 @@
       height: 100%;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
+    
+    /* Map link styling */
+    .map-link {
+      background: rgba(255, 107, 53, 0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    .map-link:hover {
+      background: rgba(255, 107, 53, 0.25);
+      transform: scale(1.02);
+    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -384,7 +402,12 @@
               </div>
               <div class="flex-1 text-center md:text-left">
                 <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
-                <p class="text-amber-200 text-sm mb-4"><i class="fas fa-map-marker-alt mr-1"></i> KMC Campus | <i class="far fa-calendar-alt ml-2 mr-1"></i> First Saturday of every month</p>
+                <p class="text-amber-200 text-sm mb-4">
+                  <a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-amber-200 hover:text-amber-100">
+                    <i class="fas fa-map-marker-alt"></i>
+                    LSDP Convent, Kottayam
+                  </a>
+                </p>
                 <p class="text-white/80 leading-relaxed">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</p>
               </div>
             </div>
@@ -408,7 +431,6 @@
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-hands-praying event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Retreat</h3>
-            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Usually in June/July</p>
             <p class="text-white/70 leading-relaxed">A time of prayer, formation, and spiritual renewal for members. A weekend away to encounter God, deepen our faith, and recharge for the mission ahead.</p>
           </div>
           
@@ -416,7 +438,6 @@
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-user-graduate event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Freshers Programme</h3>
-            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Beginning of academic year</p>
             <p class="text-white/70 leading-relaxed">Welcoming new students into our family and introducing them to the mission and community. A time of icebreakers, sharing, and warm fellowship.</p>
           </div>
           
@@ -424,7 +445,6 @@
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-bus event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Trip</h3>
-            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Summer break / After exams</p>
             <p class="text-white/70 leading-relaxed">A time for fellowship, friendship, and creating memories together. A day or weekend of fun, bonding, and enjoying God's creation as a community.</p>
           </div>
         </div>
@@ -446,7 +466,6 @@
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-church event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Athirampuzha Pilgrimage</h3>
-            <p class="text-white/70 text-sm mb-3"><i class="fas fa-walking mr-1"></i> On foot pilgrimage</p>
             <p class="text-white/70 leading-relaxed">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</p>
           </div>
           
@@ -454,7 +473,6 @@
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-cross event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Lenten Way of the Cross Pilgrimage</h3>
-            <p class="text-white/70 text-sm mb-3"><i class="far fa-calendar-alt mr-1"></i> Lenten season (weeks before Holy Week)</p>
             <p class="text-white/70 leading-relaxed">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</p>
           </div>
         </div>
