@@ -262,134 +262,6 @@
       background: rgba(255, 107, 53, 0.25);
       transform: scale(1.02);
     }
-
-    /* Rotating Background Card Styles */
-    .rotating-bg-card {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .bg-image-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    .bg-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    .bg-image.active {
-      opacity: 1;
-    }
-
-    .bg-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.55);
-      z-index: 1;
-    }
-
-    .card-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* Navigation Arrows - Hidden on mobile, visible on desktop */
-    .nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: all 0.2s ease;
-      color: white;
-      font-size: 1.2rem;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .nav-arrow:hover {
-      background: rgba(0, 0, 0, 0.7);
-      transform: translateY(-50%) scale(1.1);
-    }
-
-    /* Hide arrows on mobile (screens smaller than 768px) */
-    @media (max-width: 767px) {
-      .nav-arrow {
-        display: none;
-      }
-    }
-
-    .nav-arrow-left {
-      left: 16px;
-    }
-
-    .nav-arrow-right {
-      right: 16px;
-    }
-
-    /* Image indicator dots - Centered, subtle grow effect */
-    .image-dots {
-      position: absolute;
-      bottom: 16px;
-      left: 0;
-      right: 0;
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .image-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .image-dot.active {
-      width: 10px;
-      height: 10px;
-      background: rgba(255, 255, 255, 1);
-    }
-
-    .image-dot:hover {
-      background: rgba(255, 255, 255, 0.8);
-      transform: scale(1.15);
-    }
-
-    /* Text background for better readability */
-    .text-backdrop {
-      backdrop-filter: blur(8px);
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 12px;
-      padding: 4px 12px;
-      display: inline-block;
-    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -486,80 +358,58 @@
         </div>
         
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil with Auto-Rotating Background + Arrows (desktop only) + Centered Dots -->
-          <div id="nightVigilCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 320px;">
-            <!-- Rotating Background Images Layer -->
-            <div class="bg-image-layer">
-              <div class="bg-image" style="background-image: url('https://picsum.photos/id/104/800/600');"></div>
-              <div class="bg-image" style="background-image: url('https://picsum.photos/id/106/800/600');"></div>
-              <div class="bg-image" style="background-image: url('https://picsum.photos/id/107/800/600');"></div>
-              <div class="bg-overlay"></div>
-            </div>
-            
-            <!-- Left Navigation Arrow (desktop only - hidden on mobile via CSS) -->
-            <div class="nav-arrow nav-arrow-left" id="prevImage">
-              <i class="fas fa-chevron-left"></i>
-            </div>
-            
-            <!-- Right Navigation Arrow (desktop only - hidden on mobile via CSS) -->
-            <div class="nav-arrow nav-arrow-right" id="nextImage">
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            
-            <!-- Image Indicator Dots - Centered, small dots that grow when active -->
-            <div class="image-dots" id="imageDots">
-              <div class="image-dot" data-index="0"></div>
-              <div class="image-dot" data-index="1"></div>
-              <div class="image-dot" data-index="2"></div>
-            </div>
-            
-            <!-- Card Content -->
-            <div class="card-content relative p-8">
-              <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-                <div class="monstrance-icon">
-                  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Radiant beams -->
-                    <g stroke="#fde68a" stroke-width="2" stroke-linecap="round">
-                      <line x1="50" y1="8" x2="50" y2="18"/>
-                      <line x1="50" y1="82" x2="50" y2="92"/>
-                      <line x1="8" y1="50" x2="18" y2="50"/>
-                      <line x1="82" y1="50" x2="92" y2="50"/>
-                      <line x1="20" y1="20" x2="27" y2="27"/>
-                      <line x1="73" y1="73" x2="80" y2="80"/>
-                      <line x1="20" y1="80" x2="27" y2="73"/>
-                      <line x1="73" y1="27" x2="80" y2="20"/>
-                      <line x1="35" y1="12" x2="38" y2="20"/>
-                      <line x1="65" y1="12" x2="62" y2="20"/>
-                      <line x1="35" y1="88" x2="38" y2="80"/>
-                      <line x1="65" y1="88" x2="62" y2="80"/>
-                      <line x1="12" y1="35" x2="20" y2="38"/>
-                      <line x1="12" y1="65" x2="20" y2="62"/>
-                      <line x1="88" y1="35" x2="80" y2="38"/>
-                      <line x1="88" y1="65" x2="80" y2="62"/>
-                    </g>
-                    <circle cx="50" cy="48" r="22" stroke="#fde68a" stroke-width="3" fill="none"/>
-                    <circle cx="50" cy="48" r="12" fill="#fde68a" opacity="0.3"/>
-                    <circle cx="50" cy="48" r="8" stroke="#fde68a" stroke-width="2" fill="none"/>
-                    <circle cx="50" cy="48" r="3" fill="#fde68a"/>
-                    <line x1="50" y1="26" x2="50" y2="18" stroke="#fde68a" stroke-width="2.5"/>
-                    <line x1="46" y1="22" x2="54" y2="22" stroke="#fde68a" stroke-width="2.5"/>
-                    <line x1="50" y1="70" x2="50" y2="78" stroke="#fde68a" stroke-width="3"/>
-                    <path d="M42 78 Q50 82 58 78" stroke="#fde68a" stroke-width="2.5" fill="none"/>
-                    <line x1="44" y1="82" x2="56" y2="82" stroke="#fde68a" stroke-width="2.5"/>
-                  </svg>
-                </div>
-                <div class="flex-1 text-center md:text-left">
-                  <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
-                  <p class="text-amber-200 text-sm mb-4">
-                    <a href="https://maps.app.goo.gl/onjdMPRsHkVb2rPg9?g_st=ic" target="_blank" rel="noopener noreferrer" class="map-link text-amber-200 hover:text-amber-100">
-                      <i class="fas fa-map-marker-alt"></i>
-                      LSDP Convent, Kottayam
-                    </a>
-                  </p>
-                  <p class="text-white/90 leading-relaxed">
-                    <span class="text-backdrop">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</span>
-                  </p>
-                </div>
+          <!-- Monthly Night Vigil with Custom Monstrance SVG -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <div class="monstrance-icon">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Radiant beams -->
+                  <g stroke="#fde68a" stroke-width="2" stroke-linecap="round">
+                    <line x1="50" y1="8" x2="50" y2="18"/>
+                    <line x1="50" y1="82" x2="50" y2="92"/>
+                    <line x1="8" y1="50" x2="18" y2="50"/>
+                    <line x1="82" y1="50" x2="92" y2="50"/>
+                    <line x1="20" y1="20" x2="27" y2="27"/>
+                    <line x1="73" y1="73" x2="80" y2="80"/>
+                    <line x1="20" y1="80" x2="27" y2="73"/>
+                    <line x1="73" y1="27" x2="80" y2="20"/>
+                    <!-- Diagonal beams -->
+                    <line x1="35" y1="12" x2="38" y2="20"/>
+                    <line x1="65" y1="12" x2="62" y2="20"/>
+                    <line x1="35" y1="88" x2="38" y2="80"/>
+                    <line x1="65" y1="88" x2="62" y2="80"/>
+                    <line x1="12" y1="35" x2="20" y2="38"/>
+                    <line x1="12" y1="65" x2="20" y2="62"/>
+                    <line x1="88" y1="35" x2="80" y2="38"/>
+                    <line x1="88" y1="65" x2="80" y2="62"/>
+                  </g>
+                  <!-- Outer circle (monstrance lunette) -->
+                  <circle cx="50" cy="48" r="22" stroke="#fde68a" stroke-width="3" fill="none"/>
+                  <!-- Inner circle (Host) -->
+                  <circle cx="50" cy="48" r="12" fill="#fde68a" opacity="0.3"/>
+                  <circle cx="50" cy="48" r="8" stroke="#fde68a" stroke-width="2" fill="none"/>
+                  <!-- Center Host detail -->
+                  <circle cx="50" cy="48" r="3" fill="#fde68a"/>
+                  <!-- Cross on top -->
+                  <line x1="50" y1="26" x2="50" y2="18" stroke="#fde68a" stroke-width="2.5"/>
+                  <line x1="46" y1="22" x2="54" y2="22" stroke="#fde68a" stroke-width="2.5"/>
+                  <!-- Stem -->
+                  <line x1="50" y1="70" x2="50" y2="78" stroke="#fde68a" stroke-width="3"/>
+                  <!-- Base -->
+                  <path d="M42 78 Q50 82 58 78" stroke="#fde68a" stroke-width="2.5" fill="none"/>
+                  <line x1="44" y1="82" x2="56" y2="82" stroke="#fde68a" stroke-width="2.5"/>
+                </svg>
+              </div>
+              <div class="flex-1 text-center md:text-left">
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
+                <p class="text-amber-200 text-sm mb-4">
+                  <!-- UPDATED GOOGLE MAPS LINK AS REQUESTED -->
+                  <a href="https://maps.app.goo.gl/onjdMPRsHkVb2rPg9?g_st=ic" target="_blank" rel="noopener noreferrer" class="map-link text-amber-200 hover:text-amber-100">
+                    <i class="fas fa-map-marker-alt"></i>
+                    LSDP Convent, Kottayam
+                  </a>
+                </p>
+                <p class="text-white/80 leading-relaxed">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</p>
               </div>
             </div>
           </div>
@@ -705,141 +555,6 @@
     }
     window.addEventListener('resize', setVH);
     setVH();
-
-    // AUTO-ROTATING BACKGROUND IMAGES with Arrows (desktop only), Centered Dots & Touch Swipe
-    const card = document.getElementById('nightVigilCard');
-    if (card) {
-      const bgImages = card.querySelectorAll('.bg-image');
-      const dotsContainer = document.getElementById('imageDots');
-      let dots = [];
-      let currentIndex = 0;
-      let interval;
-      let touchStartX = 0;
-      let touchEndX = 0;
-
-      // Function to update visible image
-      function showImage(index) {
-        if (index < 0) index = bgImages.length - 1;
-        if (index >= bgImages.length) index = 0;
-        
-        bgImages.forEach((img, i) => {
-          if (i === index) {
-            img.classList.add('active');
-          } else {
-            img.classList.remove('active');
-          }
-        });
-        
-        // Update dots if they exist
-        if (dots.length > 0) {
-          dots.forEach((dot, i) => {
-            if (i === index) {
-              dot.classList.add('active');
-            } else {
-              dot.classList.remove('active');
-            }
-          });
-        }
-        
-        currentIndex = index;
-      }
-
-      // Next image
-      function nextImage() {
-        showImage(currentIndex + 1);
-        resetRotationTimer();
-      }
-
-      // Previous image
-      function prevImage() {
-        showImage(currentIndex - 1);
-        resetRotationTimer();
-      }
-
-      // Reset the auto-rotation timer
-      function resetRotationTimer() {
-        if (interval) {
-          clearInterval(interval);
-          interval = setInterval(nextImage, 3000);
-        }
-      }
-
-      // Start auto-rotation
-      function startRotation() {
-        if (interval) clearInterval(interval);
-        interval = setInterval(nextImage, 3000);
-      }
-
-      // Stop auto-rotation (used on hover/touch)
-      function stopRotation() {
-        if (interval) {
-          clearInterval(interval);
-          interval = null;
-        }
-      }
-
-      // Setup dots after they're dynamically referenced
-      function setupDots() {
-        dots = document.querySelectorAll('.image-dot');
-        dots.forEach((dot, idx) => {
-          dot.removeEventListener('click', dot.clickHandler);
-          dot.clickHandler = () => {
-            showImage(idx);
-            resetRotationTimer();
-          };
-          dot.addEventListener('click', dot.clickHandler);
-        });
-      }
-
-      // Setup arrows (only if they exist on desktop)
-      const prevBtn = document.getElementById('prevImage');
-      const nextBtn = document.getElementById('nextImage');
-      
-      if (prevBtn) {
-        prevBtn.removeEventListener('click', prevBtn.clickHandler);
-        prevBtn.clickHandler = prevImage;
-        prevBtn.addEventListener('click', prevBtn.clickHandler);
-      }
-      
-      if (nextBtn) {
-        nextBtn.removeEventListener('click', nextBtn.clickHandler);
-        nextBtn.clickHandler = nextImage;
-        nextBtn.addEventListener('click', nextBtn.clickHandler);
-      }
-
-      // Touch swipe support for mobile
-      card.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        stopRotation();
-      });
-      
-      card.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-        startRotation();
-      });
-      
-      function handleSwipe() {
-        const swipeThreshold = 50;
-        if (touchEndX < touchStartX - swipeThreshold) {
-          // Swipe left -> next image
-          nextImage();
-        }
-        if (touchEndX > touchStartX + swipeThreshold) {
-          // Swipe right -> previous image
-          prevImage();
-        }
-      }
-
-      // Pause on hover (desktop)
-      card.addEventListener('mouseenter', stopRotation);
-      card.addEventListener('mouseleave', startRotation);
-
-      // Initialize
-      setupDots();
-      showImage(0);
-      startRotation();
-    }
   </script>
 </body>
 </html>
