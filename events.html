@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Events - Jesus Youth KMC | Medical College Campus Ministry</title>
+  <!-- Tailwind CSS v3 + Font Awesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Custom smooth scroll behavior -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Glossy orange gradient background */
+    .glossy-orange-bg {
+      background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
+      position: relative;
+    }
+    .glossy-orange-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(125deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 40%);
+      pointer-events: none;
+    }
+    
+    /* Background Logo Watermark - Responsive for orientation */
+    .bg-logo {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      object-fit: contain;
+    }
+    
+    /* Default portrait mode */
+    @media (orientation: portrait) {
+      .bg-logo {
+        bottom: 20px;
+        right: -100px;
+        width: 70%;
+        max-width: 800px;
+        opacity: 0.15;
+      }
+    }
+    
+    /* Landscape mode adjustments */
+    @media (orientation: landscape) {
+      .bg-logo {
+        bottom: -50px;
+        right: -80px;
+        width: 40%;
+        max-width: 500px;
+        opacity: 0.12;
+      }
+    }
+    
+    /* Tablet portrait */
+    @media (min-width: 768px) and (orientation: portrait) {
+      .bg-logo {
+        right: -150px;
+        bottom: 50px;
+        width: 60%;
+        opacity: 0.12;
+      }
+    }
+    
+    /* Tablet landscape */
+    @media (min-width: 768px) and (orientation: landscape) {
+      .bg-logo {
+        right: -120px;
+        bottom: -30px;
+        width: 35%;
+        max-width: 450px;
+        opacity: 0.1;
+      }
+    }
+    
+    /* Desktop */
+    @media (min-width: 1024px) {
+      .bg-logo {
+        right: -200px;
+        bottom: 80px;
+        width: 50%;
+        opacity: 0.1;
+      }
+    }
+    
+    /* Desktop landscape override */
+    @media (min-width: 1024px) and (orientation: landscape) {
+      .bg-logo {
+        right: -150px;
+        bottom: 40px;
+        width: 35%;
+        max-width: 500px;
+      }
+    }
+    
+    /* Ensure content stays above background logo */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Glass morphism header with curved edges */
+    .curved-glass-header {
+      background: rgba(255, 140, 66, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      position: relative;
+      z-index: 100;
+    }
+    
+    /* Sidebar Menu Styles - Matching footer style */
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 75%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    .sidebar-menu.open {
+      transform: translateX(0);
+    }
+    
+    .sidebar-menu a {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      padding: 14px 20px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-decoration: none;
+    }
+    
+    .sidebar-menu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(-5px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .sidebar-menu i {
+      width: 24px;
+      font-size: 1.2rem;
+    }
+    
+    /* Overlay when menu is open */
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(2px);
+      z-index: 999;
+      display: none;
+    }
+    
+    .menu-overlay.active {
+      display: block;
+    }
+    
+    /* Coming soon badge */
+    .coming-soon-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 8px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Event card hover effect */
+    .event-card {
+      transition: all 0.3s ease;
+    }
+    
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Section divider */
+    .section-divider {
+      background: rgba(255, 255, 255, 0.15);
+      height: 2px;
+      width: 80px;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body class="glossy-orange-bg">
+  
+  <!-- Background Watermark Logo - Responsive for orientation -->
+  <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
+
+  <!-- Floating header with curved edges -->
+  <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
+      <!-- Logo Image -->
+      <a href="index.html" class="flex items-center relative z-10">
+        <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
+      </a>
+      <nav class="hidden md:flex space-x-6 text-sm font-medium">
+        <a href="index.html" class="text-white hover:text-amber-200 transition">Home</a>
+        <a href="index.html#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
+        <a href="index.html#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
+        <a href="gallery.html" class="text-white hover:text-amber-200 transition">
+          Gallery <span class="coming-soon-badge">Soon</span>
+        </a>
+        <a href="events.html" class="text-amber-200 border-b-2 border-amber-200 transition">Events</a>
+        <a href="index.html#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="index.html#support" class="text-white hover:text-amber-200 transition">Support Us</a>
+        <a href="index.html#join" class="text-white hover:text-amber-200 transition">Join</a>
+      </nav>
+      <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar Menu - Matching footer style -->
+  <div id="mobileMenu" class="sidebar-menu">
+    <div class="flex justify-start p-5">
+      <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
+    </div>
+    <nav class="flex flex-col gap-3 px-6 py-4">
+      <a href="index.html" class="mobile-nav-link">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="index.html#gathering" class="mobile-nav-link">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Gathering</span>
+      </a>
+      <a href="index.html#ministries" class="mobile-nav-link">
+        <i class="fas fa-church"></i>
+        <span>Ministries</span>
+      </a>
+      <a href="gallery.html" class="mobile-nav-link">
+        <i class="fas fa-images"></i>
+        <span>Gallery <span class="coming-soon-badge">Soon</span></span>
+      </a>
+      <a href="events.html" class="mobile-nav-link">
+        <i class="fas fa-calendar-week"></i>
+        <span>Events</span>
+      </a>
+      <a href="index.html#resources" class="mobile-nav-link">
+        <i class="fas fa-download"></i>
+        <span>Resources</span>
+      </a>
+      <a href="index.html#support" class="mobile-nav-link">
+        <i class="fas fa-hands-praying"></i>
+        <span>Support Us</span>
+      </a>
+      <a href="index.html#join" class="mobile-nav-link">
+        <i class="fas fa-users"></i>
+        <span>Join</span>
+      </a>
+    </nav>
+  </div>
+  
+  <!-- Overlay -->
+  <div id="menuOverlay" class="menu-overlay"></div>
+
+  <main class="content-wrapper">
+    <!-- EVENTS HEADER -->
+    <section class="pt-32 pb-12 md:pt-40 md:pb-16">
+      <div class="max-w-6xl mx-auto px-5 md:px-8 text-center">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 fade-up">Our Events</h1>
+        <p class="text-xl text-amber-100 max-w-2xl mx-auto fade-up">Moments of grace, fellowship, and spiritual growth throughout the year</p>
+      </div>
+    </section>
+
+    <!-- RECURRING EVENTS -->
+    <section class="py-12 md:py-16">
+      <div class="max-w-6xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-12 fade-up">
+          <i class="fas fa-sync-alt text-4xl text-amber-200 mb-3"></i>
+          <h2 class="text-3xl md:text-4xl font-bold text-white">Recurring Events</h2>
+          <div class="section-divider"></div>
+          <p class="text-amber-100 text-lg">Regular moments of grace that mark our monthly rhythm</p>
+        </div>
+        
+        <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
+          <!-- Monthly Night Vigil -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <div class="text-6xl">🌙</div>
+              <div class="flex-1 text-center md:text-left">
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
+                <p class="text-amber-200 text-sm mb-4">📍 KMC Campus | 📅 First Saturday of every month</p>
+                <p class="text-white/80 leading-relaxed">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANNUAL EVENTS -->
+    <section class="py-12 md:py-16">
+      <div class="max-w-6xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-12 fade-up">
+          <i class="fas fa-calendar-alt text-4xl text-amber-200 mb-3"></i>
+          <h2 class="text-3xl md:text-4xl font-bold text-white">Annual Events</h2>
+          <div class="section-divider"></div>
+          <p class="text-amber-100 text-lg">Special gatherings that mark our yearly journey together</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Annual Retreat -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
+            <div class="text-5xl mb-3">🤲</div>
+            <h3 class="text-xl font-bold text-white mb-2">Annual Retreat</h3>
+            <p class="text-white/70 text-sm mb-3">📅 Usually in June/July</p>
+            <p class="text-white/70 leading-relaxed">A time of prayer, formation, and spiritual renewal for members. A weekend away to encounter God, deepen our faith, and recharge for the mission ahead.</p>
+          </div>
+          
+          <!-- Freshers Programme -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
+            <div class="text-5xl mb-3">🎓</div>
+            <h3 class="text-xl font-bold text-white mb-2">Freshers Programme</h3>
+            <p class="text-white/70 text-sm mb-3">📅 Beginning of academic year</p>
+            <p class="text-white/70 leading-relaxed">Welcoming new students into our family and introducing them to the mission and community. A time of icebreakers, sharing, and warm fellowship.</p>
+          </div>
+          
+          <!-- Annual Trip -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
+            <div class="text-5xl mb-3">🚌</div>
+            <h3 class="text-xl font-bold text-white mb-2">Annual Trip</h3>
+            <p class="text-white/70 text-sm mb-3">📅 Summer break / After exams</p>
+            <p class="text-white/70 leading-relaxed">A time for fellowship, friendship, and creating memories together. A day or weekend of fun, bonding, and enjoying God's creation as a community.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PILGRIMAGES -->
+    <section class="py-12 md:py-16">
+      <div class="max-w-6xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-12 fade-up">
+          <i class="fas fa-walking text-4xl text-amber-200 mb-3"></i>
+          <h2 class="text-3xl md:text-4xl font-bold text-white">Pilgrimages</h2>
+          <div class="section-divider"></div>
+          <p class="text-amber-100 text-lg">Walking in faith, journeying together</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <!-- Athirampuzha Pilgrimage -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
+            <div class="text-5xl mb-3">🙏</div>
+            <h3 class="text-xl font-bold text-white mb-2">Athirampuzha Pilgrimage</h3>
+            <p class="text-white/70 text-sm mb-3">🚶 On foot pilgrimage</p>
+            <p class="text-white/70 leading-relaxed">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</p>
+          </div>
+          
+          <!-- Lenten Way of the Cross Pilgrimage -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
+            <div class="text-5xl mb-3">☦️</div>
+            <h3 class="text-xl font-bold text-white mb-2">Lenten Way of the Cross Pilgrimage</h3>
+            <p class="text-white/70 text-sm mb-3">📅 Lenten season (weeks before Holy Week)</p>
+            <p class="text-white/70 leading-relaxed">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
+      <div class="max-w-6xl mx-auto px-5">
+        <p class="font-semibold text-white">Jesus Youth KMC — Kottayam Medical College Campus Ministry</p>
+        <p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p>
+        <p class="text-amber-100">Young hearts on fire for Christ</p>
+        <div class="flex justify-center gap-5 mt-4 text-white text-lg">
+          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+        <p class="mt-6 text-white/60 text-xs">© 2026 Jesus Youth KMC · All glory to God</p>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Mobile menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    function openMenu() {
+      mobileMenu.classList.add('open');
+      menuOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenuFunction() {
+      mobileMenu.classList.remove('open');
+      menuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (menuBtn) {
+      menuBtn.addEventListener('click', openMenu);
+    }
+    
+    if (closeMenu) {
+      closeMenu.addEventListener('click', closeMenuFunction);
+    }
+    
+    if (menuOverlay) {
+      menuOverlay.addEventListener('click', closeMenuFunction);
+    }
+    
+    // Close menu when clicking on a nav link
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', closeMenuFunction);
+    });
+
+    // Intersection Observer for fade-up animation
+    const fadeElements = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    
+    fadeElements.forEach(el => observer.observe(el));
+
+    // fix for mobile viewport height
+    function setVH() {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    window.addEventListener('resize', setVH);
+    setVH();
+  </script>
+</body>
+</html>
