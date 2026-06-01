@@ -191,6 +191,17 @@
       display: block;
     }
     
+    /* Coming soon badge */
+    .coming-soon-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 8px;
+      letter-spacing: 0.5px;
+    }
+    
     /* Gallery placeholder styles */
     .gallery-placeholder {
       background: rgba(255, 255, 255, 0.1);
@@ -225,7 +236,9 @@
         <a href="index.html#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
         <a href="index.html#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
         <a href="gallery.html" class="text-amber-200 border-b-2 border-amber-200 transition">Gallery</a>
+        <a href="events.html" class="text-white hover:text-amber-200 transition">Events</a>
         <a href="index.html#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="index.html#support" class="text-white hover:text-amber-200 transition">Support Us</a>
         <a href="index.html#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
       <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none">
@@ -254,11 +267,19 @@
       </a>
       <a href="gallery.html" class="mobile-nav-link">
         <i class="fas fa-images"></i>
-        <span>Gallery</span>
+        <span>Gallery <span class="coming-soon-badge">Soon</span></span>
+      </a>
+      <a href="events.html" class="mobile-nav-link">
+        <i class="fas fa-calendar-week"></i>
+        <span>Events</span>
       </a>
       <a href="index.html#resources" class="mobile-nav-link">
         <i class="fas fa-download"></i>
         <span>Resources</span>
+      </a>
+      <a href="index.html#support" class="mobile-nav-link">
+        <i class="fas fa-hands-praying"></i>
+        <span>Support Us</span>
       </a>
       <a href="index.html#join" class="mobile-nav-link">
         <i class="fas fa-users"></i>
