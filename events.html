@@ -309,7 +309,7 @@
       z-index: 2;
     }
 
-    /* Navigation Arrows */
+    /* Navigation Arrows - Hidden on mobile, visible on desktop */
     .nav-arrow {
       position: absolute;
       top: 50%;
@@ -335,6 +335,13 @@
       transform: translateY(-50%) scale(1.1);
     }
 
+    /* Hide arrows on mobile (screens smaller than 768px) */
+    @media (max-width: 767px) {
+      .nav-arrow {
+        display: none;
+      }
+    }
+
     .nav-arrow-left {
       left: 16px;
     }
@@ -343,7 +350,7 @@
       right: 16px;
     }
 
-    /* Image indicator dots - Centered */
+    /* Image indicator dots - Centered, simplified */
     .image-dots {
       position: absolute;
       bottom: 16px;
@@ -359,35 +366,18 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.4);
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .image-dot.active {
-      background: #fde68a;
-      width: 24px;
-      border-radius: 5px;
+      background: rgba(255, 255, 255, 1);
     }
 
     .image-dot:hover {
-      background: #fde68a;
+      background: rgba(255, 255, 255, 0.8);
       transform: scale(1.2);
-    }
-
-    /* Hide arrows on very small screens if needed, but keep functional */
-    @media (max-width: 480px) {
-      .nav-arrow {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-      }
-      .nav-arrow-left {
-        left: 8px;
-      }
-      .nav-arrow-right {
-        right: 8px;
-      }
     }
 
     /* Text background for better readability */
@@ -494,7 +484,7 @@
         </div>
         
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil with Auto-Rotating Background + Arrows + Centered Dots -->
+          <!-- Monthly Night Vigil with Auto-Rotating Background + Arrows (desktop only) + Centered Dots -->
           <div id="nightVigilCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 320px;">
             <!-- Rotating Background Images Layer -->
             <div class="bg-image-layer">
@@ -504,17 +494,17 @@
               <div class="bg-overlay"></div>
             </div>
             
-            <!-- Left Navigation Arrow -->
+            <!-- Left Navigation Arrow (desktop only - hidden on mobile via CSS) -->
             <div class="nav-arrow nav-arrow-left" id="prevImage">
               <i class="fas fa-chevron-left"></i>
             </div>
             
-            <!-- Right Navigation Arrow -->
+            <!-- Right Navigation Arrow (desktop only - hidden on mobile via CSS) -->
             <div class="nav-arrow nav-arrow-right" id="nextImage">
               <i class="fas fa-chevron-right"></i>
             </div>
             
-            <!-- Image Indicator Dots - Centered -->
+            <!-- Image Indicator Dots - Centered, simplified white dots -->
             <div class="image-dots" id="imageDots">
               <div class="image-dot" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
@@ -714,7 +704,7 @@
     window.addEventListener('resize', setVH);
     setVH();
 
-    // AUTO-ROTATING BACKGROUND IMAGES with Arrows, Centered Dots & Touch Swipe
+    // AUTO-ROTATING BACKGROUND IMAGES with Arrows (desktop only), Centered Dots & Touch Swipe
     const card = document.getElementById('nightVigilCard');
     if (card) {
       const bgImages = card.querySelectorAll('.bg-image');
@@ -799,7 +789,7 @@
         });
       }
 
-      // Setup arrows
+      // Setup arrows (only if they exist on desktop)
       const prevBtn = document.getElementById('prevImage');
       const nextBtn = document.getElementById('nextImage');
       
@@ -839,7 +829,7 @@
         }
       }
 
-      // Pause on hover
+      // Pause on hover (desktop)
       card.addEventListener('mouseenter', stopRotation);
       card.addEventListener('mouseleave', startRotation);
 
