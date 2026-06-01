@@ -300,7 +300,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.55);
       z-index: 1;
     }
 
@@ -309,19 +309,55 @@
       z-index: 2;
     }
 
-    /* Image indicator dots */
+    /* Navigation Arrows */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s ease;
+      color: white;
+      font-size: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-arrow:hover {
+      background: rgba(0, 0, 0, 0.7);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .nav-arrow-left {
+      left: 16px;
+    }
+
+    .nav-arrow-right {
+      right: 16px;
+    }
+
+    /* Image indicator dots - Centered */
     .image-dots {
       position: absolute;
       bottom: 16px;
-      right: 16px;
-      z-index: 3;
+      left: 0;
+      right: 0;
+      z-index: 10;
       display: flex;
-      gap: 8px;
+      justify-content: center;
+      gap: 10px;
     }
 
     .image-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.5);
       cursor: pointer;
@@ -330,13 +366,37 @@
 
     .image-dot.active {
       background: #fde68a;
-      width: 20px;
-      border-radius: 4px;
+      width: 24px;
+      border-radius: 5px;
     }
 
     .image-dot:hover {
       background: #fde68a;
       transform: scale(1.2);
+    }
+
+    /* Hide arrows on very small screens if needed, but keep functional */
+    @media (max-width: 480px) {
+      .nav-arrow {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+      .nav-arrow-left {
+        left: 8px;
+      }
+      .nav-arrow-right {
+        right: 8px;
+      }
+    }
+
+    /* Text background for better readability */
+    .text-backdrop {
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 4px 12px;
+      display: inline-block;
     }
   </style>
 </head>
@@ -434,8 +494,8 @@
         </div>
         
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil with Auto-Rotating Background -->
-          <div id="nightVigilCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 280px;">
+          <!-- Monthly Night Vigil with Auto-Rotating Background + Arrows + Centered Dots -->
+          <div id="nightVigilCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 320px;">
             <!-- Rotating Background Images Layer -->
             <div class="bg-image-layer">
               <div class="bg-image" style="background-image: url('https://picsum.photos/id/104/800/600');"></div>
@@ -443,12 +503,24 @@
               <div class="bg-image" style="background-image: url('https://picsum.photos/id/107/800/600');"></div>
               <div class="bg-overlay"></div>
             </div>
-            <!-- Image Indicator Dots -->
-            <div class="image-dots">
+            
+            <!-- Left Navigation Arrow -->
+            <div class="nav-arrow nav-arrow-left" id="prevImage">
+              <i class="fas fa-chevron-left"></i>
+            </div>
+            
+            <!-- Right Navigation Arrow -->
+            <div class="nav-arrow nav-arrow-right" id="nextImage">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            
+            <!-- Image Indicator Dots - Centered -->
+            <div class="image-dots" id="imageDots">
               <div class="image-dot" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
               <div class="image-dot" data-index="2"></div>
             </div>
+            
             <!-- Card Content -->
             <div class="card-content relative p-8">
               <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -492,7 +564,9 @@
                       LSDP Convent, Kottayam
                     </a>
                   </p>
-                  <p class="text-white/90 leading-relaxed backdrop-blur-sm bg-black/20 rounded-lg p-2 inline-block md:block">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</p>
+                  <p class="text-white/90 leading-relaxed">
+                    <span class="text-backdrop">A monthly gathering featuring praise and worship, Eucharistic Adoration, intercession, and fellowship. A night of encountering the Lord in the silence of Adoration and the joy of community prayer.</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -640,16 +714,22 @@
     window.addEventListener('resize', setVH);
     setVH();
 
-    // AUTO-ROTATING BACKGROUND IMAGES for Night Vigil Card (3 seconds interval)
+    // AUTO-ROTATING BACKGROUND IMAGES with Arrows, Centered Dots & Touch Swipe
     const card = document.getElementById('nightVigilCard');
     if (card) {
       const bgImages = card.querySelectorAll('.bg-image');
-      const dots = card.querySelectorAll('.image-dot');
+      const dotsContainer = document.getElementById('imageDots');
+      let dots = [];
       let currentIndex = 0;
       let interval;
+      let touchStartX = 0;
+      let touchEndX = 0;
 
+      // Function to update visible image
       function showImage(index) {
-        // Update images
+        if (index < 0) index = bgImages.length - 1;
+        if (index >= bgImages.length) index = 0;
+        
         bgImages.forEach((img, i) => {
           if (i === index) {
             img.classList.add('active');
@@ -657,47 +737,116 @@
             img.classList.remove('active');
           }
         });
-        // Update dots
-        dots.forEach((dot, i) => {
-          if (i === index) {
-            dot.classList.add('active');
-          } else {
-            dot.classList.remove('active');
-          }
-        });
+        
+        // Update dots if they exist
+        if (dots.length > 0) {
+          dots.forEach((dot, i) => {
+            if (i === index) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+        
         currentIndex = index;
       }
 
+      // Next image
       function nextImage() {
-        let next = (currentIndex + 1) % bgImages.length;
-        showImage(next);
+        showImage(currentIndex + 1);
+        resetRotationTimer();
       }
 
+      // Previous image
+      function prevImage() {
+        showImage(currentIndex - 1);
+        resetRotationTimer();
+      }
+
+      // Reset the auto-rotation timer
+      function resetRotationTimer() {
+        if (interval) {
+          clearInterval(interval);
+          interval = setInterval(nextImage, 3000);
+        }
+      }
+
+      // Start auto-rotation
       function startRotation() {
         if (interval) clearInterval(interval);
-        interval = setInterval(nextImage, 3000); // 3 seconds
+        interval = setInterval(nextImage, 3000);
       }
 
-      // Add click handlers to dots
-      dots.forEach((dot, idx) => {
-        dot.addEventListener('click', () => {
-          showImage(idx);
-          // Reset the timer so it doesn't change immediately after manual click
-          startRotation();
+      // Stop auto-rotation (used on hover/touch)
+      function stopRotation() {
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }
+
+      // Setup dots after they're dynamically referenced
+      function setupDots() {
+        dots = document.querySelectorAll('.image-dot');
+        dots.forEach((dot, idx) => {
+          dot.removeEventListener('click', dot.clickHandler);
+          dot.clickHandler = () => {
+            showImage(idx);
+            resetRotationTimer();
+          };
+          dot.addEventListener('click', dot.clickHandler);
         });
-      });
+      }
 
-      // Start the rotation
-      showImage(0);
-      startRotation();
+      // Setup arrows
+      const prevBtn = document.getElementById('prevImage');
+      const nextBtn = document.getElementById('nextImage');
+      
+      if (prevBtn) {
+        prevBtn.removeEventListener('click', prevBtn.clickHandler);
+        prevBtn.clickHandler = prevImage;
+        prevBtn.addEventListener('click', prevBtn.clickHandler);
+      }
+      
+      if (nextBtn) {
+        nextBtn.removeEventListener('click', nextBtn.clickHandler);
+        nextBtn.clickHandler = nextImage;
+        nextBtn.addEventListener('click', nextBtn.clickHandler);
+      }
 
-      // Pause rotation on hover (optional, makes it user-friendly)
-      card.addEventListener('mouseenter', () => {
-        if (interval) clearInterval(interval);
+      // Touch swipe support for mobile
+      card.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopRotation();
       });
-      card.addEventListener('mouseleave', () => {
+      
+      card.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
         startRotation();
       });
+      
+      function handleSwipe() {
+        const swipeThreshold = 50;
+        if (touchEndX < touchStartX - swipeThreshold) {
+          // Swipe left -> next image
+          nextImage();
+        }
+        if (touchEndX > touchStartX + swipeThreshold) {
+          // Swipe right -> previous image
+          prevImage();
+        }
+      }
+
+      // Pause on hover
+      card.addEventListener('mouseenter', stopRotation);
+      card.addEventListener('mouseleave', startRotation);
+
+      // Initialize
+      setupDots();
+      showImage(0);
+      startRotation();
     }
   </script>
 </body>
