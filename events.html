@@ -642,17 +642,17 @@
               <div class="bg-overlay"></div>
             </div>
             
-            <!-- Left Navigation Arrow (desktop only - hidden on mobile via CSS) -->
+            <!-- Left Navigation Arrow -->
             <div class="nav-arrow nav-arrow-left" id="prevImageAthirampuzha">
               <i class="fas fa-chevron-left"></i>
             </div>
             
-            <!-- Right Navigation Arrow (desktop only - hidden on mobile via CSS) -->
+            <!-- Right Navigation Arrow -->
             <div class="nav-arrow nav-arrow-right" id="nextImageAthirampuzha">
               <i class="fas fa-chevron-right"></i>
             </div>
             
-            <!-- Image Indicator Dots - Centered -->
+            <!-- Image Indicator Dots -->
             <div class="image-dots" id="imageDotsAthirampuzha">
               <div class="image-dot" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
@@ -668,11 +668,39 @@
             </div>
           </div>
           
-          <!-- Lenten Way of the Cross Pilgrimage -->
-          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
-            <i class="fas fa-cross event-icon"></i>
-            <h3 class="text-xl font-bold text-white mb-2 mt-3">Lenten Way of the Cross Pilgrimage</h3>
-            <p class="text-white/70 leading-relaxed">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</p>
+          <!-- Lenten Way of the Cross Pilgrimage - WITH AUTO-ROTATING BACKGROUND -->
+          <div id="lentenCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 320px;">
+            <!-- Rotating Background Images Layer -->
+            <div class="bg-image-layer">
+              <div class="bg-image" style="background-image: url('event-images/malayatoor-image1.jpeg');"></div>
+              <div class="bg-image" style="background-image: url('event-images/malayatoor-image2.jpeg');"></div>
+              <div class="bg-overlay"></div>
+            </div>
+            
+            <!-- Left Navigation Arrow -->
+            <div class="nav-arrow nav-arrow-left" id="prevImageLenten">
+              <i class="fas fa-chevron-left"></i>
+            </div>
+            
+            <!-- Right Navigation Arrow -->
+            <div class="nav-arrow nav-arrow-right" id="nextImageLenten">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            
+            <!-- Image Indicator Dots -->
+            <div class="image-dots" id="imageDotsLenten">
+              <div class="image-dot" data-index="0"></div>
+              <div class="image-dot" data-index="1"></div>
+            </div>
+            
+            <!-- Card Content -->
+            <div class="card-content relative p-6 text-center">
+              <i class="fas fa-cross event-icon"></i>
+              <h3 class="text-xl font-bold text-white mb-2 mt-3">Lenten Way of the Cross Pilgrimage</h3>
+              <p class="text-white/80 leading-relaxed">
+                <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -758,7 +786,6 @@
     const athirampuzhaCard = document.getElementById('athirampuzhaCard');
     if (athirampuzhaCard) {
       const bgImages = athirampuzhaCard.querySelectorAll('.bg-image');
-      const dotsContainer = document.getElementById('imageDotsAthirampuzha');
       let dots = [];
       let currentIndex = 0;
       let interval;
@@ -865,6 +892,122 @@
 
       athirampuzhaCard.addEventListener('mouseenter', stopRotation);
       athirampuzhaCard.addEventListener('mouseleave', startRotation);
+
+      setupDots();
+      showImage(0);
+      startRotation();
+    }
+
+    // AUTO-ROTATING BACKGROUND IMAGES for Lenten Card
+    const lentenCard = document.getElementById('lentenCard');
+    if (lentenCard) {
+      const bgImages = lentenCard.querySelectorAll('.bg-image');
+      let dots = [];
+      let currentIndex = 0;
+      let interval;
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      function showImage(index) {
+        if (index < 0) index = bgImages.length - 1;
+        if (index >= bgImages.length) index = 0;
+        
+        bgImages.forEach((img, i) => {
+          if (i === index) {
+            img.classList.add('active');
+          } else {
+            img.classList.remove('active');
+          }
+        });
+        
+        if (dots.length > 0) {
+          dots.forEach((dot, i) => {
+            if (i === index) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+        
+        currentIndex = index;
+      }
+
+      function nextImage() {
+        showImage(currentIndex + 1);
+        resetRotationTimer();
+      }
+
+      function prevImage() {
+        showImage(currentIndex - 1);
+        resetRotationTimer();
+      }
+
+      function resetRotationTimer() {
+        if (interval) {
+          clearInterval(interval);
+          interval = setInterval(nextImage, 3000);
+        }
+      }
+
+      function startRotation() {
+        if (interval) clearInterval(interval);
+        interval = setInterval(nextImage, 3000);
+      }
+
+      function stopRotation() {
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }
+
+      function setupDots() {
+        dots = document.querySelectorAll('#imageDotsLenten .image-dot');
+        dots.forEach((dot, idx) => {
+          dot.removeEventListener('click', dot.clickHandler);
+          dot.clickHandler = () => {
+            showImage(idx);
+            resetRotationTimer();
+          };
+          dot.addEventListener('click', dot.clickHandler);
+        });
+      }
+
+      const prevBtn = document.getElementById('prevImageLenten');
+      const nextBtn = document.getElementById('nextImageLenten');
+      
+      if (prevBtn) {
+        prevBtn.removeEventListener('click', prevBtn.clickHandler);
+        prevBtn.clickHandler = prevImage;
+        prevBtn.addEventListener('click', prevBtn.clickHandler);
+      }
+      
+      if (nextBtn) {
+        nextBtn.removeEventListener('click', nextBtn.clickHandler);
+        nextBtn.clickHandler = nextImage;
+        nextBtn.addEventListener('click', nextBtn.clickHandler);
+      }
+
+      lentenCard.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopRotation();
+      });
+      
+      lentenCard.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const swipeThreshold = 50;
+        if (touchEndX < touchStartX - swipeThreshold) {
+          nextImage();
+        }
+        if (touchEndX > touchStartX + swipeThreshold) {
+          prevImage();
+        }
+        startRotation();
+      });
+
+      lentenCard.addEventListener('mouseenter', stopRotation);
+      lentenCard.addEventListener('mouseleave', startRotation);
 
       setupDots();
       showImage(0);
