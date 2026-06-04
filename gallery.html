@@ -153,8 +153,37 @@
       padding: 6px 18px; border-radius: 60px; font-size: 0.85rem;
       color: #FFF2DF; margin-top: 16px; border: 1px solid rgba(255,255,200,0.3);
     }
-    .ornament { display: flex; justify-content: center; gap: 12px; margin: 8px 0 4px; }
-    .ornament span { width: 40px; height: 2px; background: rgba(255,215,150,0.6); border-radius: 2px; }
+    .ornament { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      gap: 16px; 
+      margin: 8px 0 4px; 
+    }
+    .ornament span { 
+      width: 50px; 
+      height: 2px; 
+      background: rgba(255,215,150,0.6); 
+      border-radius: 2px; 
+    }
+    /* Larger camera icon */
+    .camera-icon-large {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: transform 0.3s ease;
+    }
+    .camera-icon-large:hover {
+      transform: scale(1.1);
+    }
+    @media (max-width: 640px) {
+      .camera-icon-large {
+        font-size: 1.8rem;
+      }
+      .ornament span {
+        width: 35px;
+      }
+    }
+    
     .empty-state {
       text-align: center; padding: 80px 30px;
       background: rgba(255,255,240,0.08); backdrop-filter: blur(12px);
@@ -281,7 +310,11 @@
   <main class="content-wrapper">
     <div class="pt-24 pb-12">
       <div class="gallery-header">
-        <div class="ornament"><span></span><i class="fas fa-camera-retro text-amber-200/70 text-sm"></i><span></span></div>
+        <div class="ornament">
+          <span></span>
+          <i class="fas fa-camera-retro camera-icon-large text-amber-200/80"></i>
+          <span></span>
+        </div>
         <h1>Sacred Moments</h1>
         <p>glimpses of faith, fellowship & joy</p>
         <div class="photo-badge" id="photoBadge">
