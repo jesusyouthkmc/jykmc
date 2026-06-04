@@ -169,7 +169,7 @@
     }
     .hope-message .message-card:hover { background: rgba(255, 245, 220, 0.28); transform: scale(1.02); }
     
-    /* === CUSTOM LIGHTBOX - pure image, no text hints === */
+    /* CUSTOM LIGHTBOX */
     .custom-lightbox {
       display: none;
       position: fixed;
@@ -238,23 +238,21 @@
   
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo" onerror="this.style.opacity='0'">
 
-  <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
+  <!-- Header with working menu links (matching index.html) -->
+  <header class="fixed top-0 left-0 w-full curved-glass-header z-50">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
-      <!-- Logo Image -->
-      <a href="#home" class="flex items-center relative z-10">
-        <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
+      <a href="index.html#home" class="flex items-center">
+        <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto" onerror="this.src='https://placehold.co/50x50?text=JY'">
       </a>
       <nav class="hidden md:flex space-x-6 text-sm font-medium">
-        <a href="#home" class="text-white hover:text-amber-200 transition">Home</a>
-        <a href="#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
-        <a href="#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
-        <a href="gallery.html" class="text-white hover:text-amber-200 transition">
-          Gallery <span class="coming-soon-badge">Soon</span>
-        </a>
+        <a href="index.html#home" class="text-white hover:text-amber-200 transition">Home</a>
+        <a href="index.html#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
+        <a href="index.html#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
+        <a href="gallery.html" class="text-amber-200 border-b-2 border-amber-200 transition">Gallery</a>
         <a href="events.html" class="text-white hover:text-amber-200 transition">Events</a>
-        <a href="#resources" class="text-white hover:text-amber-200 transition">Resources</a>
-        <a href="#support" class="text-white hover:text-amber-200 transition">Support Us</a>
-        <a href="#join" class="text-white hover:text-amber-200 transition">Join</a>
+        <a href="index.html#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="index.html#support" class="text-white hover:text-amber-200 transition">Support Us</a>
+        <a href="index.html#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
       <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none">
         <i class="fas fa-bars"></i>
@@ -262,45 +260,23 @@
     </div>
   </header>
 
- <div id="mobileMenu" class="sidebar-menu">
+  <!-- Mobile Sidebar Menu with working links -->
+  <div id="mobileMenu" class="sidebar-menu">
     <div class="flex justify-start p-5">
       <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
     </div>
     <nav class="flex flex-col gap-3 px-6 py-4">
-      <a href="#home" class="mobile-nav-link">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-      </a>
-      <a href="#gathering" class="mobile-nav-link">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Gathering</span>
-      </a>
-      <a href="#ministries" class="mobile-nav-link">
-        <i class="fas fa-church"></i>
-        <span>Ministries</span>
-      </a>
-      <a href="gallery.html" class="mobile-nav-link">
-        <i class="fas fa-images"></i>
-        <span>Gallery <span class="coming-soon-badge">Soon</span></span>
-      </a>
-      <a href="events.html" class="mobile-nav-link">
-        <i class="fas fa-calendar-week"></i>
-        <span>Events</span>
-      </a>
-      <a href="#resources" class="mobile-nav-link">
-        <i class="fas fa-download"></i>
-        <span>Resources</span>
-      </a>
-      <a href="#support" class="mobile-nav-link">
-        <i class="fas fa-hands-praying"></i>
-        <span>Support Us</span>
-      </a>
-      <a href="#join" class="mobile-nav-link">
-        <i class="fas fa-users"></i>
-        <span>Join</span>
-      </a>
+      <a href="index.html#home" class="mobile-nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="index.html#gathering" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i><span>Gathering</span></a>
+      <a href="index.html#ministries" class="mobile-nav-link"><i class="fas fa-church"></i><span>Ministries</span></a>
+      <a href="gallery.html" class="mobile-nav-link"><i class="fas fa-images"></i><span>Gallery</span></a>
+      <a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-week"></i><span>Events</span></a>
+      <a href="index.html#resources" class="mobile-nav-link"><i class="fas fa-download"></i><span>Resources</span></a>
+      <a href="index.html#support" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
+      <a href="index.html#join" class="mobile-nav-link"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
   </div>
+  <div id="menuOverlay" class="menu-overlay"></div>
 
   <main class="content-wrapper">
     <div class="pt-24 pb-12">
@@ -326,21 +302,26 @@
       </div>
     </div>
 
-    <footer class="bg-black/30 text-white/80 py-8 text-center text-sm backdrop-blur-sm mt-8">
+    <!-- Footer (matching index.html style) -->
+    <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-5">
         <p class="font-semibold text-white">Jesus Youth KMC — Kottayam Medical College Campus Ministry</p>
         <p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p>
-        <p class="text-amber-100 text-xs italic">Young hearts on fire for Christ</p>
+        <p class="text-amber-100">Young hearts on fire for Christ</p>
         <div class="flex justify-center gap-5 mt-4 text-white text-lg">
-          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-instagram"></i></a>
-          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+            <i class="fab fa-whatsapp"></i>
+          </a>
         </div>
         <p class="mt-6 text-white/60 text-xs">© 2026 Jesus Youth KMC · All glory to God</p>
       </div>
     </footer>
   </main>
 
-  <!-- Custom Lightbox - No buttons, no text hints, tap/click image = next -->
+  <!-- Custom Lightbox -->
   <div id="customLightbox" class="custom-lightbox">
     <div class="lightbox-content">
       <img id="lightboxImg" class="lightbox-image" src="" alt="Enlarged view">
@@ -348,14 +329,12 @@
   </div>
 
   <script>
-    // =========== YOUR PHOTOS ===========
+    // =========== YOUR PHOTOS - UPDATE THESE PATHS ===========
     const LOCAL_IMAGES = [
       "images/photo1.jpg",
       "images/photo2.jpg",
       "images/photo3.jpg",
-      "images/photo4.jpg",
-      "images/photo5.jpg",
-      "images/photo6.jpg",
+      "images/photo4.jpg"
     ];
     // 👆 Add more photos: "images/photo5.jpg", "images/photo6.jpg",
     
@@ -374,7 +353,6 @@
     let touchStartX = 0;
     let touchEndX = 0;
     
-    // Open lightbox at specific image
     function openLightbox(index) {
       if (!galleryPhotos.length) return;
       currentIdx = (index + galleryPhotos.length) % galleryPhotos.length;
@@ -392,7 +370,6 @@
       if (!galleryPhotos.length) return;
       currentIdx = (currentIdx + 1) % galleryPhotos.length;
       lightboxImg.src = galleryPhotos[currentIdx];
-      // subtle haptic-like feedback
       lightboxImg.style.transform = 'scale(0.98)';
       setTimeout(() => { if(lightboxImg) lightboxImg.style.transform = ''; }, 120);
     }
@@ -407,17 +384,15 @@
     
     // Click handling: background closes, image goes to next
     lightbox.addEventListener('click', (e) => {
-      // If click is directly on the background overlay, close
       if (e.target === lightbox) {
         closeLightbox();
       }
-      // If click is on the image or its container, go to next photo
       else if (e.target === lightboxImg || e.target.closest('.lightbox-content')) {
         nextImage();
       }
     });
     
-    // Swipe support for touch devices (mobile)
+    // Swipe support for mobile
     lightboxImg.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
@@ -426,17 +401,15 @@
       touchEndX = e.changedTouches[0].screenX;
       const swipeThreshold = 50;
       if (touchEndX < touchStartX - swipeThreshold) {
-        // swipe left → next
         nextImage();
         e.preventDefault();
       } else if (touchEndX > touchStartX + swipeThreshold) {
-        // swipe right → previous
         prevImage();
         e.preventDefault();
       }
     });
     
-    // Keyboard navigation: left/right arrows + ESC
+    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('active')) return;
       if (e.key === 'Escape') closeLightbox();
@@ -444,7 +417,7 @@
       if (e.key === 'ArrowLeft') prevImage();
     });
     
-    // Render gallery grid
+    // Render gallery
     function renderLocalGallery(imagesArray) {
       if (!galleryContainer) return;
       if (!imagesArray.length) {
@@ -487,17 +460,20 @@
       renderLocalGallery(galleryPhotos);
     });
     
-    // Mobile menu
+    // Mobile menu functionality
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
     const menuOverlay = document.getElementById('menuOverlay');
+    
     function openMenu() { if (mobileMenu && menuOverlay) { mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; } }
     function closeMenuFunc() { if (mobileMenu && menuOverlay) { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow = ''; } }
+    
     if (menuBtn) menuBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenuFunc);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunc);
     document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeMenuFunc));
+    
     function setVH() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
     window.addEventListener('resize', setVH); setVH();
   </script>
