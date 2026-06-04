@@ -191,17 +191,6 @@
       display: block;
     }
     
-    /* Coming soon badge */
-    .coming-soon-badge {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      margin-left: 8px;
-      letter-spacing: 0.5px;
-    }
-    
     /* Event card hover effect */
     .event-card {
       transition: all 0.3s ease;
@@ -423,9 +412,7 @@
         <a href="index.html" class="text-white hover:text-amber-200 transition">Home</a>
         <a href="index.html#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
         <a href="index.html#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
-        <a href="gallery.html" class="text-white hover:text-amber-200 transition">
-          Gallery <span class="coming-soon-badge">Soon</span>
-        </a>
+        <a href="gallery.html" class="text-white hover:text-amber-200 transition">Gallery</a>
         <a href="events.html" class="text-amber-200 border-b-2 border-amber-200 transition">Events</a>
         <a href="index.html#resources" class="text-white hover:text-amber-200 transition">Resources</a>
         <a href="index.html#support" class="text-white hover:text-amber-200 transition">Support Us</a>
@@ -457,7 +444,7 @@
       </a>
       <a href="gallery.html" class="mobile-nav-link">
         <i class="fas fa-images"></i>
-        <span>Gallery <span class="coming-soon-badge">Soon</span></span>
+        <span>Gallery</span>
       </a>
       <a href="events.html" class="mobile-nav-link">
         <i class="fas fa-calendar-week"></i>
@@ -774,8 +761,7 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // fix for mobile viewport height
-    function setVH() {
+    // fix for mobile viewport height    function setVH() {
       let vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
