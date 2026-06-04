@@ -7,138 +7,79 @@
   <!-- Tailwind CSS v3 + Font Awesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Custom smooth scroll behavior -->
   <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     html {
       scroll-behavior: smooth;
     }
+    
     body {
       font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
     }
-    .fade-up {
-      opacity: 0;
-      transform: translateY(25px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    
     /* Glossy orange gradient background */
     .glossy-orange-bg {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       position: relative;
     }
-    .glossy-orange-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(125deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 40%);
-      pointer-events: none;
-    }
     
-    /* Background Logo Watermark - Responsive for orientation */
+    /* Background Logo Watermark */
     .bg-logo {
       position: fixed;
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
+      bottom: 20px;
+      right: -100px;
+      width: 70%;
+      max-width: 800px;
+      opacity: 0.1;
     }
     
-    /* Default portrait mode */
-    @media (orientation: portrait) {
-      .bg-logo {
-        bottom: 20px;
-        right: -100px;
-        width: 70%;
-        max-width: 800px;
-        opacity: 0.15;
-      }
-    }
-    
-    /* Landscape mode adjustments */
-    @media (orientation: landscape) {
-      .bg-logo {
-        bottom: -50px;
-        right: -80px;
-        width: 40%;
-        max-width: 500px;
-        opacity: 0.12;
-      }
-    }
-    
-    /* Tablet portrait */
-    @media (min-width: 768px) and (orientation: portrait) {
+    @media (min-width: 768px) {
       .bg-logo {
         right: -150px;
-        bottom: 50px;
-        width: 60%;
-        opacity: 0.12;
-      }
-    }
-    
-    /* Tablet landscape */
-    @media (min-width: 768px) and (orientation: landscape) {
-      .bg-logo {
-        right: -120px;
-        bottom: -30px;
-        width: 35%;
-        max-width: 450px;
-        opacity: 0.1;
-      }
-    }
-    
-    /* Desktop */
-    @media (min-width: 1024px) {
-      .bg-logo {
-        right: -200px;
-        bottom: 80px;
         width: 50%;
-        opacity: 0.1;
       }
     }
     
-    /* Desktop landscape override */
-    @media (min-width: 1024px) and (orientation: landscape) {
-      .bg-logo {
-        right: -150px;
-        bottom: 40px;
-        width: 35%;
-        max-width: 500px;
-      }
-    }
-    
-    /* Ensure content stays above background logo */
+    /* Content wrapper */
     .content-wrapper {
       position: relative;
       z-index: 1;
     }
     
-    /* Glass morphism header with curved edges */
+    /* Header */
     .curved-glass-header {
       background: rgba(255, 140, 66, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 0 0 30px 30px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       border-bottom: 1px solid rgba(255,255,255,0.3);
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
       z-index: 100;
     }
     
-    /* Sidebar Menu Styles - Matching footer style */
+    /* Sidebar Menu */
     .sidebar-menu {
       position: fixed;
       top: 0;
       right: 0;
       height: 100%;
       width: 75%;
-      background: rgba(0, 0, 0, 0.3);
+      max-width: 300px;
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: -5px 0 30px rgba(0,0,0,0.2);
       z-index: 1000;
       transform: translateX(100%);
       transition: transform 0.3s ease-in-out;
@@ -153,36 +94,25 @@
       font-weight: 600;
       padding: 14px 20px;
       border-radius: 12px;
-      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 12px;
-      background: transparent;
+      text-decoration: none;
       margin-bottom: 8px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      text-decoration: none;
     }
     
     .sidebar-menu a:hover {
       background: rgba(255, 255, 255, 0.1);
-      transform: translateX(-5px);
-      border-color: rgba(255, 255, 255, 0.3);
     }
     
-    .sidebar-menu i {
-      width: 24px;
-      font-size: 1.2rem;
-    }
-    
-    /* Overlay when menu is open */
     .menu-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(2px);
+      background: rgba(0,0,0,0.5);
       z-index: 999;
       display: none;
     }
@@ -191,25 +121,19 @@
       display: block;
     }
     
-    /* Event card hover effect */
-    .event-card {
-      transition: all 0.3s ease;
+    /* Fade up animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
     
-    .event-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     
-    /* Section divider */
-    .section-divider {
-      background: rgba(255, 255, 255, 0.15);
-      height: 2px;
-      width: 80px;
-      margin: 20px auto;
-    }
-    
-    /* Icon styling */
+    /* Section styles */
     .section-icon {
       font-size: 2.5rem;
       color: #fde68a;
@@ -221,7 +145,50 @@
       color: #fde68a;
     }
     
-    /* Hero Calendar + Cross Icon */
+    .section-divider {
+      background: rgba(255, 255, 255, 0.15);
+      height: 2px;
+      width: 80px;
+      margin: 20px auto;
+    }
+    
+    /* Event card */
+    .event-card {
+      transition: all 0.3s ease;
+    }
+    
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Map link */
+    .map-link {
+      background: rgba(255, 107, 53, 0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      font-weight: 600;
+      text-decoration: none;
+      color: #fde68a;
+    }
+    
+    .map-link:hover {
+      background: rgba(255, 107, 53, 0.25);
+      transform: scale(1.02);
+    }
+    
+    /* Monstrance icon */
+    .monstrance-icon {
+      width: 3rem;
+      height: 3rem;
+      display: inline-block;
+    }
+    
+    /* Hero icon */
     .hero-icon {
       display: inline-block;
       width: 64px;
@@ -236,43 +203,13 @@
       }
     }
     
-    /* Custom SVG Monstrance Icon */
-    .monstrance-icon {
-      width: 3rem;
-      height: 3rem;
-      display: inline-block;
-    }
-    
-    .monstrance-icon svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-    }
-    
-    /* Map link styling */
-    .map-link {
-      background: rgba(255, 107, 53, 0.1);
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      font-weight: 600;
-      text-decoration: none;
-    }
-    
-    .map-link:hover {
-      background: rgba(255, 107, 53, 0.25);
-      transform: scale(1.02);
-    }
-
     /* Rotating Background Card Styles */
     .rotating-bg-card {
       position: relative;
       overflow: hidden;
+      min-height: 280px;
     }
-
+    
     .bg-image-layer {
       position: absolute;
       top: 0;
@@ -281,7 +218,7 @@
       height: 100%;
       z-index: 0;
     }
-
+    
     .bg-image {
       position: absolute;
       top: 0;
@@ -293,11 +230,11 @@
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
-
+    
     .bg-image.active {
       opacity: 1;
     }
-
+    
     .bg-overlay {
       position: absolute;
       top: 0;
@@ -307,13 +244,13 @@
       background: rgba(0, 0, 0, 0.55);
       z-index: 1;
     }
-
+    
     .card-content {
       position: relative;
       z-index: 2;
     }
-
-    /* Navigation Arrows - Hidden on mobile, visible on desktop */
+    
+    /* Navigation Arrows */
     .nav-arrow {
       position: absolute;
       top: 50%;
@@ -333,28 +270,27 @@
       font-size: 1.2rem;
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
-
+    
     .nav-arrow:hover {
       background: rgba(0, 0, 0, 0.7);
       transform: translateY(-50%) scale(1.1);
     }
-
-    /* Hide arrows on mobile (screens smaller than 768px) */
+    
     @media (max-width: 767px) {
       .nav-arrow {
         display: none;
       }
     }
-
+    
     .nav-arrow-left {
       left: 16px;
     }
-
+    
     .nav-arrow-right {
       right: 16px;
     }
-
-    /* Image indicator dots - Centered, subtle grow effect */
+    
+    /* Image indicator dots */
     .image-dots {
       position: absolute;
       bottom: 16px;
@@ -365,7 +301,7 @@
       justify-content: center;
       gap: 8px;
     }
-
+    
     .image-dot {
       width: 6px;
       height: 6px;
@@ -374,19 +310,19 @@
       cursor: pointer;
       transition: all 0.25s ease;
     }
-
+    
     .image-dot.active {
       width: 10px;
       height: 10px;
       background: rgba(255, 255, 255, 1);
     }
-
+    
     .image-dot:hover {
       background: rgba(255, 255, 255, 0.8);
       transform: scale(1.15);
     }
-
-    /* Text background for better readability */
+    
+    /* Text backdrop */
     .text-backdrop {
       backdrop-filter: blur(8px);
       background: rgba(0, 0, 0, 0.3);
@@ -398,14 +334,11 @@
 </head>
 <body class="glossy-orange-bg">
   
-  <!-- Background Watermark Logo - Responsive for orientation -->
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
 
-  <!-- Floating header with curved edges -->
-  <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
+  <header class="curved-glass-header">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
-      <!-- Logo Image -->
-      <a href="index.html" class="flex items-center relative z-10">
+      <a href="index.html" class="flex items-center">
         <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
       </a>
       <nav class="hidden md:flex space-x-6 text-sm font-medium">
@@ -424,69 +357,35 @@
     </div>
   </header>
 
-  <!-- Sidebar Menu - Matching footer style -->
   <div id="mobileMenu" class="sidebar-menu">
     <div class="flex justify-start p-5">
       <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
     </div>
     <nav class="flex flex-col gap-3 px-6 py-4">
-      <a href="index.html" class="mobile-nav-link">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-      </a>
-      <a href="index.html#gathering" class="mobile-nav-link">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Gathering</span>
-      </a>
-      <a href="index.html#ministries" class="mobile-nav-link">
-        <i class="fas fa-church"></i>
-        <span>Ministries</span>
-      </a>
-      <a href="gallery.html" class="mobile-nav-link">
-        <i class="fas fa-images"></i>
-        <span>Gallery</span>
-      </a>
-      <a href="events.html" class="mobile-nav-link">
-        <i class="fas fa-calendar-week"></i>
-        <span>Events</span>
-      </a>
-      <a href="index.html#resources" class="mobile-nav-link">
-        <i class="fas fa-download"></i>
-        <span>Resources</span>
-      </a>
-      <a href="index.html#support" class="mobile-nav-link">
-        <i class="fas fa-hands-praying"></i>
-        <span>Support Us</span>
-      </a>
-      <a href="index.html#join" class="mobile-nav-link">
-        <i class="fas fa-users"></i>
-        <span>Join</span>
-      </a>
+      <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="index.html#gathering"><i class="fas fa-calendar-alt"></i><span>Gathering</span></a>
+      <a href="index.html#ministries"><i class="fas fa-church"></i><span>Ministries</span></a>
+      <a href="gallery.html"><i class="fas fa-images"></i><span>Gallery</span></a>
+      <a href="events.html"><i class="fas fa-calendar-week"></i><span>Events</span></a>
+      <a href="index.html#resources"><i class="fas fa-download"></i><span>Resources</span></a>
+      <a href="index.html#support"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
+      <a href="index.html#join"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
   </div>
   
-  <!-- Overlay -->
   <div id="menuOverlay" class="menu-overlay"></div>
 
   <main class="content-wrapper">
-    <!-- EVENTS HEADER with Cross Inside Calendar Icon (Bolder Lines) -->
+    <!-- EVENTS HEADER -->
     <section class="pt-32 pb-12 md:pt-40 md:pb-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8 text-center">
-        <!-- Custom SVG: Cross inside Calendar - BOLDER STROKES -->
         <div class="hero-icon mx-auto fade-up">
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Calendar Body - BOLDER -->
             <rect x="15" y="20" width="70" height="65" rx="8" fill="#fde68a" fill-opacity="0.2" stroke="#fde68a" stroke-width="4"/>
-            
-            <!-- Calendar Top Binding Strip - BOLDER -->
             <rect x="15" y="20" width="70" height="14" rx="4" fill="#fde68a" fill-opacity="0.35" stroke="#fde68a" stroke-width="3.5"/>
-            
-            <!-- Calendar Ring Holes - Slightly larger and bolder -->
             <circle cx="32" cy="27" r="3.5" fill="#FF8C42" fill-opacity="0.9" stroke="#fde68a" stroke-width="1"/>
             <circle cx="50" cy="27" r="3.5" fill="#FF8C42" fill-opacity="0.9" stroke="#fde68a" stroke-width="1"/>
             <circle cx="68" cy="27" r="3.5" fill="#FF8C42" fill-opacity="0.9" stroke="#fde68a" stroke-width="1"/>
-            
-            <!-- Calendar Grid Lines - Slightly bolder -->
             <line x1="25" y1="45" x2="75" y2="45" stroke="#fde68a" stroke-width="1.5" stroke-opacity="0.35"/>
             <line x1="25" y1="55" x2="75" y2="55" stroke="#fde68a" stroke-width="1.5" stroke-opacity="0.35"/>
             <line x1="25" y1="65" x2="75" y2="65" stroke="#fde68a" stroke-width="1.5" stroke-opacity="0.35"/>
@@ -494,16 +393,8 @@
             <line x1="38" y1="45" x2="38" y2="78" stroke="#fde68a" stroke-width="1.5" stroke-opacity="0.35"/>
             <line x1="50" y1="45" x2="50" y2="78" stroke="#fde68a" stroke-width="1.5" stroke-opacity="0.35"/>
             <line x1="62" y1="45" x2="62" y2="78" stroke="#fde68a" stroke-width="1.5" stroke-opacity="0.35"/>
-            
-            <!-- Cross inside the calendar - BOLDER -->
-            <!-- Vertical bar -->
             <line x1="50" y1="48" x2="50" y2="75" stroke="#fde68a" stroke-width="5" stroke-linecap="round"/>
-            <!-- Horizontal bar -->
             <line x1="38" y1="58" x2="62" y2="58" stroke="#fde68a" stroke-width="5" stroke-linecap="round"/>
-            
-            <!-- Subtle glow behind cross - BOLDER -->
-            <line x1="50" y1="48" x2="50" y2="75" stroke="#fde68a" stroke-width="10" stroke-linecap="round" opacity="0.12"/>
-            <line x1="38" y1="58" x2="62" y2="58" stroke="#fde68a" stroke-width="10" stroke-linecap="round" opacity="0.12"/>
           </svg>
         </div>
         <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 fade-up">Our Events</h1>
@@ -511,16 +402,15 @@
       </div>
     </section>
 
-    <!-- RECURRING EVENTS - Title, description and icon removed -->
+    <!-- RECURRING EVENTS -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil with Custom Monstrance SVG (BOLDER Lines) -->
+          <!-- Monthly Night Vigil -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div class="monstrance-icon">
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Radiant beams - BOLDER -->
                   <g stroke="#fde68a" stroke-width="3" stroke-linecap="round">
                     <line x1="50" y1="8" x2="50" y2="18"/>
                     <line x1="50" y1="82" x2="50" y2="92"/>
@@ -530,7 +420,6 @@
                     <line x1="73" y1="73" x2="80" y2="80"/>
                     <line x1="20" y1="80" x2="27" y2="73"/>
                     <line x1="73" y1="27" x2="80" y2="20"/>
-                    <!-- Diagonal beams - BOLDER -->
                     <line x1="35" y1="12" x2="38" y2="20"/>
                     <line x1="65" y1="12" x2="62" y2="20"/>
                     <line x1="35" y1="88" x2="38" y2="80"/>
@@ -540,20 +429,13 @@
                     <line x1="88" y1="35" x2="80" y2="38"/>
                     <line x1="88" y1="65" x2="80" y2="62"/>
                   </g>
-                  <!-- Outer circle (monstrance lunette) - BOLDER -->
                   <circle cx="50" cy="48" r="22" stroke="#fde68a" stroke-width="4" fill="none"/>
-                  <!-- Inner circle (Host) -->
                   <circle cx="50" cy="48" r="12" fill="#fde68a" opacity="0.3"/>
-                  <!-- Inner ring - BOLDER -->
                   <circle cx="50" cy="48" r="8" stroke="#fde68a" stroke-width="3" fill="none"/>
-                  <!-- Center Host detail -->
                   <circle cx="50" cy="48" r="3" fill="#fde68a"/>
-                  <!-- Cross on top - BOLDER -->
                   <line x1="50" y1="26" x2="50" y2="18" stroke="#fde68a" stroke-width="3.5" stroke-linecap="round"/>
                   <line x1="46" y1="22" x2="54" y2="22" stroke="#fde68a" stroke-width="3.5" stroke-linecap="round"/>
-                  <!-- Stem - BOLDER -->
                   <line x1="50" y1="70" x2="50" y2="78" stroke="#fde68a" stroke-width="4" stroke-linecap="round"/>
-                  <!-- Base - BOLDER -->
                   <path d="M42 78 Q50 82 58 78" stroke="#fde68a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
                   <line x1="44" y1="82" x2="56" y2="82" stroke="#fde68a" stroke-width="3.5" stroke-linecap="round"/>
                 </svg>
@@ -561,7 +443,7 @@
               <div class="flex-1 text-center md:text-left">
                 <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
                 <p class="text-amber-200 text-sm mb-4">
-                  <a href="https://maps.app.goo.gl/onjdMPRsHkVb2rPg9?g_st=ic" target="_blank" rel="noopener noreferrer" class="map-link text-amber-200 hover:text-amber-100">
+                  <a href="https://maps.app.goo.gl/onjdMPRsHkVb2rPg9?g_st=ic" target="_blank" rel="noopener noreferrer" class="map-link">
                     <i class="fas fa-map-marker-alt"></i>
                     LSDP Convent, Kottayam
                   </a>
@@ -585,21 +467,18 @@
         </div>
         
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- Annual Retreat -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-hands-praying event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Retreat</h3>
             <p class="text-white/70 leading-relaxed">A time of prayer, formation, and spiritual renewal for members. A weekend away to encounter God, deepen our faith, and recharge for the mission ahead.</p>
           </div>
           
-          <!-- Freshers Programme -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-user-graduate event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Freshers Programme</h3>
             <p class="text-white/70 leading-relaxed">Welcoming new students into our family and introducing them to the mission and community. A time of icebreakers, sharing, and warm fellowship.</p>
           </div>
           
-          <!-- Annual Trip -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-bus event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Trip</h3>
@@ -620,32 +499,23 @@
         </div>
         
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <!-- Athirampuzha Pilgrimage - WITH AUTO-ROTATING BACKGROUND -->
-          <div id="athirampuzhaCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 320px;">
-            <!-- Rotating Background Images Layer -->
+          <!-- Athirampuzha Pilgrimage -->
+          <div id="athirampuzhaCard" class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30">
             <div class="bg-image-layer">
               <div class="bg-image" style="background-image: url('event-images/athirampuzha-image1.jpeg');"></div>
               <div class="bg-image" style="background-image: url('event-images/athirampuzha-image2.jpeg');"></div>
               <div class="bg-overlay"></div>
             </div>
-            
-            <!-- Left Navigation Arrow -->
             <div class="nav-arrow nav-arrow-left" id="prevImageAthirampuzha">
               <i class="fas fa-chevron-left"></i>
             </div>
-            
-            <!-- Right Navigation Arrow -->
             <div class="nav-arrow nav-arrow-right" id="nextImageAthirampuzha">
               <i class="fas fa-chevron-right"></i>
             </div>
-            
-            <!-- Image Indicator Dots -->
             <div class="image-dots" id="imageDotsAthirampuzha">
               <div class="image-dot" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
             </div>
-            
-            <!-- Card Content -->
             <div class="card-content relative p-6 text-center">
               <i class="fas fa-church event-icon"></i>
               <h3 class="text-xl font-bold text-white mb-2 mt-3">Athirampuzha Pilgrimage</h3>
@@ -655,32 +525,23 @@
             </div>
           </div>
           
-          <!-- Lenten Way of the Cross Pilgrimage - WITH AUTO-ROTATING BACKGROUND -->
-          <div id="lentenCard" class="rotating-bg-card bg-white/10 backdrop-blur-md rounded-2xl event-card fade-up border border-white/30" style="min-height: 320px;">
-            <!-- Rotating Background Images Layer -->
+          <!-- Lenten Pilgrimage -->
+          <div id="lentenCard" class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30">
             <div class="bg-image-layer">
               <div class="bg-image" style="background-image: url('event-images/malayatoor-image1.jpeg');"></div>
               <div class="bg-image" style="background-image: url('event-images/malayatoor-image2.jpeg');"></div>
               <div class="bg-overlay"></div>
             </div>
-            
-            <!-- Left Navigation Arrow -->
             <div class="nav-arrow nav-arrow-left" id="prevImageLenten">
               <i class="fas fa-chevron-left"></i>
             </div>
-            
-            <!-- Right Navigation Arrow -->
             <div class="nav-arrow nav-arrow-right" id="nextImageLenten">
               <i class="fas fa-chevron-right"></i>
             </div>
-            
-            <!-- Image Indicator Dots -->
             <div class="image-dots" id="imageDotsLenten">
               <div class="image-dot" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
             </div>
-            
-            <!-- Card Content -->
             <div class="card-content relative p-6 text-center">
               <i class="fas fa-cross event-icon"></i>
               <h3 class="text-xl font-bold text-white mb-2 mt-3">Lenten Way of the Cross Pilgrimage</h3>
@@ -700,10 +561,10 @@
         <p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p>
         <p class="text-amber-100">Young hearts on fire for Christ</p>
         <div class="flex justify-center gap-5 mt-4 text-white text-lg">
-          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition">
             <i class="fab fa-instagram"></i>
           </a>
-          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition">
             <i class="fab fa-whatsapp"></i>
           </a>
         </div>
@@ -713,7 +574,7 @@
   </main>
 
   <script>
-    // Mobile menu functionality
+    // Mobile menu
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenu = document.getElementById('closeMenu');
@@ -731,24 +592,14 @@
       document.body.style.overflow = '';
     }
 
-    if (menuBtn) {
-      menuBtn.addEventListener('click', openMenu);
-    }
-    
-    if (closeMenu) {
-      closeMenu.addEventListener('click', closeMenuFunction);
-    }
-    
-    if (menuOverlay) {
-      menuOverlay.addEventListener('click', closeMenuFunction);
-    }
-    
-    // Close menu when clicking on a nav link
+    if (menuBtn) menuBtn.addEventListener('click', openMenu);
+    if (closeMenu) closeMenu.addEventListener('click', closeMenuFunction);
+    if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunction);
     document.querySelectorAll('.mobile-nav-link').forEach(link => {
       link.addEventListener('click', closeMenuFunction);
     });
 
-    // Intersection Observer for fade-up animation
+    // Fade-up animation
     const fadeElements = document.querySelectorAll('.fade-up');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -757,18 +608,10 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
-    
+    }, { threshold: 0.1 });
     fadeElements.forEach(el => observer.observe(el));
 
-    // fix for mobile viewport height    function setVH() {
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    window.addEventListener('resize', setVH);
-    setVH();
-
-    // AUTO-ROTATING BACKGROUND IMAGES for Athirampuzha Card
+    // Rotating background for Athirampuzha Card
     const athirampuzhaCard = document.getElementById('athirampuzhaCard');
     if (athirampuzhaCard) {
       const bgImages = athirampuzhaCard.querySelectorAll('.bg-image');
@@ -781,101 +624,46 @@
       function showImage(index) {
         if (index < 0) index = bgImages.length - 1;
         if (index >= bgImages.length) index = 0;
-        
         bgImages.forEach((img, i) => {
-          if (i === index) {
-            img.classList.add('active');
-          } else {
-            img.classList.remove('active');
-          }
+          if (i === index) img.classList.add('active');
+          else img.classList.remove('active');
         });
-        
         if (dots.length > 0) {
           dots.forEach((dot, i) => {
-            if (i === index) {
-              dot.classList.add('active');
-            } else {
-              dot.classList.remove('active');
-            }
+            if (i === index) dot.classList.add('active');
+            else dot.classList.remove('active');
           });
         }
-        
         currentIndex = index;
       }
 
-      function nextImage() {
-        showImage(currentIndex + 1);
-        resetRotationTimer();
-      }
-
-      function prevImage() {
-        showImage(currentIndex - 1);
-        resetRotationTimer();
-      }
-
-      function resetRotationTimer() {
-        if (interval) {
-          clearInterval(interval);
-          interval = setInterval(nextImage, 3000);
-        }
-      }
-
-      function startRotation() {
-        if (interval) clearInterval(interval);
-        interval = setInterval(nextImage, 3000);
-      }
-
-      function stopRotation() {
-        if (interval) {
-          clearInterval(interval);
-          interval = null;
-        }
-      }
+      function nextImage() { showImage(currentIndex + 1); resetTimer(); }
+      function prevImage() { showImage(currentIndex - 1); resetTimer(); }
+      function resetTimer() { if (interval) { clearInterval(interval); interval = setInterval(nextImage, 3000); } }
+      function startRotation() { if (interval) clearInterval(interval); interval = setInterval(nextImage, 3000); }
+      function stopRotation() { if (interval) { clearInterval(interval); interval = null; } }
 
       function setupDots() {
         dots = document.querySelectorAll('#imageDotsAthirampuzha .image-dot');
         dots.forEach((dot, idx) => {
           dot.removeEventListener('click', dot.clickHandler);
-          dot.clickHandler = () => {
-            showImage(idx);
-            resetRotationTimer();
-          };
+          dot.clickHandler = () => { showImage(idx); resetTimer(); };
           dot.addEventListener('click', dot.clickHandler);
         });
       }
 
       const prevBtn = document.getElementById('prevImageAthirampuzha');
       const nextBtn = document.getElementById('nextImageAthirampuzha');
-      
-      if (prevBtn) {
-        prevBtn.removeEventListener('click', prevBtn.clickHandler);
-        prevBtn.clickHandler = prevImage;
-        prevBtn.addEventListener('click', prevBtn.clickHandler);
-      }
-      
-      if (nextBtn) {
-        nextBtn.removeEventListener('click', nextBtn.clickHandler);
-        nextBtn.clickHandler = nextImage;
-        nextBtn.addEventListener('click', nextBtn.clickHandler);
-      }
+      if (prevBtn) { prevBtn.clickHandler = prevImage; prevBtn.addEventListener('click', prevImage); }
+      if (nextBtn) { nextBtn.clickHandler = nextImage; nextBtn.addEventListener('click', nextImage); }
 
-      athirampuzhaCard.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        stopRotation();
-      });
-      
+      athirampuzhaCard.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; stopRotation(); });
       athirampuzhaCard.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        const swipeThreshold = 50;
-        if (touchEndX < touchStartX - swipeThreshold) {
-          nextImage();
-        }
-        if (touchEndX > touchStartX + swipeThreshold) {
-          prevImage();
-        }
+        if (touchEndX < touchStartX - 50) nextImage();
+        if (touchEndX > touchStartX + 50) prevImage();
         startRotation();
       });
-
       athirampuzhaCard.addEventListener('mouseenter', stopRotation);
       athirampuzhaCard.addEventListener('mouseleave', startRotation);
 
@@ -884,7 +672,7 @@
       startRotation();
     }
 
-    // AUTO-ROTATING BACKGROUND IMAGES for Lenten Card
+    // Rotating background for Lenten Card
     const lentenCard = document.getElementById('lentenCard');
     if (lentenCard) {
       const bgImages = lentenCard.querySelectorAll('.bg-image');
@@ -897,101 +685,46 @@
       function showImage(index) {
         if (index < 0) index = bgImages.length - 1;
         if (index >= bgImages.length) index = 0;
-        
         bgImages.forEach((img, i) => {
-          if (i === index) {
-            img.classList.add('active');
-          } else {
-            img.classList.remove('active');
-          }
+          if (i === index) img.classList.add('active');
+          else img.classList.remove('active');
         });
-        
         if (dots.length > 0) {
           dots.forEach((dot, i) => {
-            if (i === index) {
-              dot.classList.add('active');
-            } else {
-              dot.classList.remove('active');
-            }
+            if (i === index) dot.classList.add('active');
+            else dot.classList.remove('active');
           });
         }
-        
         currentIndex = index;
       }
 
-      function nextImage() {
-        showImage(currentIndex + 1);
-        resetRotationTimer();
-      }
-
-      function prevImage() {
-        showImage(currentIndex - 1);
-        resetRotationTimer();
-      }
-
-      function resetRotationTimer() {
-        if (interval) {
-          clearInterval(interval);
-          interval = setInterval(nextImage, 3000);
-        }
-      }
-
-      function startRotation() {
-        if (interval) clearInterval(interval);
-        interval = setInterval(nextImage, 3000);
-      }
-
-      function stopRotation() {
-        if (interval) {
-          clearInterval(interval);
-          interval = null;
-        }
-      }
+      function nextImage() { showImage(currentIndex + 1); resetTimer(); }
+      function prevImage() { showImage(currentIndex - 1); resetTimer(); }
+      function resetTimer() { if (interval) { clearInterval(interval); interval = setInterval(nextImage, 3000); } }
+      function startRotation() { if (interval) clearInterval(interval); interval = setInterval(nextImage, 3000); }
+      function stopRotation() { if (interval) { clearInterval(interval); interval = null; } }
 
       function setupDots() {
         dots = document.querySelectorAll('#imageDotsLenten .image-dot');
         dots.forEach((dot, idx) => {
           dot.removeEventListener('click', dot.clickHandler);
-          dot.clickHandler = () => {
-            showImage(idx);
-            resetRotationTimer();
-          };
+          dot.clickHandler = () => { showImage(idx); resetTimer(); };
           dot.addEventListener('click', dot.clickHandler);
         });
       }
 
       const prevBtn = document.getElementById('prevImageLenten');
       const nextBtn = document.getElementById('nextImageLenten');
-      
-      if (prevBtn) {
-        prevBtn.removeEventListener('click', prevBtn.clickHandler);
-        prevBtn.clickHandler = prevImage;
-        prevBtn.addEventListener('click', prevBtn.clickHandler);
-      }
-      
-      if (nextBtn) {
-        nextBtn.removeEventListener('click', nextBtn.clickHandler);
-        nextBtn.clickHandler = nextImage;
-        nextBtn.addEventListener('click', nextBtn.clickHandler);
-      }
+      if (prevBtn) { prevBtn.clickHandler = prevImage; prevBtn.addEventListener('click', prevImage); }
+      if (nextBtn) { nextBtn.clickHandler = nextImage; nextBtn.addEventListener('click', nextImage); }
 
-      lentenCard.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        stopRotation();
-      });
-      
+      lentenCard.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; stopRotation(); });
       lentenCard.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        const swipeThreshold = 50;
-        if (touchEndX < touchStartX - swipeThreshold) {
-          nextImage();
-        }
-        if (touchEndX > touchStartX + swipeThreshold) {
-          prevImage();
-        }
+        if (touchEndX < touchStartX - 50) nextImage();
+        if (touchEndX > touchStartX + 50) prevImage();
         startRotation();
       });
-
       lentenCard.addEventListener('mouseenter', stopRotation);
       lentenCard.addEventListener('mouseleave', startRotation);
 
