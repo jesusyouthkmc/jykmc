@@ -510,7 +510,7 @@
     <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12 w-full">
         
-        <!-- AUTO-ROTATING CAROUSEL (3 images, rotates every 2 seconds, no dots/arrows) -->
+        <!-- AUTO-ROTATING CAROUSEL (3 images, rotates every 3 seconds, no dots/arrows) -->
         <div class="carousel-container mb-4 md:mb-6 fade-up">
           <div class="carousel-slides">
             <div class="carousel-slide active">
@@ -824,7 +824,7 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // ============ AUTO CAROUSEL (3 images, rotates every 2 seconds, no dots/arrows) ============
+    // ============ AUTO CAROUSEL (3 images, rotates every 3 SECONDS, no dots/arrows) ============
     const carouselSlides = document.querySelectorAll('.carousel-slide');
     let currentSlide = 0;
     const totalSlides = carouselSlides.length;
@@ -840,9 +840,9 @@
       carouselSlides[currentSlide].classList.add('active');
     }
 
-    // Start carousel rotation every 2 seconds
+    // Start carousel rotation every 3 SECONDS (3000 milliseconds)
     if (totalSlides > 0) {
-      setInterval(rotateCarousel, 2000);
+      setInterval(rotateCarousel, 3000);
     }
 
     // ============ PRAYER COUNTER - CSS POWERED ANIMATIONS ============
