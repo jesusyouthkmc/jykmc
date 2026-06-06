@@ -247,8 +247,6 @@
       opacity: 1;
     }
     
-    /* Dark overlay REMOVED - no longer here */
-    
     .card-content {
       position: relative;
       z-index: 2;
@@ -326,7 +324,14 @@
       transform: scale(1.15);
     }
     
-    /* Text backdrop - keeps text readable without dark overlay */
+    /* Title with text-shadow - clean and minimal */
+    .pilgrimage-title {
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    /* Description still needs backdrop for longer text readability */
     .text-backdrop {
       backdrop-filter: blur(8px);
       background: rgba(0, 0, 0, 0.4);
@@ -503,7 +508,7 @@
         </div>
         
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <!-- Athirampuzha Pilgrimage - NO DARK OVERLAY -->
+          <!-- Athirampuzha Pilgrimage -->
           <div id="athirampuzhaCard" class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30">
             <div class="bg-image-layer">
               <div class="bg-image" style="background-image: url('event-images/athirampuzha-image1.jpeg');"></div>
@@ -521,14 +526,14 @@
             </div>
             <div class="card-content relative p-6 text-center">
               <i class="fas fa-church event-icon"></i>
-              <h3 class="text-xl font-bold text-white mb-2 mt-3">Athirampuzha Pilgrimage</h3>
+              <h3 class="text-xl font-bold text-white pilgrimage-title">Athirampuzha Pilgrimage</h3>
               <p class="text-white/80 leading-relaxed">
                 <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
               </p>
             </div>
           </div>
           
-          <!-- Lenten Pilgrimage - NO DARK OVERLAY -->
+          <!-- Lenten Pilgrimage -->
           <div id="lentenCard" class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30">
             <div class="bg-image-layer">
               <div class="bg-image" style="background-image: url('event-images/malayatoor-image1.jpeg');"></div>
@@ -546,7 +551,7 @@
             </div>
             <div class="card-content relative p-6 text-center">
               <i class="fas fa-cross event-icon"></i>
-              <h3 class="text-xl font-bold text-white mb-2 mt-3">Lenten Way of the Cross Pilgrimage</h3>
+              <h3 class="text-xl font-bold text-white pilgrimage-title">Lenten Way of the Cross Pilgrimage</h3>
               <p class="text-white/80 leading-relaxed">
                 <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
               </p>
