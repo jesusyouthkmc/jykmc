@@ -59,14 +59,14 @@
       }
     }
     
-    /* Landscape mode adjustments */
+    /* Landscape mode adjustments - SMALLER and better positioned */
     @media (orientation: landscape) {
       .bg-logo {
-        bottom: -50px;
-        right: -80px;
-        width: 40%;
-        max-width: 500px;
-        opacity: 0.12;
+        bottom: -30px;
+        right: -40px;
+        width: 25%;
+        max-width: 300px;
+        opacity: 0.1;
       }
     }
     
@@ -80,19 +80,19 @@
       }
     }
     
-    /* Tablet landscape */
+    /* Tablet landscape - even smaller */
     @media (min-width: 768px) and (orientation: landscape) {
       .bg-logo {
-        right: -120px;
-        bottom: -30px;
-        width: 35%;
-        max-width: 450px;
-        opacity: 0.1;
+        right: -60px;
+        bottom: -20px;
+        width: 20%;
+        max-width: 250px;
+        opacity: 0.08;
       }
     }
     
-    /* Desktop */
-    @media (min-width: 1024px) {
+    /* Desktop portrait */
+    @media (min-width: 1024px) and (orientation: portrait) {
       .bg-logo {
         right: -200px;
         bottom: 80px;
@@ -101,13 +101,14 @@
       }
     }
     
-    /* Desktop landscape override */
+    /* Desktop landscape - small and subtle */
     @media (min-width: 1024px) and (orientation: landscape) {
       .bg-logo {
-        right: -150px;
-        bottom: 40px;
-        width: 35%;
-        max-width: 500px;
+        right: -80px;
+        bottom: 20px;
+        width: 18%;
+        max-width: 280px;
+        opacity: 0.08;
       }
     }
     
