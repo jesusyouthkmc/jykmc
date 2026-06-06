@@ -8,7 +8,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* Reset and base styles */
     * {
       margin: 0;
       padding: 0;
@@ -24,13 +23,11 @@
       min-height: 100vh;
     }
     
-    /* Glossy orange gradient background */
     .glossy-orange-bg {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       position: relative;
     }
     
-    /* Background Logo Watermark */
     .bg-logo {
       position: fixed;
       pointer-events: none;
@@ -50,13 +47,11 @@
       }
     }
     
-    /* Content wrapper */
     .content-wrapper {
       position: relative;
       z-index: 1;
     }
     
-    /* Header */
     .curved-glass-header {
       background: rgba(255, 140, 66, 0.95);
       backdrop-filter: blur(10px);
@@ -70,7 +65,6 @@
       z-index: 100;
     }
     
-    /* Sidebar Menu - Matching footer style */
     .sidebar-menu {
       position: fixed;
       top: 0;
@@ -133,7 +127,6 @@
       display: block;
     }
     
-    /* Fade up animation */
     .fade-up {
       opacity: 0;
       transform: translateY(25px);
@@ -145,7 +138,6 @@
       transform: translateY(0);
     }
     
-    /* Section styles */
     .section-icon {
       font-size: 2.5rem;
       color: #fde68a;
@@ -164,7 +156,6 @@
       margin: 20px auto;
     }
     
-    /* Event card */
     .event-card {
       transition: all 0.3s ease;
     }
@@ -174,7 +165,6 @@
       box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
     }
     
-    /* Map link */
     .map-link {
       background: rgba(255, 107, 53, 0.1);
       padding: 4px 10px;
@@ -193,14 +183,12 @@
       transform: scale(1.02);
     }
     
-    /* Monstrance icon */
     .monstrance-icon {
       width: 3rem;
       height: 3rem;
       display: inline-block;
     }
     
-    /* Hero icon */
     .hero-icon {
       display: inline-block;
       width: 64px;
@@ -215,45 +203,59 @@
       }
     }
     
-    /* Rotating Background Card Styles - FIXED */
+    /* NEW: Simplified rotating card using img tags */
     .rotating-bg-card {
       position: relative;
       overflow: hidden;
-      min-height: 380px;
+      border-radius: 1rem;
     }
     
-    .bg-image-layer {
+    .image-stack {
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+    }
+    
+    .stack-image {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 0;
-    }
-    
-    .bg-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      object-fit: cover;
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
     
-    .bg-image.active {
+    .stack-image.active {
       opacity: 1;
     }
     
-    .card-content {
+    .card-overlay {
       position: relative;
       z-index: 2;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
-    /* Navigation Arrows */
+    .pilgrimage-title {
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .text-backdrop {
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 6px 14px;
+      display: inline-block;
+    }
+    
     .nav-arrow {
       position: absolute;
       top: 50%;
@@ -293,7 +295,6 @@
       right: 16px;
     }
     
-    /* Image indicator dots */
     .image-dots {
       position: absolute;
       bottom: 16px;
@@ -306,8 +307,8 @@
     }
     
     .image-dot {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.6);
       cursor: pointer;
@@ -315,30 +316,9 @@
     }
     
     .image-dot.active {
-      width: 10px;
-      height: 10px;
+      width: 20px;
+      border-radius: 4px;
       background: rgba(255, 255, 255, 1);
-    }
-    
-    .image-dot:hover {
-      background: rgba(255, 255, 255, 0.9);
-      transform: scale(1.15);
-    }
-    
-    /* Title with text-shadow - clean and minimal */
-    .pilgrimage-title {
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    
-    /* Description backdrop */
-    .text-backdrop {
-      backdrop-filter: blur(8px);
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 12px;
-      padding: 6px 14px;
-      display: inline-block;
     }
   </style>
 </head>
@@ -386,7 +366,6 @@
   <div id="menuOverlay" class="menu-overlay"></div>
 
   <main class="content-wrapper">
-    <!-- EVENTS HEADER -->
     <section class="pt-32 pb-12 md:pt-40 md:pb-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8 text-center">
         <div class="hero-icon mx-auto fade-up">
@@ -412,11 +391,9 @@
       </div>
     </section>
 
-    <!-- RECURRING EVENTS -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div class="monstrance-icon">
@@ -466,7 +443,6 @@
       </div>
     </section>
 
-    <!-- ANNUAL EVENTS -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -498,7 +474,7 @@
       </div>
     </section>
 
-    <!-- PILGRIMAGES -->
+    <!-- PILGRIMAGES - NEW VERSION USING <img> TAGS -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -509,51 +485,31 @@
         </div>
         
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <!-- Athirampuzha Pilgrimage -->
-          <div id="athirampuzhaCard" class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30" style="min-height: 380px;">
-            <div class="bg-image-layer">
-              <div class="bg-image" style="background-image: url('event-images/athirampuzha-image1.jpeg');"></div>
-              <div class="bg-image" style="background-image: url('event-images/athirampuzha-image2.jpeg');"></div>
+          <!-- Athirampuzha Pilgrimage - NEW VERSION -->
+          <div class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30">
+            <div class="image-stack" style="min-height: 320px;">
+              <img src="event-images/athirampuzha-image1.jpeg" class="stack-image active" alt="Athirampuzha Pilgrimage 1">
+              <img src="event-images/athirampuzha-image2.jpeg" class="stack-image" alt="Athirampuzha Pilgrimage 2">
             </div>
-            <div class="nav-arrow nav-arrow-left" id="prevImageAthirampuzha">
-              <i class="fas fa-chevron-left"></i>
-            </div>
-            <div class="nav-arrow nav-arrow-right" id="nextImageAthirampuzha">
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="image-dots" id="imageDotsAthirampuzha">
-              <div class="image-dot" data-index="0"></div>
-              <div class="image-dot" data-index="1"></div>
-            </div>
-            <div class="card-content relative p-6 text-center">
+            <div class="card-overlay p-6 text-center" style="min-height: 320px;">
               <i class="fas fa-church event-icon"></i>
-              <h3 class="text-xl font-bold text-white pilgrimage-title">Athirampuzha Pilgrimage</h3>
-              <p class="text-white/80 leading-relaxed">
+              <h3 class="text-xl font-bold text-white pilgrimage-title mt-2">Athirampuzha Pilgrimage</h3>
+              <p class="text-white/80 leading-relaxed mt-2">
                 <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
               </p>
             </div>
           </div>
           
-          <!-- Lenten Pilgrimage -->
-          <div id="lentenCard" class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30" style="min-height: 380px;">
-            <div class="bg-image-layer">
-              <div class="bg-image" style="background-image: url('event-images/malayatoor-image1.jpeg');"></div>
-              <div class="bg-image" style="background-image: url('event-images/malayatoor-image2.jpeg');"></div>
+          <!-- Lenten Pilgrimage - NEW VERSION -->
+          <div class="rotating-bg-card rounded-2xl event-card fade-up border border-white/30">
+            <div class="image-stack" style="min-height: 320px;">
+              <img src="event-images/malayatoor-image1.jpeg" class="stack-image active" alt="Lenten Pilgrimage 1">
+              <img src="event-images/malayatoor-image2.jpeg" class="stack-image" alt="Lenten Pilgrimage 2">
             </div>
-            <div class="nav-arrow nav-arrow-left" id="prevImageLenten">
-              <i class="fas fa-chevron-left"></i>
-            </div>
-            <div class="nav-arrow nav-arrow-right" id="nextImageLenten">
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="image-dots" id="imageDotsLenten">
-              <div class="image-dot" data-index="0"></div>
-              <div class="image-dot" data-index="1"></div>
-            </div>
-            <div class="card-content relative p-6 text-center">
+            <div class="card-overlay p-6 text-center" style="min-height: 320px;">
               <i class="fas fa-cross event-icon"></i>
-              <h3 class="text-xl font-bold text-white pilgrimage-title">Lenten Way of the Cross Pilgrimage</h3>
-              <p class="text-white/80 leading-relaxed">
+              <h3 class="text-xl font-bold text-white pilgrimage-title mt-2">Lenten Way of the Cross Pilgrimage</h3>
+              <p class="text-white/80 leading-relaxed mt-2">
                 <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
               </p>
             </div>
@@ -562,7 +518,6 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-5">
         <p class="font-semibold text-white">Jesus Youth KMC — Kottayam Medical College Campus Ministry</p>
@@ -619,127 +574,49 @@
     }, { threshold: 0.1 });
     fadeElements.forEach(el => observer.observe(el));
 
-    // Rotating background for Athirampuzha Card
-    const athirampuzhaCard = document.getElementById('athirampuzhaCard');
-    if (athirampuzhaCard) {
-      const bgImages = athirampuzhaCard.querySelectorAll('.bg-image');
-      let dots = [];
+    // Simple rotation for images
+    function setupImageRotation(container) {
+      const images = container.querySelectorAll('.stack-image');
+      if (images.length <= 1) return;
+      
       let currentIndex = 0;
       let interval;
-      let touchStartX = 0;
-      let touchEndX = 0;
-
+      
       function showImage(index) {
-        if (index < 0) index = bgImages.length - 1;
-        if (index >= bgImages.length) index = 0;
-        bgImages.forEach((img, i) => {
-          if (i === index) img.classList.add('active');
-          else img.classList.remove('active');
+        images.forEach((img, i) => {
+          if (i === index) {
+            img.classList.add('active');
+          } else {
+            img.classList.remove('active');
+          }
         });
-        if (dots.length > 0) {
-          dots.forEach((dot, i) => {
-            if (i === index) dot.classList.add('active');
-            else dot.classList.remove('active');
-          });
-        }
         currentIndex = index;
       }
-
-      function nextImage() { showImage(currentIndex + 1); resetTimer(); }
-      function prevImage() { showImage(currentIndex - 1); resetTimer(); }
-      function resetTimer() { if (interval) { clearInterval(interval); interval = setInterval(nextImage, 3000); } }
-      function startRotation() { if (interval) clearInterval(interval); interval = setInterval(nextImage, 3000); }
-      function stopRotation() { if (interval) { clearInterval(interval); interval = null; } }
-
-      function setupDots() {
-        dots = document.querySelectorAll('#imageDotsAthirampuzha .image-dot');
-        dots.forEach((dot, idx) => {
-          dot.removeEventListener('click', dot.clickHandler);
-          dot.clickHandler = () => { showImage(idx); resetTimer(); };
-          dot.addEventListener('click', dot.clickHandler);
-        });
+      
+      function nextImage() {
+        let next = (currentIndex + 1) % images.length;
+        showImage(next);
       }
-
-      const prevBtn = document.getElementById('prevImageAthirampuzha');
-      const nextBtn = document.getElementById('nextImageAthirampuzha');
-      if (prevBtn) { prevBtn.clickHandler = prevImage; prevBtn.addEventListener('click', prevImage); }
-      if (nextBtn) { nextBtn.clickHandler = nextImage; nextBtn.addEventListener('click', nextImage); }
-
-      athirampuzhaCard.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; stopRotation(); });
-      athirampuzhaCard.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        if (touchEndX < touchStartX - 50) nextImage();
-        if (touchEndX > touchStartX + 50) prevImage();
-        startRotation();
-      });
-      athirampuzhaCard.addEventListener('mouseenter', stopRotation);
-      athirampuzhaCard.addEventListener('mouseleave', startRotation);
-
-      setupDots();
-      showImage(0);
+      
+      function startRotation() {
+        if (interval) clearInterval(interval);
+        interval = setInterval(nextImage, 3000);
+      }
+      
       startRotation();
-    }
-
-    // Rotating background for Lenten Card
-    const lentenCard = document.getElementById('lentenCard');
-    if (lentenCard) {
-      const bgImages = lentenCard.querySelectorAll('.bg-image');
-      let dots = [];
-      let currentIndex = 0;
-      let interval;
-      let touchStartX = 0;
-      let touchEndX = 0;
-
-      function showImage(index) {
-        if (index < 0) index = bgImages.length - 1;
-        if (index >= bgImages.length) index = 0;
-        bgImages.forEach((img, i) => {
-          if (i === index) img.classList.add('active');
-          else img.classList.remove('active');
-        });
-        if (dots.length > 0) {
-          dots.forEach((dot, i) => {
-            if (i === index) dot.classList.add('active');
-            else dot.classList.remove('active');
-          });
-        }
-        currentIndex = index;
-      }
-
-      function nextImage() { showImage(currentIndex + 1); resetTimer(); }
-      function prevImage() { showImage(currentIndex - 1); resetTimer(); }
-      function resetTimer() { if (interval) { clearInterval(interval); interval = setInterval(nextImage, 3000); } }
-      function startRotation() { if (interval) clearInterval(interval); interval = setInterval(nextImage, 3000); }
-      function stopRotation() { if (interval) { clearInterval(interval); interval = null; } }
-
-      function setupDots() {
-        dots = document.querySelectorAll('#imageDotsLenten .image-dot');
-        dots.forEach((dot, idx) => {
-          dot.removeEventListener('click', dot.clickHandler);
-          dot.clickHandler = () => { showImage(idx); resetTimer(); };
-          dot.addEventListener('click', dot.clickHandler);
-        });
-      }
-
-      const prevBtn = document.getElementById('prevImageLenten');
-      const nextBtn = document.getElementById('nextImageLenten');
-      if (prevBtn) { prevBtn.clickHandler = prevImage; prevBtn.addEventListener('click', prevImage); }
-      if (nextBtn) { nextBtn.clickHandler = nextImage; nextBtn.addEventListener('click', nextImage); }
-
-      lentenCard.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; stopRotation(); });
-      lentenCard.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        if (touchEndX < touchStartX - 50) nextImage();
-        if (touchEndX > touchStartX + 50) prevImage();
-        startRotation();
+      
+      // Pause on hover
+      container.addEventListener('mouseenter', () => {
+        if (interval) clearInterval(interval);
       });
-      lentenCard.addEventListener('mouseenter', stopRotation);
-      lentenCard.addEventListener('mouseleave', startRotation);
-
-      setupDots();
-      showImage(0);
-      startRotation();
+      container.addEventListener('mouseleave', startRotation);
     }
+    
+    // Setup both cards
+    const cards = document.querySelectorAll('.rotating-bg-card');
+    cards.forEach(card => {
+      setupImageRotation(card);
+    });
   </script>
 </body>
 </html>
