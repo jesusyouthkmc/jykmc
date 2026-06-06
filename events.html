@@ -156,13 +156,9 @@
       margin: 20px auto;
     }
     
+    /* REMOVED hover effect that causes card to rise */
     .event-card {
-      transition: all 0.3s ease;
-    }
-    
-    .event-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
+      transition: none;
     }
     
     .map-link {
@@ -203,7 +199,7 @@
       }
     }
     
-    /* Rotating Card - Fixed Arrangement */
+    /* Rotating Card */
     .rotating-card {
       position: relative;
       overflow: hidden;
@@ -262,13 +258,13 @@
       display: inline-block;
     }
     
-    /* Navigation Arrows */
+    /* Navigation Arrows - 50% smaller */
     .nav-arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      height: 20px;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
       border-radius: 50%;
@@ -279,7 +275,7 @@
       z-index: 10;
       transition: all 0.2s ease;
       color: white;
-      font-size: 1.2rem;
+      font-size: 0.6rem;
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
@@ -295,11 +291,11 @@
     }
     
     .nav-arrow-left {
-      left: 16px;
+      left: 8px;
     }
     
     .nav-arrow-right {
-      right: 16px;
+      right: 8px;
     }
     
     /* Image indicator dots */
@@ -482,7 +478,7 @@
       </div>
     </section>
 
-    <!-- PILGRIMAGES - FIXED ARRANGEMENT -->
+    <!-- PILGRIMAGES -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -495,13 +491,11 @@
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <!-- Athirampuzha Pilgrimage -->
           <div id="athirampuzhaCard" class="rotating-card rounded-2xl event-card fade-up border border-white/30">
-            <!-- Images - absolute positioned background -->
             <div class="image-stack">
               <img src="event-images/athirampuzha-image1.jpeg" class="stack-image active" alt="Athirampuzha Pilgrimage 1">
               <img src="event-images/athirampuzha-image2.jpeg" class="stack-image" alt="Athirampuzha Pilgrimage 2">
             </div>
             
-            <!-- Navigation Arrows -->
             <div class="nav-arrow nav-arrow-left athi-prev">
               <i class="fas fa-chevron-left"></i>
             </div>
@@ -509,13 +503,11 @@
               <i class="fas fa-chevron-right"></i>
             </div>
             
-            <!-- Dots -->
             <div class="image-dots athi-dots">
               <div class="image-dot active" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
             </div>
             
-            <!-- Content overlay -->
             <div class="card-overlay p-6">
               <i class="fas fa-church event-icon"></i>
               <h3 class="text-xl font-bold text-white pilgrimage-title mt-2">Athirampuzha Pilgrimage</h3>
@@ -527,13 +519,11 @@
           
           <!-- Lenten Pilgrimage -->
           <div id="lentenCard" class="rotating-card rounded-2xl event-card fade-up border border-white/30">
-            <!-- Images - absolute positioned background -->
             <div class="image-stack">
               <img src="event-images/malayatoor-image1.jpeg" class="stack-image active" alt="Lenten Pilgrimage 1">
               <img src="event-images/malayatoor-image2.jpeg" class="stack-image" alt="Lenten Pilgrimage 2">
             </div>
             
-            <!-- Navigation Arrows -->
             <div class="nav-arrow nav-arrow-left lenten-prev">
               <i class="fas fa-chevron-left"></i>
             </div>
@@ -541,13 +531,11 @@
               <i class="fas fa-chevron-right"></i>
             </div>
             
-            <!-- Dots -->
             <div class="image-dots lenten-dots">
               <div class="image-dot active" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
             </div>
             
-            <!-- Content overlay -->
             <div class="card-overlay p-6">
               <i class="fas fa-cross event-icon"></i>
               <h3 class="text-xl font-bold text-white pilgrimage-title mt-2">Lenten Way of the Cross Pilgrimage</h3>
@@ -670,7 +658,6 @@
         }
       }
       
-      // Add event listeners
       if (prevBtn) prevBtn.addEventListener('click', prevImage);
       if (nextBtn) nextBtn.addEventListener('click', nextImage);
       
@@ -681,7 +668,6 @@
         });
       });
       
-      // Touch swipe
       card.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
         stopRotation();
@@ -694,15 +680,12 @@
         startRotation();
       });
       
-      // Mouse hover
       card.addEventListener('mouseenter', stopRotation);
       card.addEventListener('mouseleave', startRotation);
       
-      // Start rotation
       startRotation();
     }
     
-    // Setup both cards
     setupRotatingCard('athirampuzhaCard', 'athi-dots', 'athi-prev', 'athi-next');
     setupRotatingCard('lentenCard', 'lenten-dots', 'lenten-prev', 'lenten-next');
   </script>
