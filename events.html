@@ -203,7 +203,7 @@
       position: relative;
       overflow: hidden;
       border-radius: 1rem;
-      min-height: 380px;
+      min-height: 420px;
     }
     
     .image-stack {
@@ -230,65 +230,69 @@
       opacity: 1;
     }
     
+    /* REMOVED dark overlay - no background overlay anymore */
     .card-overlay {
       position: relative;
       z-index: 2;
-      min-height: 380px;
+      min-height: 420px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(2px);
+      /* No background, no backdrop-filter here - clean! */
     }
     
-    /* NEW: Flex row layout for icon and text side by side */
-    .content-row {
+    /* Fixed height container for consistent alignment */
+    .icon-container {
+      height: 60px;
       display: flex;
-      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      padding: 1rem;
-    }
-    
-    .icon-wrapper {
-      flex-shrink: 0;
-    }
-    
-    .text-wrapper {
-      flex: 1;
-      text-align: left;
-      max-width: 70%;
-    }
-    
-    .pilgrimage-title {
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-      font-weight: bold;
       margin-bottom: 8px;
     }
     
+    .title-container {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    
+    .description-container {
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Title with text-shadow only - no background */
+    .pilgrimage-title {
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      font-weight: bold;
+      font-size: 1.25rem;
+      line-height: 1.4;
+      max-width: 90%;
+      color: white;
+    }
+    
+    /* Text background retained for description readability */
     .text-backdrop {
       backdrop-filter: blur(8px);
       background: rgba(0, 0, 0, 0.35);
       border-radius: 12px;
-      padding: 6px 14px;
+      padding: 8px 16px;
       display: inline-block;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      max-width: 90%;
+      color: white;
     }
     
-    /* Mobile: stack vertically on smaller screens */
-    @media (max-width: 640px) {
-      .content-row {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.75rem;
-      }
-      .text-wrapper {
-        text-align: center;
-        max-width: 100%;
-      }
+    /* Icons remain fully visible with text-shadow */
+    .event-icon {
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
     
     /* Navigation Arrows - 50% smaller */
@@ -511,7 +515,7 @@
       </div>
     </section>
 
-    <!-- PILGRIMAGES - ALIGNED ICON AND TEXT -->
+    <!-- PILGRIMAGES - NO DARK OVERLAY -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -542,16 +546,16 @@
             </div>
             
             <div class="card-overlay p-6">
-              <div class="content-row">
-                <div class="icon-wrapper">
-                  <i class="fas fa-church event-icon"></i>
-                </div>
-                <div class="text-wrapper">
-                  <h3 class="text-xl font-bold text-white pilgrimage-title">Athirampuzha Pilgrimage</h3>
-                  <p class="text-white/80 leading-relaxed">
-                    <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
-                  </p>
-                </div>
+              <div class="icon-container">
+                <i class="fas fa-church event-icon"></i>
+              </div>
+              <div class="title-container">
+                <h3 class="pilgrimage-title">Athirampuzha Pilgrimage</h3>
+              </div>
+              <div class="description-container">
+                <p class="text-white/80 leading-relaxed">
+                  <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
+                </p>
               </div>
             </div>
           </div>
@@ -576,16 +580,16 @@
             </div>
             
             <div class="card-overlay p-6">
-              <div class="content-row">
-                <div class="icon-wrapper">
-                  <i class="fas fa-cross event-icon"></i>
-                </div>
-                <div class="text-wrapper">
-                  <h3 class="text-xl font-bold text-white pilgrimage-title">Lenten Way of the Cross Pilgrimage</h3>
-                  <p class="text-white/80 leading-relaxed">
-                    <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
-                  </p>
-                </div>
+              <div class="icon-container">
+                <i class="fas fa-cross event-icon"></i>
+              </div>
+              <div class="title-container">
+                <h3 class="pilgrimage-title">Lenten Way of the Cross Pilgrimage</h3>
+              </div>
+              <div class="description-container">
+                <p class="text-white/80 leading-relaxed">
+                  <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
+                </p>
               </div>
             </div>
           </div>
