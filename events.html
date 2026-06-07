@@ -156,7 +156,6 @@
       margin: 20px auto;
     }
     
-    /* REMOVED hover effect that causes card to rise */
     .event-card {
       transition: none;
     }
@@ -244,6 +243,27 @@
       backdrop-filter: blur(2px);
     }
     
+    /* NEW: Flex row layout for icon and text side by side */
+    .content-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+    }
+    
+    .icon-wrapper {
+      flex-shrink: 0;
+    }
+    
+    .text-wrapper {
+      flex: 1;
+      text-align: left;
+      max-width: 70%;
+    }
+    
     .pilgrimage-title {
       text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
       font-weight: bold;
@@ -256,6 +276,19 @@
       border-radius: 12px;
       padding: 6px 14px;
       display: inline-block;
+    }
+    
+    /* Mobile: stack vertically on smaller screens */
+    @media (max-width: 640px) {
+      .content-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+      }
+      .text-wrapper {
+        text-align: center;
+        max-width: 100%;
+      }
     }
     
     /* Navigation Arrows - 50% smaller */
@@ -478,7 +511,7 @@
       </div>
     </section>
 
-    <!-- PILGRIMAGES -->
+    <!-- PILGRIMAGES - ALIGNED ICON AND TEXT -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -509,11 +542,17 @@
             </div>
             
             <div class="card-overlay p-6">
-              <i class="fas fa-church event-icon"></i>
-              <h3 class="text-xl font-bold text-white pilgrimage-title mt-2">Athirampuzha Pilgrimage</h3>
-              <p class="text-white/80 leading-relaxed mt-2">
-                <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
-              </p>
+              <div class="content-row">
+                <div class="icon-wrapper">
+                  <i class="fas fa-church event-icon"></i>
+                </div>
+                <div class="text-wrapper">
+                  <h3 class="text-xl font-bold text-white pilgrimage-title">Athirampuzha Pilgrimage</h3>
+                  <p class="text-white/80 leading-relaxed">
+                    <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -537,11 +576,17 @@
             </div>
             
             <div class="card-overlay p-6">
-              <i class="fas fa-cross event-icon"></i>
-              <h3 class="text-xl font-bold text-white pilgrimage-title mt-2">Lenten Way of the Cross Pilgrimage</h3>
-              <p class="text-white/80 leading-relaxed mt-2">
-                <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
-              </p>
+              <div class="content-row">
+                <div class="icon-wrapper">
+                  <i class="fas fa-cross event-icon"></i>
+                </div>
+                <div class="text-wrapper">
+                  <h3 class="text-xl font-bold text-white pilgrimage-title">Lenten Way of the Cross Pilgrimage</h3>
+                  <p class="text-white/80 leading-relaxed">
+                    <span class="text-backdrop">During Lent, especially in the weeks leading up to Holy Week, we undertake a pilgrimage to churches and shrines featuring Stations of the Cross. Through prayer, reflection, and fellowship, we meditate on Christ's Passion and prepare spiritually for Easter.</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
