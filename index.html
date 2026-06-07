@@ -48,7 +48,7 @@
       object-fit: contain;
     }
     
-    /* Default portrait mode */
+    /* Default portrait mode - full logo visible */
     @media (orientation: portrait) {
       .bg-logo {
         bottom: 20px;
@@ -59,14 +59,14 @@
       }
     }
     
-    /* Landscape mode adjustments - SMALLER and better positioned */
+    /* Landscape mode - 50% of logo visible (half cut off) */
     @media (orientation: landscape) {
       .bg-logo {
-        bottom: -30px;
-        right: -40px;
-        width: 25%;
-        max-width: 300px;
-        opacity: 0.1;
+        bottom: -50px;
+        right: -50%;
+        width: 100%;
+        max-width: none;
+        opacity: 0.12;
       }
     }
     
@@ -80,35 +80,33 @@
       }
     }
     
-    /* Tablet landscape - even smaller */
+    /* Tablet landscape - 50% visible */
     @media (min-width: 768px) and (orientation: landscape) {
       .bg-logo {
-        right: -60px;
-        bottom: -20px;
-        width: 20%;
-        max-width: 250px;
-        opacity: 0.08;
-      }
-    }
-    
-    /* Desktop portrait */
-    @media (min-width: 1024px) and (orientation: portrait) {
-      .bg-logo {
-        right: -200px;
-        bottom: 80px;
-        width: 50%;
+        right: -45%;
+        bottom: -30px;
+        width: 90%;
         opacity: 0.1;
       }
     }
     
-    /* Desktop landscape - small and subtle */
+    /* Desktop landscape - 50% visible */
     @media (min-width: 1024px) and (orientation: landscape) {
       .bg-logo {
-        right: -80px;
-        bottom: 20px;
-        width: 18%;
-        max-width: 280px;
-        opacity: 0.08;
+        right: -40%;
+        bottom: 40px;
+        width: 80%;
+        opacity: 0.1;
+      }
+    }
+    
+    /* Large desktop landscape - 50% visible */
+    @media (min-width: 1440px) and (orientation: landscape) {
+      .bg-logo {
+        right: -35%;
+        bottom: 60px;
+        width: 70%;
+        opacity: 0.1;
       }
     }
     
@@ -436,7 +434,7 @@
 </head>
 <body class="glossy-orange-bg">
   
-  <!-- Background Watermark Logo - Responsive for orientation -->
+  <!-- Background Watermark Logo - Responsive for orientation (50% visible in landscape) -->
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
 
   <!-- Floating header with curved edges -->
