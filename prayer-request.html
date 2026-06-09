@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prayer Requests | Jesus Youth KMC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
+      font-family: system-ui, 'Segoe UI', sans-serif;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      transition: all 0.2s ease;
+      outline: none;
+      font-family: inherit;
+    }
+    .input-field:focus {
+      border-color: #FF8C42;
+      box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.2);
+    }
+    textarea.input-field {
+      resize: vertical;
+    }
+    .submit-btn {
+      background: linear-gradient(135deg, #FF8C42, #FF6B35);
+      transition: all 0.2s ease;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+    }
+    .optional-badge {
+      font-size: 0.75rem;
+      font-weight: normal;
+      background: #e5e7eb;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+    .verse-card {
+      background: linear-gradient(135deg, #fef3e8, #fff5eb);
+      border-left: 4px solid #FF8C42;
+      transition: all 0.3s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="max-w-2xl mx-auto px-5 py-12 md:py-20">
+    <!-- Back button -->
+    <a href="index.html#ministries" class="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition">
+      <i class="fas fa-arrow-left"></i> Back to Ministries
+    </a>
+    
+    <!-- Prayer Request Form -->
+    <div class="glass-card p-6 md:p-10 shadow-xl">
+      <div class="text-center mb-8">
+        <i class="fas fa-hands-praying text-5xl text-orange-600 mb-3"></i>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Prayer Request</h1>
+        <p class="text-gray-600 mt-2">Our Intercession Ministry will pray for your intentions</p>
+      </div>
+      
+      <form id="prayerForm">
+        <div class="mb-5">
+          <label class="block text-gray-700 font-semibold mb-2">
+            Your Name 
+            <span class="optional-badge">Optional</span>
+          </label>
+          <input type="text" id="name" class="input-field" placeholder="Enter your name (or leave blank)">
+          <p class="text-gray-400 text-xs mt-1">Leave blank to submit anonymously</p>
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-gray-700 font-semibold mb-2">Prayer Request *</label>
+          <textarea id="prayerRequest" rows="5" class="input-field" placeholder="Share your prayer intention..." required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn w-full text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center gap-2">
+          <i class="fas fa-hands-praying"></i> Submit Prayer Request
+        </button>
+      </form>
+      
+      <!-- Success Message with Random Bible Verse -->
+      <div id="successMessage" class="hidden mt-6">
+        <div class="bg-green-100 text-green-700 p-4 rounded-xl text-center mb-4">
+          <i class="fas fa-check-circle text-green-600 mr-2"></i> 
+          Your prayer request has been submitted! Our Intercession Ministry will pray for you.
+        </div>
+        
+        <!-- Random Bible Verse will appear here -->
+        <div id="bibleVerseContainer" class="verse-card p-5 rounded-xl shadow-md fade-in-up">
+          <div class="flex items-start gap-3">
+            <i class="fas fa-bible text-orange-600 text-2xl mt-1"></i>
+            <div>
+              <p id="verseText" class="text-gray-700 italic leading-relaxed">"Trust in the Lord with all your heart and lean not on your own understanding."</p>
+              <p id="verseRef" class="text-orange-600 font-semibold text-sm mt-2">— Proverbs 3:5</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="errorMessage" class="hidden mt-6 bg-red-100 text-red-700 p-4 rounded-xl text-center"></div>
+    </div>
+    
+    <!-- Scripture Verse -->
+    <div class="text-center mt-8 text-white/80 text-sm">
+      <i class="fas fa-quote-left mr-1"></i> 
+      Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God. 
+      <i class="fas fa-quote-right ml-1"></i><br>
+      — Philippians 4:6
+    </div>
+  </div>
+
+  <script>
+    // ============ BIBLE VERSES DATABASE ============
+    const bibleVerses = [
+      { text: "Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God.", ref: "Philippians 4:6" },
+      { text: "Cast all your anxiety on him because he cares for you.", ref: "1 Peter 5:7" },
+      { text: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.", ref: "Psalm 34:18" },
+      { text: "Come to me, all you who are weary and burdened, and I will give you rest.", ref: "Matthew 11:28" },
+      { text: "I can do all things through Christ who strengthens me.", ref: "Philippians 4:13" },
+      { text: "Trust in the Lord with all your heart and lean not on your own understanding.", ref: "Proverbs 3:5" },
+      { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref: "Joshua 1:9" },
+      { text: "And we know that in all things God works for the good of those who love him, who have been called according to his purpose.", ref: "Romans 8:28" },
+      { text: "Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.", ref: "John 14:27" },
+      { text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.", ref: "Isaiah 40:31" },
+      { text: "The Lord is my shepherd; I shall not want.", ref: "Psalm 23:1" },
+      { text: "Pray without ceasing.", ref: "1 Thessalonians 5:17" },
+      { text: "If my people, who are called by my name, will humble themselves and pray and seek my face and turn from their wicked ways, then I will hear from heaven, and I will forgive their sin and will heal their land.", ref: "2 Chronicles 7:14" },
+      { text: "Therefore I tell you, whatever you ask for in prayer, believe that you have received it, and it will be yours.", ref: "Mark 11:24" },
+      { text: "Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.", ref: "Matthew 7:7" },
+      { text: "The prayer of a righteous person is powerful and effective.", ref: "James 5:16" },
+      { text: "I sought the Lord, and he answered me; he delivered me from all my fears.", ref: "Psalm 34:4" },
+      { text: "Call to me and I will answer you and tell you great and unsearchable things you do not know.", ref: "Jeremiah 33:3" },
+      { text: "My grace is sufficient for you, for my power is made perfect in weakness.", ref: "2 Corinthians 12:9" },
+      { text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref: "Jeremiah 29:11" }
+    ];
+    
+    // Function to get random Bible verse
+    function getRandomVerse() {
+      const randomIndex = Math.floor(Math.random() * bibleVerses.length);
+      return bibleVerses[randomIndex];
+    }
+    
+    // Replace with your Google Apps Script URL after deploying
+    const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+    
+    const form = document.getElementById('prayerForm');
+    const successDiv = document.getElementById('successMessage');
+    const errorDiv = document.getElementById('errorMessage');
+    const verseText = document.getElementById('verseText');
+    const verseRef = document.getElementById('verseRef');
+    
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Hide previous messages
+      successDiv.classList.add('hidden');
+      errorDiv.classList.add('hidden');
+      
+      // Get form values
+      let name = document.getElementById('name').value.trim();
+      const prayerRequest = document.getElementById('prayerRequest').value.trim();
+      
+      // If name is empty, set to "Anonymous"
+      if (name === '') {
+        name = 'Anonymous';
+      }
+      
+      // Validate prayer request only
+      if (!prayerRequest) {
+        errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Please enter your prayer request.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      // Disable submit button
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+      submitBtn.disabled = true;
+      
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            prayerRequest: prayerRequest,
+            timestamp: new Date().toLocaleString()
+          })
+        });
+        
+        // Get a random Bible verse
+        const randomVerse = getRandomVerse();
+        
+        // Update the verse display
+        verseText.textContent = `"${randomVerse.text}"`;
+        verseRef.textContent = `— ${randomVerse.ref}`;
+        
+        // Show success message with verse
+        successDiv.classList.remove('hidden');
+        
+        // Add animation class to verse container
+        const verseContainer = document.getElementById('bibleVerseContainer');
+        verseContainer.classList.remove('fade-in-up');
+        void verseContainer.offsetWidth; // Force reflow
+        verseContainer.classList.add('fade-in-up');
+        
+        // Reset form
+        form.reset();
+        
+        // Scroll to success message
+        successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+      } catch (error) {
+        errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Unable to submit. Please try again later.';
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
