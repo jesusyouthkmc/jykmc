@@ -420,7 +420,7 @@
       display: block;
     }
 
-    /* WhatsApp button - White background with green text (Option 1) */
+    /* WhatsApp button - White background with green text */
     .whatsapp-btn-white {
       background: white;
       color: #25D366;
@@ -645,13 +645,21 @@
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           
-          <!-- Intercession Ministry -->
+          <!-- Intercession Ministry with Prayer Request Button (FIXED - visible orange text) -->
           <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🙏</div>
             <h3 class="text-2xl font-bold text-white">Intercession Ministry</h3>
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Tuesday</p>
-            <p class="mt-3 text-amber-50 italic">“Pray without ceasing.”</p>
+            <p class="mt-3 text-amber-50 italic">"Pray without ceasing."</p>
             <p class="text-amber-100 text-sm mt-1">— 1 Thessalonians 5:17</p>
+            
+            <!-- Prayer Request Button - NOW WITH VISIBLE ORANGE TEXT -->
+            <div class="mt-5">
+              <a href="prayer-request.html" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-orange-200 hover:shadow-md">
+                <i class="fas fa-hands-praying"></i> Need a prayer?
+              </a>
+            </div>
+            
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           
@@ -695,7 +703,7 @@
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION - Updated with CSS animations -->
+    <!-- SUPPORT US SECTION -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -724,7 +732,7 @@
       </div>
     </section>
 
-    <!-- JOIN THE FAMILY + CALL TO ACTION - WhatsApp button: White background with green text (Option 1) -->
+    <!-- JOIN THE FAMILY + CALL TO ACTION -->
     <section id="join" class="py-20 relative overflow-hidden">
       <div class="absolute inset-0 opacity-20">
         <i class="fas fa-dove text-9xl absolute -bottom-10 -left-10 text-white"></i>
@@ -736,7 +744,6 @@
           <h2 class="text-4xl md:text-5xl font-bold text-white">Join the Family</h2>
           <p class="text-amber-50 text-lg md:text-xl max-w-2xl mx-auto mt-4">Be part of a vibrant community of young believers growing in faith, prayer and mission on the Medical College campus.</p>
           <div class="flex flex-wrap justify-center gap-5 mt-10">
-            <!-- WhatsApp button - clean white background with green text -->
             <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="whatsapp-btn-white inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold shadow-md transition">
               <i class="fab fa-whatsapp text-xl"></i> WhatsApp group
             </a>
@@ -824,28 +831,22 @@
     
     fadeElements.forEach(el => observer.observe(el));
 
-    // ============ AUTO CAROUSEL (3 images, rotates every 3 SECONDS, no dots/arrows) ============
+    // ============ AUTO CAROUSEL (3 images, rotates every 3 SECONDS) ============
     const carouselSlides = document.querySelectorAll('.carousel-slide');
     let currentSlide = 0;
     const totalSlides = carouselSlides.length;
 
     function rotateCarousel() {
-      // Remove active class from current slide
       carouselSlides[currentSlide].classList.remove('active');
-      
-      // Move to next slide (loop back to 0 if at the end)
       currentSlide = (currentSlide + 1) % totalSlides;
-      
-      // Add active class to new slide
       carouselSlides[currentSlide].classList.add('active');
     }
 
-    // Start carousel rotation every 3 SECONDS (3000 milliseconds)
     if (totalSlides > 0) {
       setInterval(rotateCarousel, 3000);
     }
 
-    // ============ PRAYER COUNTER - CSS POWERED ANIMATIONS ============
+    // ============ PRAYER COUNTER ============
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     
     const counterDisplay = document.getElementById('prayerCountDisplay');
@@ -855,40 +856,26 @@
     let currentValue = 0;
     let isProcessing = false;
     
-    // Update display with CSS animations
     function updateDisplayWithCSSAnimation(newValue) {
       if (!counterDisplay) return;
-      
-      // Remove animation classes to reset
       counterDisplay.classList.remove('number-flip', 'number-pulse');
-      
-      // Force reflow to restart animation
       void counterDisplay.offsetWidth;
-      
-      // Update the number with comma formatting
       counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
-      
-      // Apply animations
       counterDisplay.classList.add('number-flip', 'number-pulse');
-      
-      // Remove animation classes after they complete
       setTimeout(() => {
         if (counterDisplay) {
           counterDisplay.classList.remove('number-flip', 'number-pulse');
         }
       }, 500);
-      
       currentValue = newValue;
     }
     
-    // Direct display update (no animation - for initial load)
     function updateDisplayDirect(value) {
       if (!counterDisplay) return;
       counterDisplay.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`;
       currentValue = value;
     }
     
-    // Fetch current count from server
     async function fetchPrayerCount() {
       try {
         const response = await fetch(GOOGLE_SHEETS_API);
@@ -900,38 +887,22 @@
       }
     }
     
-    // Increment prayer count with CSS animations
     async function incrementPrayerCount() {
       if (isProcessing) return;
       isProcessing = true;
       
-      // Add loading class - CSS handles the smooth bar animation
       prayerButton.classList.add('loading');
       prayerButton.disabled = true;
-      
-      // CSS transition will smoothly animate to 100% over 2 seconds
       loadingBarFill.style.width = '100%';
       
       try {
-        // Send request to server
-        const response = await fetch(GOOGLE_SHEETS_API, {
-          method: 'POST'
-        });
+        const response = await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
         const data = await response.json();
-        
-        // Small delay to let the CSS animation feel satisfying
         await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // Remove loading state
         prayerButton.classList.remove('loading');
         prayerButton.disabled = false;
-        
-        // Reset loading bar (CSS transition handles the smooth reset)
         loadingBarFill.style.width = '0%';
-        
-        // Animate the number update with CSS
         updateDisplayWithCSSAnimation(data.count);
-        
       } catch (error) {
         console.error('Error incrementing prayer count:', error);
         prayerButton.classList.remove('loading');
@@ -943,13 +914,9 @@
       }
     }
     
-    // Load initial count
     fetchPrayerCount();
-    
-    // Add click event to button
     prayerButton.addEventListener('click', incrementPrayerCount);
 
-    // fix for mobile viewport height
     function setVH() {
       let vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
