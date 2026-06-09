@@ -254,7 +254,90 @@
       transform: scale(1.05);
     }
     
-    /* Coming soon badge - kept for other uses if needed, but removed from Gallery */
+    /* Orange Pulse for Need a Prayer button */
+    @keyframes pulse-orange {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 140, 66, 0.7);
+      }
+      50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 8px rgba(255, 140, 66, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 140, 66, 0);
+      }
+    }
+    
+    .pulse-orange {
+      animation: pulse-orange 2s infinite;
+    }
+    
+    .pulse-orange:hover {
+      animation: none;
+      transform: scale(1.03);
+    }
+    
+    /* Pink Pulse for Spiritual Adoption button */
+    @keyframes pulse-pink {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.6);
+      }
+      50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 8px rgba(219, 39, 119, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(219, 39, 119, 0);
+      }
+    }
+    
+    .pulse-pink {
+      animation: pulse-pink 2s infinite;
+    }
+    
+    .pulse-pink:hover {
+      animation: none;
+      transform: scale(1.03);
+    }
+    
+    /* Ripple Effect Styles */
+    .ripple-btn {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .ripple-btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(0);
+      animation: ripple-animation 0.6s ease-out;
+      pointer-events: none;
+    }
+    
+    @keyframes ripple-animation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    /* Orange ripple for Need a prayer button */
+    .ripple-orange .ripple {
+      background: rgba(255, 140, 66, 0.7);
+    }
+    
+    /* Pink ripple for Spiritual Adoption button */
+    .ripple-pink .ripple {
+      background: rgba(219, 39, 119, 0.7);
+    }
+    
+    /* Coming soon badge */
     .coming-soon-badge {
       background: rgba(255, 255, 255, 0.2);
       padding: 2px 8px;
@@ -265,7 +348,7 @@
       letter-spacing: 0.5px;
     }
     
-    /* ============ UPDATED PRAYER BUTTON STYLES - CSS POWERED ============ */
+    /* ============ PRAYER BUTTON STYLES ============ */
     .prayer-button-container {
       position: relative;
       display: inline-block;
@@ -304,7 +387,6 @@
       pointer-events: none;
     }
     
-    /* Loading state - CSS handles the smooth animation */
     .prayer-btn.loading .loading-bar-fill {
       width: 100% !important;
       transition: width 2s linear;
@@ -319,7 +401,6 @@
       cursor: wait;
     }
     
-    /* Loading glow animation */
     @keyframes loadingGlow {
       0% {
         box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
@@ -336,7 +417,6 @@
       animation: loadingGlow 1s infinite;
     }
     
-    /* CSS number flip animation */
     .number-flip {
       animation: flipUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
@@ -352,7 +432,6 @@
       }
     }
     
-    /* Number pulse animation */
     .number-pulse {
       animation: gentlePulse 0.5s ease;
     }
@@ -372,7 +451,6 @@
       }
     }
     
-    /* Counter wrapper gradient text */
     .counter-wrapper {
       display: inline-block;
       background: linear-gradient(135deg, #fde68a, #FF8C42);
@@ -382,7 +460,7 @@
       font-weight: bold;
     }
 
-    /* Auto-rotating Carousel Styles (above hero image) */
+    /* Auto-rotating Carousel Styles */
     .carousel-container {
       position: relative;
       width: 100%;
@@ -420,7 +498,6 @@
       display: block;
     }
 
-    /* WhatsApp button - White background with green text */
     .whatsapp-btn-white {
       background: white;
       color: #25D366;
@@ -435,13 +512,10 @@
 </head>
 <body class="glossy-orange-bg">
   
-  <!-- Background Watermark Logo - Responsive for orientation -->
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
 
-  <!-- Floating header with curved edges -->
   <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
-      <!-- Logo Image -->
       <a href="#home" class="flex items-center relative z-10">
         <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
       </a>
@@ -461,71 +535,36 @@
     </div>
   </header>
 
-  <!-- Sidebar Menu - Matching footer style -->
   <div id="mobileMenu" class="sidebar-menu">
     <div class="flex justify-start p-5">
       <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
     </div>
     <nav class="flex flex-col gap-3 px-6 py-4">
-      <a href="#home" class="mobile-nav-link">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-      </a>
-      <a href="#gathering" class="mobile-nav-link">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Gathering</span>
-      </a>
-      <a href="#ministries" class="mobile-nav-link">
-        <i class="fas fa-church"></i>
-        <span>Ministries</span>
-      </a>
-      <a href="gallery.html" class="mobile-nav-link">
-        <i class="fas fa-images"></i>
-        <span>Gallery</span>
-      </a>
-      <a href="events.html" class="mobile-nav-link">
-        <i class="fas fa-calendar-week"></i>
-        <span>Events</span>
-      </a>
-      <a href="#resources" class="mobile-nav-link">
-        <i class="fas fa-download"></i>
-        <span>Resources</span>
-      </a>
-      <a href="#support" class="mobile-nav-link">
-        <i class="fas fa-hands-praying"></i>
-        <span>Support Us</span>
-      </a>
-      <a href="#join" class="mobile-nav-link">
-        <i class="fas fa-users"></i>
-        <span>Join</span>
-      </a>
+      <a href="#home" class="mobile-nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="#gathering" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i><span>Gathering</span></a>
+      <a href="#ministries" class="mobile-nav-link"><i class="fas fa-church"></i><span>Ministries</span></a>
+      <a href="gallery.html" class="mobile-nav-link"><i class="fas fa-images"></i><span>Gallery</span></a>
+      <a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-week"></i><span>Events</span></a>
+      <a href="#resources" class="mobile-nav-link"><i class="fas fa-download"></i><span>Resources</span></a>
+      <a href="#support" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
+      <a href="#join" class="mobile-nav-link"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
   </div>
   
-  <!-- Overlay -->
   <div id="menuOverlay" class="menu-overlay"></div>
 
   <main class="content-wrapper">
-    <!-- HERO SECTION with Image -->
     <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12 w-full">
         
-        <!-- AUTO-ROTATING CAROUSEL (3 images, rotates every 3 seconds, no dots/arrows) -->
         <div class="carousel-container mb-4 md:mb-6 fade-up">
           <div class="carousel-slides">
-            <div class="carousel-slide active">
-              <img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image">
-            </div>
-            <div class="carousel-slide">
-              <img src="carousel/carousel-2.jpg" alt="Jesus Youth KMC Ministry 2" class="carousel-image">
-            </div>
-            <div class="carousel-slide">
-              <img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image">
-            </div>
+            <div class="carousel-slide active"><img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image"></div>
+            <div class="carousel-slide"><img src="carousel/carousel-2.jpg" alt="Jesus Youth KMC Ministry 2" class="carousel-image"></div>
+            <div class="carousel-slide"><img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image"></div>
           </div>
         </div>
         
-        <!-- Hero Image above heading (existing hero image stays unchanged) -->
         <div class="hero-image-container mb-8 md:mb-12 fade-up">
           <img src="hero-image.jpg" alt="Jesus Youth KMC Ministry" class="hero-image">
         </div>
@@ -534,9 +573,7 @@
           <div class="fade-up">
             <p class="text-amber-100 font-semibold tracking-wide text-sm uppercase mb-2">A Campus Ministry under the Jesus Youth Movement</p>
             <p class="text-amber-200 text-base md:text-lg mb-6">Rooted in the Catholic Faith</p>
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
-              JESUS YOUTH <span class="text-amber-200">KMC</span>
-            </h1>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">JESUS YOUTH <span class="text-amber-200">KMC</span></h1>
             <p class="text-xl text-amber-50 mt-4">Young hearts on fire for Christ</p>
             <p class="text-lg text-amber-100 mt-1">Kottayam Medical College Campus Ministry</p>
             <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
@@ -549,47 +586,32 @@
             <i class="fas fa-cross text-white text-9xl opacity-10 absolute bottom-0 right-0"></i>
             <div class="text-center p-6 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30 shadow-xl">
               <p class="text-3xl font-bold text-white">🔥</p>
-              <p class="italic text-white mt-2">“I can do all things through Christ who strengthens me”</p>
+              <p class="italic text-white mt-2">"I can do all things through Christ who strengthens me"</p>
               <p class="text-sm text-amber-100">— Philippians 4:13</p>
             </div>
           </div>
         </div>
         
-        <!-- SCROLL TO EXPLORE - moved lower -->
         <div class="mt-32 text-center animate-bounce">
-          <a href="#jesus-youth-movement" class="text-white text-sm flex flex-col items-center gap-1">
-            SCROLL TO EXPLORE 
-            <i class="fas fa-chevron-down"></i>
-          </a>
+          <a href="#jesus-youth-movement" class="text-white text-sm flex flex-col items-center gap-1">SCROLL TO EXPLORE <i class="fas fa-chevron-down"></i></a>
         </div>
       </div>
     </section>
 
-    <!-- JESUS YOUTH MOVEMENT SECTION -->
     <section id="jesus-youth-movement" class="py-20 md:py-28">
       <div class="max-w-4xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
-          <!-- Clickable Logo -->
           <a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="inline-block mb-6 transition-transform hover:scale-105">
             <img src="jesus-youth-logo.png" alt="Jesus Youth International" class="w-28 md:w-36 h-auto mx-auto">
           </a>
-          
-          <!-- Description -->
-          <p class="text-white text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            Jesus Youth (JY) is an International Catholic Movement, approved by the Holy See.
-          </p>
-          
-          <!-- Know More Button with Pulse Animation -->
+          <p class="text-white text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">Jesus Youth (JY) is an International Catholic Movement, approved by the Holy See.</p>
           <div class="mt-8">
-            <a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="pulse-button inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-lg transition">
-              Know more <i class="fas fa-arrow-right"></i>
-            </a>
+            <a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="pulse-button inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-lg transition">Know more <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- WEEKLY GATHERING -->
     <section id="gathering" class="py-20 md:py-28">
       <div class="max-w-5xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -599,35 +621,15 @@
         </div>
         <div class="bg-white/95 rounded-3xl p-6 md:p-10 shadow-lg fade-up transition-all text-gray-800">
           <div class="grid md:grid-cols-3 gap-6 text-center md:text-left">
-            <div>
-              <i class="far fa-calendar-alt text-orange-600 text-3xl mb-3"></i>
-              <p class="font-bold text-lg text-gray-800">Every Wednesday</p>
-              <p class="text-gray-600">4:30 PM – 6:00 PM</p>
-            </div>
-            <div>
-              <i class="fas fa-place-of-worship text-orange-600 text-3xl mb-3"></i>
-              <p class="font-bold text-lg text-gray-800">
-                <a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-orange-600 hover:text-orange-700">
-                  <i class="fas fa-map-marker-alt"></i>
-                  St. Luke's Convent
-                </a>
-              </p>
-              <p class="text-gray-600">Near Medical College Bus Stand, Kottayam</p>
-            </div>
-            <div>
-              <i class="fas fa-heart text-orange-600 text-3xl mb-3"></i>
-              <p class="font-bold text-lg text-gray-800">Worship • Fellowship • Transformation</p>
-              <p class="text-gray-600">A place of belonging</p>
-            </div>
+            <div><i class="far fa-calendar-alt text-orange-600 text-3xl mb-3"></i><p class="font-bold text-lg text-gray-800">Every Wednesday</p><p class="text-gray-600">4:30 PM – 6:00 PM</p></div>
+            <div><i class="fas fa-place-of-worship text-orange-600 text-3xl mb-3"></i><p class="font-bold text-lg text-gray-800"><a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-orange-600 hover:text-orange-700"><i class="fas fa-map-marker-alt"></i> St. Luke's Convent</a></p><p class="text-gray-600">Near Medical College Bus Stand, Kottayam</p></div>
+            <div><i class="fas fa-heart text-orange-600 text-3xl mb-3"></i><p class="font-bold text-lg text-gray-800">Worship • Fellowship • Transformation</p><p class="text-gray-600">A place of belonging</p></div>
           </div>
-          <div class="mt-8 text-center border-t border-gray-200 pt-6">
-            <p class="italic text-gray-700">“Where two or three gather in my name, there am I with them.” — Matthew 18:20</p>
-          </div>
+          <div class="mt-8 text-center border-t border-gray-200 pt-6"><p class="italic text-gray-700">"Where two or three gather in my name, there am I with them." — Matthew 18:20</p></div>
         </div>
       </div>
     </section>
 
-    <!-- MINISTRIES -->
     <section id="ministries" class="py-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-14 fade-up">
@@ -635,58 +637,56 @@
           <p class="text-amber-50 text-lg mt-2">Serving Christ in different ways</p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <!-- Nurses Ministry -->
+          
           <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">❤️‍🩹</div>
             <h3 class="text-2xl font-bold text-white">Nurses Ministry</h3>
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p>
-            <p class="mt-3 text-amber-50 italic">“…so that we may be able to console those who are in any affliction with the consolation with which we ourselves are consoled by God.”</p>
+            <p class="mt-3 text-amber-50 italic">"…so that we may be able to console those who are in any affliction with the consolation with which we ourselves are consoled by God."</p>
             <p class="text-amber-100 text-sm mt-1">— 2 Corinthians 1:4</p>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           
-          <!-- Intercession Ministry with Prayer Request Button (FIXED - visible orange text) -->
           <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🙏</div>
             <h3 class="text-2xl font-bold text-white">Intercession Ministry</h3>
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Tuesday</p>
             <p class="mt-3 text-amber-50 italic">"Pray without ceasing."</p>
             <p class="text-amber-100 text-sm mt-1">— 1 Thessalonians 5:17</p>
-            
-            <!-- Prayer Request Button - NOW WITH VISIBLE ORANGE TEXT -->
             <div class="mt-5">
-              <a href="prayer-request.html" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-orange-200 hover:shadow-md">
+              <a href="prayer-request.html" id="needPrayerBtn" class="ripple-btn ripple-orange pulse-orange inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-orange-200 hover:shadow-md">
                 <i class="fas fa-hands-praying"></i> Need a prayer?
               </a>
             </div>
-            
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           
-          <!-- Music Ministry -->
           <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🎵</div>
             <h3 class="text-2xl font-bold text-white">Music Ministry</h3>
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p>
-            <p class="mt-3 text-amber-50 italic">“Oh come, let us sing to the LORD...”</p>
+            <p class="mt-3 text-amber-50 italic">"Oh come, let us sing to the LORD..."</p>
             <p class="text-amber-100 text-sm mt-1">— Psalm 95:1</p>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           
-          <!-- Pro-Life Ministry -->
           <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">🕊️</div>
             <h3 class="text-2xl font-bold text-white">Pro-Life Ministry</h3>
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Friday</p>
-            <p class="mt-3 text-amber-50 italic">“Before I formed you in the womb I knew you…”</p>
+            <p class="mt-3 text-amber-50 italic">"Before I formed you in the womb I knew you…"</p>
             <p class="text-amber-100 text-sm mt-1">— Jeremiah 1:5</p>
+            <div class="mt-5">
+              <a href="#" id="spiritualAdoptionBtn" class="ripple-btn ripple-pink pulse-pink inline-flex items-center gap-2 bg-white/90 hover:bg-pink-50 text-pink-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-pink-300 hover:shadow-md">
+                <i class="fas fa-baby-carriage"></i> Spiritually adopt a child
+              </a>
+            </div>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FREE RESOURCES (wallpapers) -->
     <section id="resources" class="py-20">
       <div class="max-w-5xl mx-auto px-5 md:px-8 text-center">
         <div class="fade-up">
@@ -694,88 +694,55 @@
           <h2 class="text-4xl md:text-5xl font-bold mt-4 text-white">Bible Verse Phone Wallpapers</h2>
           <p class="text-amber-50 text-lg max-w-2xl mx-auto mt-3">Beautiful, faith-filled wallpapers to keep God's Word with you every day.</p>
           <div class="mt-8">
-            <a href="https://drive.google.com/drive/folders/1wv_bxp4cHn9hQnkM1UsxYgtPAyYaFUHZ" target="_blank" class="inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-md transition text-lg">
-              <i class="fas fa-download"></i> Download Wallpapers
-            </a>
+            <a href="https://drive.google.com/drive/folders/1wv_bxp4cHn9hQnkM1UsxYgtPAyYaFUHZ" target="_blank" class="inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-md transition text-lg"><i class="fas fa-download"></i> Download Wallpapers</a>
           </div>
           <div class="mt-6 text-sm text-amber-100">* high-res, mobile optimized | free for personal use</div>
         </div>
       </div>
     </section>
 
-    <!-- SUPPORT US SECTION -->
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
           <div class="text-5xl mb-4">💝</div>
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Support Us</h2>
           <p class="text-amber-100 text-lg mb-8">Your prayers are the foundation of our ministry. Every Hail Mary lifts us up!</p>
-          
-          <!-- Global Prayer Counter with Gradient Text -->
           <div class="bg-white/5 rounded-2xl p-8 mb-8">
-            <div class="text-6xl font-bold mb-2">
-              <span id="prayerCountDisplay" class="counter-wrapper">0</span>
-            </div>
+            <div class="text-6xl font-bold mb-2"><span id="prayerCountDisplay" class="counter-wrapper">0</span></div>
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
-          
-          <!-- Button with CSS-powered animations -->
           <div class="prayer-button-container">
-            <button id="prayerButton" class="prayer-btn">
-              <div id="loadingBarFill" class="loading-bar-fill"></div>
-              <span class="btn-text">🙏 Pray a Hail Mary</span>
-            </button>
+            <button id="prayerButton" class="prayer-btn"><div id="loadingBarFill" class="loading-bar-fill"></div><span class="btn-text">🙏 Pray a Hail Mary</span></button>
           </div>
-          
           <p class="text-white/60 text-sm mt-6">"The fervent prayer of a righteous person is very powerful." — James 5:16</p>
         </div>
       </div>
     </section>
 
-    <!-- JOIN THE FAMILY + CALL TO ACTION -->
     <section id="join" class="py-20 relative overflow-hidden">
-      <div class="absolute inset-0 opacity-20">
-        <i class="fas fa-dove text-9xl absolute -bottom-10 -left-10 text-white"></i>
-        <i class="fas fa-cross text-8xl absolute top-10 right-10 text-white"></i>
-      </div>
+      <div class="absolute inset-0 opacity-20"><i class="fas fa-dove text-9xl absolute -bottom-10 -left-10 text-white"></i><i class="fas fa-cross text-8xl absolute top-10 right-10 text-white"></i></div>
       <div class="max-w-4xl mx-auto px-5 md:px-8 text-center relative z-10">
         <div class="fade-up">
           <i class="fas fa-users text-5xl text-white mb-4"></i>
           <h2 class="text-4xl md:text-5xl font-bold text-white">Join the Family</h2>
           <p class="text-amber-50 text-lg md:text-xl max-w-2xl mx-auto mt-4">Be part of a vibrant community of young believers growing in faith, prayer and mission on the Medical College campus.</p>
           <div class="flex flex-wrap justify-center gap-5 mt-10">
-            <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="whatsapp-btn-white inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold shadow-md transition">
-              <i class="fab fa-whatsapp text-xl"></i> WhatsApp group
-            </a>
-            <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition transform hover:scale-105">
-              <i class="fab fa-instagram text-white mr-2"></i> Follow us
-            </a>
+            <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="whatsapp-btn-white inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold shadow-md transition"><i class="fab fa-whatsapp text-xl"></i> WhatsApp group</a>
+            <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition transform hover:scale-105"><i class="fab fa-instagram text-white mr-2"></i> Follow us</a>
           </div>
-          <p class="text-amber-100 text-sm mt-8">
-            <i class="fas fa-map-marker-alt text-amber-200 mr-1"></i> 
-            Kottayam Medical College Campus & 
-            <a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-white/90 hover:text-white">
-              <i class="fas fa-map-marker-alt"></i>
-              St. Luke's Convent
-            </a>
-          </p>
+          <p class="text-amber-100 text-sm mt-8"><i class="fas fa-map-marker-alt text-amber-200 mr-1"></i> Kottayam Medical College Campus & <a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-white/90 hover:text-white"><i class="fas fa-map-marker-alt"></i> St. Luke's Convent</a></p>
         </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-5">
         <p class="font-semibold text-white">Jesus Youth KMC — Kottayam Medical College Campus Ministry</p>
         <p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p>
         <p class="text-amber-100">Young hearts on fire for Christ</p>
         <div class="flex justify-center gap-5 mt-4 text-white text-lg">
-          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
-            <i class="fab fa-whatsapp"></i>
-          </a>
+          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-instagram"></i></a>
+          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-whatsapp"></i></a>
         </div>
         <p class="mt-6 text-white/60 text-xs">© 2026 Jesus Youth KMC · All glory to God</p>
       </div>
@@ -783,77 +750,92 @@
   </main>
 
   <script>
-    // Mobile menu functionality
+    // Ripple effect function
+    function addRippleEffect(button) {
+      button.addEventListener('click', function(event) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        button.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    }
+    
+    // Apply ripple to Need a Prayer button (navigation handled by href)
+    const needPrayerBtn = document.getElementById('needPrayerBtn');
+    if (needPrayerBtn) {
+      addRippleEffect(needPrayerBtn);
+    }
+    
+    // Spiritual Adoption Button with device detection - FIXED
+    const spiritualBtn = document.getElementById('spiritualAdoptionBtn');
+    if (spiritualBtn) {
+      // Add ripple effect
+      addRippleEffect(spiritualBtn);
+      
+      // Handle click for navigation
+      spiritualBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+        const isAndroid = /Android/.test(userAgent);
+        
+        // Navigate immediately to the correct store
+        if (isIOS) {
+          window.location.href = 'https://apps.apple.com/us/app/army-for-life/id1557521454';
+        } else if (isAndroid) {
+          window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
+        } else {
+          // Desktop - default to Google Play Store
+          window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
+        }
+      });
+    }
+
+    // Mobile menu
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenu = document.getElementById('closeMenu');
     const menuOverlay = document.getElementById('menuOverlay');
 
-    function openMenu() {
-      mobileMenu.classList.add('open');
-      menuOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+    function openMenu() { mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeMenuFunction() { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
 
-    function closeMenuFunction() {
-      mobileMenu.classList.remove('open');
-      menuOverlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+    if (menuBtn) menuBtn.addEventListener('click', openMenu);
+    if (closeMenu) closeMenu.addEventListener('click', closeMenuFunction);
+    if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunction);
+    document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeMenuFunction));
 
-    if (menuBtn) {
-      menuBtn.addEventListener('click', openMenu);
-    }
-    
-    if (closeMenu) {
-      closeMenu.addEventListener('click', closeMenuFunction);
-    }
-    
-    if (menuOverlay) {
-      menuOverlay.addEventListener('click', closeMenuFunction);
-    }
-    
-    // Close menu when clicking on a nav link
-    document.querySelectorAll('.mobile-nav-link').forEach(link => {
-      link.addEventListener('click', closeMenuFunction);
-    });
-
-    // Intersection Observer for fade-up animation
+    // Fade-up animation
     const fadeElements = document.querySelectorAll('.fade-up');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
     }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
-    
     fadeElements.forEach(el => observer.observe(el));
 
-    // ============ AUTO CAROUSEL (3 images, rotates every 3 SECONDS) ============
+    // Auto Carousel
     const carouselSlides = document.querySelectorAll('.carousel-slide');
     let currentSlide = 0;
-    const totalSlides = carouselSlides.length;
-
-    function rotateCarousel() {
-      carouselSlides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % totalSlides;
-      carouselSlides[currentSlide].classList.add('active');
+    if (carouselSlides.length > 0) {
+      setInterval(() => {
+        carouselSlides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % carouselSlides.length;
+        carouselSlides[currentSlide].classList.add('active');
+      }, 3000);
     }
 
-    if (totalSlides > 0) {
-      setInterval(rotateCarousel, 3000);
-    }
-
-    // ============ PRAYER COUNTER ============
+    // Prayer Counter
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
-    
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
     const loadingBarFill = document.getElementById('loadingBarFill');
-    
-    let currentValue = 0;
     let isProcessing = false;
     
     function updateDisplayWithCSSAnimation(newValue) {
@@ -862,67 +844,41 @@
       void counterDisplay.offsetWidth;
       counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
       counterDisplay.classList.add('number-flip', 'number-pulse');
-      setTimeout(() => {
-        if (counterDisplay) {
-          counterDisplay.classList.remove('number-flip', 'number-pulse');
-        }
-      }, 500);
-      currentValue = newValue;
+      setTimeout(() => counterDisplay.classList.remove('number-flip', 'number-pulse'), 500);
     }
     
-    function updateDisplayDirect(value) {
-      if (!counterDisplay) return;
-      counterDisplay.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`;
-      currentValue = value;
-    }
+    function updateDisplayDirect(value) { if (counterDisplay) counterDisplay.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`; }
     
     async function fetchPrayerCount() {
-      try {
-        const response = await fetch(GOOGLE_SHEETS_API);
-        const data = await response.json();
-        updateDisplayDirect(data.count);
-      } catch (error) {
-        console.error('Error fetching prayer count:', error);
-        counterDisplay.innerHTML = '<span class="counter-wrapper">—</span>';
-      }
+      try { const response = await fetch(GOOGLE_SHEETS_API); const data = await response.json(); updateDisplayDirect(data.count); } 
+      catch (error) { console.error(error); if (counterDisplay) counterDisplay.innerHTML = '<span class="counter-wrapper">—</span>'; }
     }
     
     async function incrementPrayerCount() {
       if (isProcessing) return;
       isProcessing = true;
-      
       prayerButton.classList.add('loading');
       prayerButton.disabled = true;
       loadingBarFill.style.width = '100%';
-      
       try {
-        const response = await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
+        await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
+        const response = await fetch(GOOGLE_SHEETS_API);
         const data = await response.json();
         await new Promise(resolve => setTimeout(resolve, 300));
         prayerButton.classList.remove('loading');
         prayerButton.disabled = false;
         loadingBarFill.style.width = '0%';
         updateDisplayWithCSSAnimation(data.count);
-      } catch (error) {
-        console.error('Error incrementing prayer count:', error);
+      } catch (error) { 
         prayerButton.classList.remove('loading');
         prayerButton.disabled = false;
         loadingBarFill.style.width = '0%';
         alert('Unable to save your prayer. Please try again later.');
-      } finally {
-        isProcessing = false;
-      }
+      } finally { isProcessing = false; }
     }
     
     fetchPrayerCount();
-    prayerButton.addEventListener('click', incrementPrayerCount);
-
-    function setVH() {
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    window.addEventListener('resize', setVH);
-    setVH();
+    if (prayerButton) prayerButton.addEventListener('click', incrementPrayerCount);
   </script>
 </body>
 </html>
