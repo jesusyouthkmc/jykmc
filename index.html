@@ -349,14 +349,55 @@
   </main>
 
   <script>
-    // ============ SOUND ============
-    function playPrayerSound() {
+    // ============ WEB AUDIO API (Better for Safari) ============
+    let audioContext = null;
+    let audioBuffer = null;
+    let isAudioUnlocked = false;
+
+    // Load and decode the audio file
+    async function loadAudio() {
       try {
-        const audio = new Audio('prayer-sound.mp3');
-        audio.volume = 0.7;
-        audio.play().catch(() => {});
+        const response = await fetch('prayer-sound.mp3');
+        const arrayBuffer = await response.arrayBuffer();
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
       } catch(e) {}
     }
+
+    // Call this on any user interaction to unlock audio
+    function unlockAudio() {
+      if (isAudioUnlocked || !audioContext) return;
+      if (audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+          isAudioUnlocked = true;
+        }).catch(() => {});
+      } else {
+        isAudioUnlocked = true;
+      }
+    }
+
+    function playPrayerSound() {
+      try {
+        if (!audioBuffer || !audioContext) return;
+        
+        // Resume context if suspended
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(audioContext.destination);
+        source.start();
+      } catch(e) {}
+    }
+
+    // Load audio file when page loads
+    loadAudio();
+
+    // Unlock audio on ANY user interaction (tap/click anywhere)
+    document.body.addEventListener('click', unlockAudio);
+    document.body.addEventListener('touchend', unlockAudio);
 
     // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
