@@ -760,8 +760,9 @@
     function preloadPrayerSound() {
       try {
         soundAudio = new Audio(soundUrl);
+        soundAudio.volume = 0.7; // Set volume to 70% (higher than default)
         soundAudio.load();
-        console.log('Prayer sound preloaded successfully');
+        console.log('Prayer sound preloaded successfully at 70% volume');
       } catch(e) {
         console.log('Sound file not found yet - add prayer-sound.mp3 to enable sound effects');
       }
@@ -771,9 +772,11 @@
       try {
         if (soundAudio) {
           soundAudio.currentTime = 0; // Rewind to start
+          soundAudio.volume = 0.7; // Ensure volume is set to 70%
           soundAudio.play().catch(e => console.log('Sound play failed:', e));
         } else {
           const audio = new Audio(soundUrl);
+          audio.volume = 0.7; // Set volume for new audio object
           audio.play().catch(e => console.log('Sound file not found - add prayer-sound.mp3'));
         }
       } catch(e) {
