@@ -133,10 +133,20 @@
     .prayer-btn:disabled { cursor: wait; }
     @keyframes loadingGlow { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); } 50% { box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); } }
     .prayer-btn.loading { animation: loadingGlow 1s infinite; }
+    
+    /* Number animations - FLIP + GLOW */
     .number-flip { animation: flipUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
-    @keyframes flipUp { 0% { opacity: 0; transform: translateY(20px) rotateX(90deg); } 100% { opacity: 1; transform: translateY(0) rotateX(0); } }
+    @keyframes flipUp {
+      0% { opacity: 0; transform: translateY(20px) rotateX(90deg); }
+      100% { opacity: 1; transform: translateY(0) rotateX(0); }
+    }
     .number-pulse { animation: gentlePulse 0.5s ease; }
-    @keyframes gentlePulse { 0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } 50% { transform: scale(1.08); text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); } 100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } }
+    @keyframes gentlePulse {
+      0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+      50% { transform: scale(1.08); text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+      100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+    }
+    
     .counter-wrapper { display: inline-block; background: linear-gradient(135deg, #fde68a, #FF8C42); background-clip: text; -webkit-background-clip: text; color: transparent; font-weight: bold; }
     .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: #000; }
     .carousel-slides { position: relative; width: 100%; aspect-ratio: 16 / 9; }
@@ -349,7 +359,7 @@
   </main>
 
   <script>
-    // ============ SIMPLE SOUND (works everywhere except Safari after first click) ============
+    // ============ SIMPLE SOUND ============
     function playPrayerSound() {
       try {
         const audio = new Audio('prayer-sound.mp3');
@@ -382,7 +392,6 @@
       spiritualBtn.addEventListener('click', function(e) {
         e.preventDefault();
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isAndroid = /Android/.test(navigator.userAgent);
         window.location.href = isIOS ? 'https://apps.apple.com/us/app/army-for-life/id1557521454' : 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
       });
     }
@@ -410,30 +419,39 @@
     let idx = 0;
     if (slides.length) setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 3000);
 
-    // Prayer Counter with platform-specific sound timing
-    const API = 'https://script.google.com/macros/s/AKfycbyA0mFyA1vfd-ITtXUzpiaA4_P-SgQZIp5axhelyI73GruQ6K9c2VQOkCvRoebyjNNW/exec';
+    // Prayer Counter with GLOW effect on numbers
+    const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
     const fill = document.getElementById('loadingBarFill');
     let processing = false;
     
-    function updateDisplay(value) { if (display) display.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`; }
+    function updateDisplayWithAnimation(newValue) {
+      if (!display) return;
+      // Remove both animation classes
+      display.classList.remove('number-flip', 'number-pulse');
+      // Force reflow to restart animation
+      void display.offsetWidth;
+      // Update the number
+      display.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
+      // Add both animations: flip + glow pulse
+      display.classList.add('number-flip', 'number-pulse');
+      // Remove after animation completes
+      setTimeout(() => {
+        if (display) display.classList.remove('number-flip', 'number-pulse');
+      }, 500);
+    }
+    
+    function updateDisplayDirect(value) { if (display) display.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`; }
     
     async function fetchCount() {
-      try { const res = await fetch(API); const data = await res.json(); updateDisplay(data.count); } catch(e) { if (display) display.innerHTML = '<span class="counter-wrapper">—</span>'; }
+      try { const res = await fetch(API); const data = await res.json(); updateDisplayDirect(data.count); } 
+      catch(e) { if (display) display.innerHTML = '<span class="counter-wrapper">—</span>'; }
     }
     
     async function increment() {
       if (processing) return;
       processing = true;
-      
-      // Detect iOS device
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      
-      // On iOS: Play sound IMMEDIATELY on click (better chance with Safari)
-      if (isIOS) {
-        playPrayerSound();
-      }
       
       btn.classList.add('loading');
       btn.disabled = true;
@@ -447,12 +465,11 @@
         btn.classList.remove('loading');
         btn.disabled = false;
         fill.style.width = '0%';
-        updateDisplay(data.count);
         
-        // On Android/Desktop: Play sound AFTER counter updates
-        if (!isIOS) {
-          playPrayerSound();
-        }
+        // Update with FLIP + GLOW animation
+        updateDisplayWithAnimation(data.count);
+        
+        playPrayerSound();
         
         const span = btn.querySelector('.btn-text');
         span.innerHTML = 'Thank You ☺️';
