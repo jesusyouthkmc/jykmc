@@ -107,7 +107,7 @@
       font-weight: 600;
       padding: 16px 32px;
       border-radius: 50px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
       cursor: pointer;
       border: none;
       font-size: 1.125rem;
@@ -349,26 +349,18 @@
   </main>
 
   <script>
-    // ============ ROBUST SOUND (creates fresh audio each time) ============
+    // ============ ROBUST SOUND ============
     const soundUrl = 'prayer-sound.mp3';
 
     function playPrayerSound() {
       try {
-        // Create fresh audio element each time - most reliable across browsers
         const audio = new Audio(soundUrl);
         audio.volume = 0.7;
-        
-        // Use promise-based play with error catching
         const playPromise = audio.play();
-        
         if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            // Silent fail - website works fine without sound
-            console.log('Sound play was prevented by browser');
-          });
+          playPromise.catch(error => console.log('Sound play prevented by browser'));
         }
       } catch(e) {
-        // Silent fail
         console.log('Sound not supported');
       }
     }
@@ -437,7 +429,7 @@
       }, 3000);
     }
 
-    // Prayer Counter
+    // Prayer Counter with "Thank You ☺️" feedback
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -467,6 +459,11 @@
       prayerButton.classList.add('loading');
       prayerButton.disabled = true;
       loadingBarFill.style.width = '100%';
+      
+      // Store original button text
+      const btnTextSpan = prayerButton.querySelector('.btn-text');
+      const originalText = btnTextSpan.innerHTML;
+      
       try {
         await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
         const response = await fetch(GOOGLE_SHEETS_API);
@@ -477,15 +474,29 @@
         loadingBarFill.style.width = '0%';
         updateDisplayWithCSSAnimation(data.count);
         
-        // Play sound AFTER successful counter update
+        // Play sound (optional - works when it can)
         playPrayerSound();
+        
+        // Change button to "Thank You ☺️"
+        btnTextSpan.innerHTML = 'Thank You ☺️';
+        prayerButton.style.backgroundColor = '#4CAF50';
+        prayerButton.style.color = 'white';
+        
+        // Revert back after 2 seconds
+        setTimeout(() => {
+          btnTextSpan.innerHTML = originalText;
+          prayerButton.style.backgroundColor = '';
+          prayerButton.style.color = '';
+        }, 2000);
         
       } catch (error) { 
         prayerButton.classList.remove('loading');
         prayerButton.disabled = false;
         loadingBarFill.style.width = '0%';
         alert('Unable to save your prayer. Please try again later.');
-      } finally { isProcessing = false; }
+      } finally { 
+        isProcessing = false; 
+      }
     }
     
     fetchPrayerCount();
