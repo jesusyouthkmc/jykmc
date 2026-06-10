@@ -30,13 +30,14 @@
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
+      bottom: 20px;
+      right: -100px;
+      width: 70%;
+      max-width: 800px;
+      opacity: 0.15;
     }
-    @media (orientation: portrait) { .bg-logo { bottom: 20px; right: -100px; width: 70%; max-width: 800px; opacity: 0.15; } }
-    @media (orientation: landscape) { .bg-logo { bottom: -50px; right: -80px; width: 40%; max-width: 500px; opacity: 0.12; } }
-    @media (min-width: 768px) and (orientation: portrait) { .bg-logo { right: -150px; bottom: 50px; width: 60%; opacity: 0.12; } }
-    @media (min-width: 768px) and (orientation: landscape) { .bg-logo { right: -120px; bottom: -30px; width: 35%; opacity: 0.1; } }
-    @media (min-width: 1024px) { .bg-logo { right: -200px; bottom: 80px; width: 50%; opacity: 0.1; } }
-    @media (min-width: 1024px) and (orientation: landscape) { .bg-logo { right: -150px; bottom: 40px; width: 35%; max-width: 500px; } }
+    @media (min-width: 768px) { .bg-logo { right: -150px; width: 50%; } }
+    @media (min-width: 1024px) { .bg-logo { right: -200px; width: 40%; opacity: 0.1; } }
     .content-wrapper { position: relative; z-index: 1; }
     .curved-glass-header {
       background: rgba(255, 140, 66, 0.95);
@@ -99,7 +100,6 @@
     @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
     .ripple-orange .ripple { background: rgba(255, 140, 66, 0.7); }
     .ripple-pink .ripple { background: rgba(219, 39, 119, 0.7); }
-    .coming-soon-badge { background: rgba(255, 255, 255, 0.2); padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; margin-left: 8px; letter-spacing: 0.5px; }
     .prayer-button-container { position: relative; display: inline-block; }
     .prayer-btn {
       background: white;
@@ -349,34 +349,25 @@
   </main>
 
   <script>
-    // ============ ROBUST SOUND ============
-    const soundUrl = 'prayer-sound.mp3';
-
+    // ============ SOUND ============
     function playPrayerSound() {
       try {
-        const audio = new Audio(soundUrl);
+        const audio = new Audio('prayer-sound.mp3');
         audio.volume = 0.7;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => console.log('Sound play prevented by browser'));
-        }
-      } catch(e) {
-        console.log('Sound not supported');
-      }
+        audio.play().catch(() => {});
+      } catch(e) {}
     }
 
     // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
-      button.addEventListener('click', function(event) {
+      button.addEventListener('click', function(e) {
         const ripple = document.createElement('span');
         ripple.classList.add('ripple');
         const rect = button.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
         ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
+        ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+        ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
         button.appendChild(ripple);
         setTimeout(() => ripple.remove(), 600);
       });
@@ -390,12 +381,9 @@
       addRippleEffect(spiritualBtn);
       spiritualBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-        const isAndroid = /Android/.test(userAgent);
-        if (isIOS) window.location.href = 'https://apps.apple.com/us/app/army-for-life/id1557521454';
-        else if (isAndroid) window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
-        else window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isAndroid = /Android/.test(navigator.userAgent);
+        window.location.href = isIOS ? 'https://apps.apple.com/us/app/army-for-life/id1557521454' : 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
       });
     }
 
@@ -412,95 +400,61 @@
     document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeMenuFunction));
 
     // Fade-up animation
-    const fadeElements = document.querySelectorAll('.fade-up');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
-    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
-    fadeElements.forEach(el => observer.observe(el));
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
     // Auto Carousel
-    const carouselSlides = document.querySelectorAll('.carousel-slide');
-    let currentSlide = 0;
-    if (carouselSlides.length > 0) {
-      setInterval(() => {
-        carouselSlides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % carouselSlides.length;
-        carouselSlides[currentSlide].classList.add('active');
-      }, 3000);
-    }
+    const slides = document.querySelectorAll('.carousel-slide');
+    let idx = 0;
+    if (slides.length) setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 3000);
 
-    // Prayer Counter with "Thank You ☺️" feedback
-    const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
-    const counterDisplay = document.getElementById('prayerCountDisplay');
-    const prayerButton = document.getElementById('prayerButton');
-    const loadingBarFill = document.getElementById('loadingBarFill');
-    let isProcessing = false;
+    // Prayer Counter
+    const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
+    const display = document.getElementById('prayerCountDisplay');
+    const btn = document.getElementById('prayerButton');
+    const fill = document.getElementById('loadingBarFill');
+    let processing = false;
     
-    function updateDisplayWithCSSAnimation(newValue) {
-      if (!counterDisplay) return;
-      counterDisplay.classList.remove('number-flip', 'number-pulse');
-      void counterDisplay.offsetWidth;
-      counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
-      counterDisplay.classList.add('number-flip', 'number-pulse');
-      setTimeout(() => counterDisplay.classList.remove('number-flip', 'number-pulse'), 500);
+    function updateDisplay(value) { if (display) display.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`; }
+    
+    async function fetchCount() {
+      try { const res = await fetch(API); const data = await res.json(); updateDisplay(data.count); } catch(e) { if (display) display.innerHTML = '<span class="counter-wrapper">—</span>'; }
     }
     
-    function updateDisplayDirect(value) { if (counterDisplay) counterDisplay.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`; }
-    
-    async function fetchPrayerCount() {
-      try { const response = await fetch(GOOGLE_SHEETS_API); const data = await response.json(); updateDisplayDirect(data.count); } 
-      catch (error) { console.error(error); if (counterDisplay) counterDisplay.innerHTML = '<span class="counter-wrapper">—</span>'; }
-    }
-    
-    async function incrementPrayerCount() {
-      if (isProcessing) return;
-      isProcessing = true;
-      
-      prayerButton.classList.add('loading');
-      prayerButton.disabled = true;
-      loadingBarFill.style.width = '100%';
-      
-      // Store original button text
-      const btnTextSpan = prayerButton.querySelector('.btn-text');
-      const originalText = btnTextSpan.innerHTML;
-      
+    async function increment() {
+      if (processing) return;
+      processing = true;
+      btn.classList.add('loading');
+      btn.disabled = true;
+      fill.style.width = '100%';
+      const originalText = btn.querySelector('.btn-text').innerHTML;
       try {
-        await fetch(GOOGLE_SHEETS_API, { method: 'POST' });
-        const response = await fetch(GOOGLE_SHEETS_API);
-        const data = await response.json();
-        await new Promise(resolve => setTimeout(resolve, 300));
-        prayerButton.classList.remove('loading');
-        prayerButton.disabled = false;
-        loadingBarFill.style.width = '0%';
-        updateDisplayWithCSSAnimation(data.count);
-        
-        // Play sound (optional - works when it can)
+        await fetch(API, { method: 'POST' });
+        const res = await fetch(API);
+        const data = await res.json();
+        await new Promise(r => setTimeout(r, 300));
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        fill.style.width = '0%';
+        updateDisplay(data.count);
         playPrayerSound();
-        
-        // Change button to "Thank You ☺️"
-        btnTextSpan.innerHTML = 'Thank You ☺️';
-        prayerButton.style.backgroundColor = '#4CAF50';
-        prayerButton.style.color = 'white';
-        
-        // Revert back after 2 seconds
-        setTimeout(() => {
-          btnTextSpan.innerHTML = originalText;
-          prayerButton.style.backgroundColor = '';
-          prayerButton.style.color = '';
-        }, 2000);
-        
-      } catch (error) { 
-        prayerButton.classList.remove('loading');
-        prayerButton.disabled = false;
-        loadingBarFill.style.width = '0%';
+        const span = btn.querySelector('.btn-text');
+        span.innerHTML = 'Thank You ☺️';
+        btn.style.backgroundColor = '#4CAF50';
+        btn.style.color = 'white';
+        setTimeout(() => { span.innerHTML = originalText; btn.style.backgroundColor = ''; btn.style.color = ''; }, 2000);
+      } catch(e) {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        fill.style.width = '0%';
         alert('Unable to save your prayer. Please try again later.');
-      } finally { 
-        isProcessing = false; 
-      }
+      } finally { processing = false; }
     }
     
-    fetchPrayerCount();
-    if (prayerButton) prayerButton.addEventListener('click', incrementPrayerCount);
+    fetchCount();
+    if (btn) btn.addEventListener('click', increment);
   </script>
 </body>
 </html>
