@@ -750,46 +750,40 @@
   </main>
 
   <script>
-    // ============ SOUND EFFECT FUNCTION (Ready for audio file) ============
-    // To add a sound effect:
-    // 1. Place your sound file (e.g., "amen.mp3", "chime.mp3", "bell.mp3") in the same folder as index.html
-    // 2. Update the soundUrl variable below with your filename
-    // 3. Uncomment the playPrayerSound() function and the call inside incrementPrayerCount()
+    // ============ SOUND EFFECT FUNCTION (ENABLED - waits for prayer-sound.mp3) ============
+    // Make sure your sound file is named "prayer-sound.mp3" in the same folder as index.html
     
-    const soundUrl = 'prayer-sound.mp3'; // <-- CHANGE THIS to your sound filename
+    const soundUrl = 'prayer-sound.mp3';
     let soundAudio = null;
     
-    // Preload sound if file exists (optional - prevents delay on first click)
+    // Preload sound when page loads (so it plays instantly on first click)
     function preloadPrayerSound() {
       try {
         soundAudio = new Audio(soundUrl);
         soundAudio.load();
+        console.log('Prayer sound preloaded successfully');
       } catch(e) {
-        console.log('Sound preload failed (file may not exist yet)');
+        console.log('Sound file not found yet - add prayer-sound.mp3 to enable sound effects');
       }
     }
     
     function playPrayerSound() {
       try {
-        // Method 1: If we have an Audio object preloaded
         if (soundAudio) {
           soundAudio.currentTime = 0; // Rewind to start
           soundAudio.play().catch(e => console.log('Sound play failed:', e));
-        } 
-        // Method 2: Create new audio element on the fly
-        else {
+        } else {
           const audio = new Audio(soundUrl);
-          audio.play().catch(e => console.log('Sound file not found or cannot play'));
+          audio.play().catch(e => console.log('Sound file not found - add prayer-sound.mp3'));
         }
       } catch(e) {
-        // Silently fail if sound can't play - website works fine without it
+        // Silently fail - website works fine without sound
         console.log('Sound effect not available');
       }
     }
     
-    // Optional: Try to preload sound when page loads
-    // Uncomment the line below after adding your sound file
-    // preloadPrayerSound();
+    // Preload sound when page loads
+    preloadPrayerSound();
     
     // ============ RIPPLE EFFECT FUNCTION ============
     function addRippleEffect(button) {
@@ -868,7 +862,7 @@
       }, 3000);
     }
 
-    // Prayer Counter with Sound Effect
+    // Prayer Counter with Sound Effect (ENABLED)
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -895,9 +889,8 @@
       if (isProcessing) return;
       isProcessing = true;
       
-      // ============ PLAY SOUND EFFECT ============
-      // UNCOMMENT THE LINE BELOW AFTER ADDING YOUR SOUND FILE
-      // playPrayerSound();
+      // PLAY SOUND EFFECT - enabled and ready!
+      playPrayerSound();
       
       prayerButton.classList.add('loading');
       prayerButton.disabled = true;
