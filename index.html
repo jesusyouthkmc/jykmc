@@ -750,39 +750,36 @@
   </main>
 
   <script>
-    // ============ SOUND EFFECT FUNCTION (ENABLED - waits for prayer-sound.mp3) ============
+    // ============ SOUND EFFECT FUNCTION ============
     // Make sure your sound file is named "prayer-sound.mp3" in the same folder as index.html
     
     const soundUrl = 'prayer-sound.mp3';
     let soundAudio = null;
     
-    // Preload sound when page loads (so it plays instantly on first click)
     function preloadPrayerSound() {
       try {
         soundAudio = new Audio(soundUrl);
         soundAudio.load();
         console.log('Prayer sound preloaded successfully');
       } catch(e) {
-        console.log('Sound file not found yet - add prayer-sound.mp3 to enable sound effects');
+        console.log('Sound file not found - add prayer-sound.mp3 to enable');
       }
     }
     
     function playPrayerSound() {
       try {
         if (soundAudio) {
-          soundAudio.currentTime = 0; // Rewind to start
+          soundAudio.currentTime = 0;
           soundAudio.play().catch(e => console.log('Sound play failed:', e));
         } else {
           const audio = new Audio(soundUrl);
-          audio.play().catch(e => console.log('Sound file not found - add prayer-sound.mp3'));
+          audio.play().catch(e => console.log('Sound file not found'));
         }
       } catch(e) {
-        // Silently fail - website works fine without sound
         console.log('Sound effect not available');
       }
     }
     
-    // Preload sound when page loads
     preloadPrayerSound();
     
     // ============ RIPPLE EFFECT FUNCTION ============
@@ -862,7 +859,7 @@
       }, 3000);
     }
 
-    // Prayer Counter with Sound Effect (plays AFTER successful update with a small delay)
+    // ============ PRAYER COUNTER WITH SOUND SYNCED TO NUMBER UPDATE ============
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -875,6 +872,10 @@
       void counterDisplay.offsetWidth;
       counterDisplay.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
       counterDisplay.classList.add('number-flip', 'number-pulse');
+      
+      // PLAY SOUND RIGHT WHEN THE NUMBER STARTS ITS FLIP ANIMATION!
+      playPrayerSound();
+      
       setTimeout(() => counterDisplay.classList.remove('number-flip', 'number-pulse'), 500);
     }
     
@@ -900,12 +901,9 @@
         prayerButton.classList.remove('loading');
         prayerButton.disabled = false;
         loadingBarFill.style.width = '0%';
-        updateDisplayWithCSSAnimation(data.count);
         
-        // Small delay to ensure DOM update completes, then play sound
-        setTimeout(() => {
-          playPrayerSound();
-        }, 100);
+        // This function will update the number AND play the sound
+        updateDisplayWithCSSAnimation(data.count);
         
       } catch (error) { 
         prayerButton.classList.remove('loading');
