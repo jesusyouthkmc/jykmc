@@ -750,7 +750,48 @@
   </main>
 
   <script>
-    // Ripple effect function
+    // ============ SOUND EFFECT FUNCTION (Ready for audio file) ============
+    // To add a sound effect:
+    // 1. Place your sound file (e.g., "amen.mp3", "chime.mp3", "bell.mp3") in the same folder as index.html
+    // 2. Update the soundUrl variable below with your filename
+    // 3. Uncomment the playPrayerSound() function and the call inside incrementPrayerCount()
+    
+    const soundUrl = 'prayer-sound.mp3'; // <-- CHANGE THIS to your sound filename
+    let soundAudio = null;
+    
+    // Preload sound if file exists (optional - prevents delay on first click)
+    function preloadPrayerSound() {
+      try {
+        soundAudio = new Audio(soundUrl);
+        soundAudio.load();
+      } catch(e) {
+        console.log('Sound preload failed (file may not exist yet)');
+      }
+    }
+    
+    function playPrayerSound() {
+      try {
+        // Method 1: If we have an Audio object preloaded
+        if (soundAudio) {
+          soundAudio.currentTime = 0; // Rewind to start
+          soundAudio.play().catch(e => console.log('Sound play failed:', e));
+        } 
+        // Method 2: Create new audio element on the fly
+        else {
+          const audio = new Audio(soundUrl);
+          audio.play().catch(e => console.log('Sound file not found or cannot play'));
+        }
+      } catch(e) {
+        // Silently fail if sound can't play - website works fine without it
+        console.log('Sound effect not available');
+      }
+    }
+    
+    // Optional: Try to preload sound when page loads
+    // Uncomment the line below after adding your sound file
+    // preloadPrayerSound();
+    
+    // ============ RIPPLE EFFECT FUNCTION ============
     function addRippleEffect(button) {
       button.addEventListener('click', function(event) {
         const ripple = document.createElement('span');
@@ -767,19 +808,17 @@
       });
     }
     
-    // Apply ripple to Need a Prayer button (navigation handled by href)
+    // Apply ripple to Need a Prayer button
     const needPrayerBtn = document.getElementById('needPrayerBtn');
     if (needPrayerBtn) {
       addRippleEffect(needPrayerBtn);
     }
     
-    // Spiritual Adoption Button with device detection - FIXED
+    // Spiritual Adoption Button with device detection
     const spiritualBtn = document.getElementById('spiritualAdoptionBtn');
     if (spiritualBtn) {
-      // Add ripple effect
       addRippleEffect(spiritualBtn);
       
-      // Handle click for navigation
       spiritualBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
@@ -787,13 +826,11 @@
         const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
         const isAndroid = /Android/.test(userAgent);
         
-        // Navigate immediately to the correct store
         if (isIOS) {
           window.location.href = 'https://apps.apple.com/us/app/army-for-life/id1557521454';
         } else if (isAndroid) {
           window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
         } else {
-          // Desktop - default to Google Play Store
           window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
         }
       });
@@ -831,7 +868,7 @@
       }, 3000);
     }
 
-    // Prayer Counter
+    // Prayer Counter with Sound Effect
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -857,6 +894,11 @@
     async function incrementPrayerCount() {
       if (isProcessing) return;
       isProcessing = true;
+      
+      // ============ PLAY SOUND EFFECT ============
+      // UNCOMMENT THE LINE BELOW AFTER ADDING YOUR SOUND FILE
+      // playPrayerSound();
+      
       prayerButton.classList.add('loading');
       prayerButton.disabled = true;
       loadingBarFill.style.width = '100%';
