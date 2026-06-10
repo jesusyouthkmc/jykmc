@@ -862,7 +862,7 @@
       }, 3000);
     }
 
-    // Prayer Counter with Sound Effect (ENABLED)
+    // Prayer Counter with Sound Effect (plays AFTER successful update)
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -889,9 +889,6 @@
       if (isProcessing) return;
       isProcessing = true;
       
-      // PLAY SOUND EFFECT - enabled and ready!
-      playPrayerSound();
-      
       prayerButton.classList.add('loading');
       prayerButton.disabled = true;
       loadingBarFill.style.width = '100%';
@@ -904,6 +901,10 @@
         prayerButton.disabled = false;
         loadingBarFill.style.width = '0%';
         updateDisplayWithCSSAnimation(data.count);
+        
+        // ============ PLAY SOUND AFTER COUNTER SUCCESSFULLY UPDATES ============
+        playPrayerSound();
+        
       } catch (error) { 
         prayerButton.classList.remove('loading');
         prayerButton.disabled = false;
