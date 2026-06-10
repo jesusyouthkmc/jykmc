@@ -349,55 +349,14 @@
   </main>
 
   <script>
-    // ============ WEB AUDIO API (Better for Safari) ============
-    let audioContext = null;
-    let audioBuffer = null;
-    let isAudioUnlocked = false;
-
-    // Load and decode the audio file
-    async function loadAudio() {
-      try {
-        const response = await fetch('prayer-sound.mp3');
-        const arrayBuffer = await response.arrayBuffer();
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      } catch(e) {}
-    }
-
-    // Call this on any user interaction to unlock audio
-    function unlockAudio() {
-      if (isAudioUnlocked || !audioContext) return;
-      if (audioContext.state === 'suspended') {
-        audioContext.resume().then(() => {
-          isAudioUnlocked = true;
-        }).catch(() => {});
-      } else {
-        isAudioUnlocked = true;
-      }
-    }
-
+    // ============ SIMPLE SOUND (works everywhere except Safari after first click) ============
     function playPrayerSound() {
       try {
-        if (!audioBuffer || !audioContext) return;
-        
-        // Resume context if suspended
-        if (audioContext.state === 'suspended') {
-          audioContext.resume();
-        }
-        
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(audioContext.destination);
-        source.start();
+        const audio = new Audio('prayer-sound.mp3');
+        audio.volume = 0.7;
+        audio.play().catch(() => {});
       } catch(e) {}
     }
-
-    // Load audio file when page loads
-    loadAudio();
-
-    // Unlock audio on ANY user interaction (tap/click anywhere)
-    document.body.addEventListener('click', unlockAudio);
-    document.body.addEventListener('touchend', unlockAudio);
 
     // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
@@ -451,7 +410,7 @@
     let idx = 0;
     if (slides.length) setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 3000);
 
-    // Prayer Counter
+    // Prayer Counter with platform-specific sound timing
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -467,6 +426,15 @@
     async function increment() {
       if (processing) return;
       processing = true;
+      
+      // Detect iOS device
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      
+      // On iOS: Play sound IMMEDIATELY on click (better chance with Safari)
+      if (isIOS) {
+        playPrayerSound();
+      }
+      
       btn.classList.add('loading');
       btn.disabled = true;
       fill.style.width = '100%';
@@ -480,7 +448,12 @@
         btn.disabled = false;
         fill.style.width = '0%';
         updateDisplay(data.count);
-        playPrayerSound();
+        
+        // On Android/Desktop: Play sound AFTER counter updates
+        if (!isIOS) {
+          playPrayerSound();
+        }
+        
         const span = btn.querySelector('.btn-text');
         span.innerHTML = 'Thank You ☺️';
         btn.style.backgroundColor = '#4CAF50';
