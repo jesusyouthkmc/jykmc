@@ -862,7 +862,7 @@
       }, 3000);
     }
 
-    // Prayer Counter with Sound Effect (plays AFTER successful update)
+    // Prayer Counter with Sound Effect (plays AFTER successful update with a small delay)
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -902,8 +902,10 @@
         loadingBarFill.style.width = '0%';
         updateDisplayWithCSSAnimation(data.count);
         
-        // ============ PLAY SOUND AFTER COUNTER SUCCESSFULLY UPDATES ============
-        playPrayerSound();
+        // Small delay to ensure DOM update completes, then play sound
+        setTimeout(() => {
+          playPrayerSound();
+        }, 100);
         
       } catch (error) { 
         prayerButton.classList.remove('loading');
