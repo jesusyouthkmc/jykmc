@@ -4,27 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Jesus Youth KMC | Medical College Campus Ministry</title>
-  <!-- Tailwind CSS v3 + Font Awesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Custom smooth scroll behavior -->
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    .fade-up {
-      opacity: 0;
-      transform: translateY(25px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    /* Glossy orange gradient background */
+    html { scroll-behavior: smooth; }
+    body { font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    .fade-up { opacity: 0; transform: translateY(25px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
     .glossy-orange-bg {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       position: relative;
@@ -39,85 +25,19 @@
       background: linear-gradient(125deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 40%);
       pointer-events: none;
     }
-    
-    /* Background Logo Watermark - Responsive for orientation */
     .bg-logo {
       position: fixed;
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
     }
-    
-    /* Default portrait mode */
-    @media (orientation: portrait) {
-      .bg-logo {
-        bottom: 20px;
-        right: -100px;
-        width: 70%;
-        max-width: 800px;
-        opacity: 0.15;
-      }
-    }
-    
-    /* Landscape mode adjustments */
-    @media (orientation: landscape) {
-      .bg-logo {
-        bottom: -50px;
-        right: -80px;
-        width: 40%;
-        max-width: 500px;
-        opacity: 0.12;
-      }
-    }
-    
-    /* Tablet portrait */
-    @media (min-width: 768px) and (orientation: portrait) {
-      .bg-logo {
-        right: -150px;
-        bottom: 50px;
-        width: 60%;
-        opacity: 0.12;
-      }
-    }
-    
-    /* Tablet landscape */
-    @media (min-width: 768px) and (orientation: landscape) {
-      .bg-logo {
-        right: -120px;
-        bottom: -30px;
-        width: 35%;
-        max-width: 450px;
-        opacity: 0.1;
-      }
-    }
-    
-    /* Desktop */
-    @media (min-width: 1024px) {
-      .bg-logo {
-        right: -200px;
-        bottom: 80px;
-        width: 50%;
-        opacity: 0.1;
-      }
-    }
-    
-    /* Desktop landscape override */
-    @media (min-width: 1024px) and (orientation: landscape) {
-      .bg-logo {
-        right: -150px;
-        bottom: 40px;
-        width: 35%;
-        max-width: 500px;
-      }
-    }
-    
-    /* Ensure content stays above background logo */
-    .content-wrapper {
-      position: relative;
-      z-index: 1;
-    }
-    
-    /* Glass morphism header with curved edges */
+    @media (orientation: portrait) { .bg-logo { bottom: 20px; right: -100px; width: 70%; max-width: 800px; opacity: 0.15; } }
+    @media (orientation: landscape) { .bg-logo { bottom: -50px; right: -80px; width: 40%; max-width: 500px; opacity: 0.12; } }
+    @media (min-width: 768px) and (orientation: portrait) { .bg-logo { right: -150px; bottom: 50px; width: 60%; opacity: 0.12; } }
+    @media (min-width: 768px) and (orientation: landscape) { .bg-logo { right: -120px; bottom: -30px; width: 35%; opacity: 0.1; } }
+    @media (min-width: 1024px) { .bg-logo { right: -200px; bottom: 80px; width: 50%; opacity: 0.1; } }
+    @media (min-width: 1024px) and (orientation: landscape) { .bg-logo { right: -150px; bottom: 40px; width: 35%; max-width: 500px; } }
+    .content-wrapper { position: relative; z-index: 1; }
     .curved-glass-header {
       background: rgba(255, 140, 66, 0.95);
       backdrop-filter: blur(10px);
@@ -127,29 +47,10 @@
       position: relative;
       z-index: 100;
     }
-    /* Card hover effect */
-    .card-hover {
-      transition: all 0.25s ease;
-    }
-    .card-hover:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
-    }
-    /* Hero image styles */
-    .hero-image-container {
-      max-width: 100%;
-      overflow: hidden;
-      border-radius: 0 0 40px 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .hero-image {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      display: block;
-    }
-    
-    /* Sidebar Menu Styles - Matching footer style */
+    .card-hover { transition: all 0.25s ease; }
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2); }
+    .hero-image-container { max-width: 100%; overflow: hidden; border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .hero-image { width: 100%; height: auto; object-fit: cover; display: block; }
     .sidebar-menu {
       position: fixed;
       top: 0;
@@ -158,17 +59,12 @@
       width: 75%;
       background: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       box-shadow: -5px 0 30px rgba(0,0,0,0.2);
       z-index: 1000;
       transform: translateX(100%);
       transition: transform 0.3s ease-in-out;
     }
-    
-    .sidebar-menu.open {
-      transform: translateX(0);
-    }
-    
+    .sidebar-menu.open { transform: translateX(0); }
     .sidebar-menu a {
       color: rgba(255, 255, 255, 0.9);
       font-weight: 600;
@@ -183,177 +79,28 @@
       border: 1px solid rgba(255, 255, 255, 0.15);
       text-decoration: none;
     }
-    
-    .sidebar-menu a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateX(-5px);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .sidebar-menu i {
-      width: 24px;
-      font-size: 1.2rem;
-    }
-    
-    /* Overlay when menu is open */
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(2px);
-      z-index: 999;
-      display: none;
-    }
-    
-    .menu-overlay.active {
-      display: block;
-    }
-    
-    /* Map link styling - more obvious */
-    .map-link {
-      background: rgba(255, 107, 53, 0.1);
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      font-weight: 600;
-    }
-    
-    .map-link:hover {
-      background: rgba(255, 107, 53, 0.25);
-      transform: scale(1.02);
-    }
-    
-    /* Pulsing animation for Know More button */
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-      }
-    }
-    
-    .pulse-button {
-      animation: pulse 2s infinite;
-    }
-    
-    .pulse-button:hover {
-      animation: none;
-      transform: scale(1.05);
-    }
-    
-    /* Orange Pulse for Need a Prayer button */
-    @keyframes pulse-orange {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 140, 66, 0.7);
-      }
-      50% {
-        transform: scale(1.03);
-        box-shadow: 0 0 0 8px rgba(255, 140, 66, 0);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 140, 66, 0);
-      }
-    }
-    
-    .pulse-orange {
-      animation: pulse-orange 2s infinite;
-    }
-    
-    .pulse-orange:hover {
-      animation: none;
-      transform: scale(1.03);
-    }
-    
-    /* Pink Pulse for Spiritual Adoption button */
-    @keyframes pulse-pink {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.6);
-      }
-      50% {
-        transform: scale(1.03);
-        box-shadow: 0 0 0 8px rgba(219, 39, 119, 0);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(219, 39, 119, 0);
-      }
-    }
-    
-    .pulse-pink {
-      animation: pulse-pink 2s infinite;
-    }
-    
-    .pulse-pink:hover {
-      animation: none;
-      transform: scale(1.03);
-    }
-    
-    /* Ripple Effect Styles */
-    .ripple-btn {
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    
-    .ripple-btn .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.6);
-      transform: scale(0);
-      animation: ripple-animation 0.6s ease-out;
-      pointer-events: none;
-    }
-    
-    @keyframes ripple-animation {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-    
-    /* Orange ripple for Need a prayer button */
-    .ripple-orange .ripple {
-      background: rgba(255, 140, 66, 0.7);
-    }
-    
-    /* Pink ripple for Spiritual Adoption button */
-    .ripple-pink .ripple {
-      background: rgba(219, 39, 119, 0.7);
-    }
-    
-    /* Coming soon badge */
-    .coming-soon-badge {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      margin-left: 8px;
-      letter-spacing: 0.5px;
-    }
-    
-    /* ============ PRAYER BUTTON STYLES ============ */
-    .prayer-button-container {
-      position: relative;
-      display: inline-block;
-    }
-    
+    .sidebar-menu a:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(-5px); border-color: rgba(255, 255, 255, 0.3); }
+    .sidebar-menu i { width: 24px; font-size: 1.2rem; }
+    .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); z-index: 999; display: none; }
+    .menu-overlay.active { display: block; }
+    .map-link { background: rgba(255, 107, 53, 0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; font-weight: 600; }
+    .map-link:hover { background: rgba(255, 107, 53, 0.25); transform: scale(1.02); }
+    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+    .pulse-button { animation: pulse 2s infinite; }
+    .pulse-button:hover { animation: none; transform: scale(1.05); }
+    @keyframes pulse-orange { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 66, 0.7); } 50% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(255, 140, 66, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 66, 0); } }
+    .pulse-orange { animation: pulse-orange 2s infinite; }
+    .pulse-orange:hover { animation: none; transform: scale(1.03); }
+    @keyframes pulse-pink { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.6); } 50% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(219, 39, 119, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(219, 39, 119, 0); } }
+    .pulse-pink { animation: pulse-pink 2s infinite; }
+    .pulse-pink:hover { animation: none; transform: scale(1.03); }
+    .ripple-btn { position: relative; overflow: hidden; cursor: pointer; }
+    .ripple-btn .ripple { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.6); transform: scale(0); animation: ripple-animation 0.6s ease-out; pointer-events: none; }
+    @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
+    .ripple-orange .ripple { background: rgba(255, 140, 66, 0.7); }
+    .ripple-pink .ripple { background: rgba(219, 39, 119, 0.7); }
+    .coming-soon-badge { background: rgba(255, 255, 255, 0.2); padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; margin-left: 8px; letter-spacing: 0.5px; }
+    .prayer-button-container { position: relative; display: inline-block; }
     .prayer-btn {
       background: white;
       color: #FF6B35;
@@ -368,12 +115,7 @@
       position: relative;
       overflow: hidden;
     }
-    
-    .prayer-btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-    }
-    
+    .prayer-btn:hover { transform: scale(1.02); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); }
     .loading-bar-fill {
       position: absolute;
       top: 0;
@@ -386,128 +128,23 @@
       transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       pointer-events: none;
     }
-    
-    .prayer-btn.loading .loading-bar-fill {
-      width: 100% !important;
-      transition: width 2s linear;
-    }
-    
-    .prayer-btn.loading .btn-text {
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
-    
-    .prayer-btn:disabled {
-      cursor: wait;
-    }
-    
-    @keyframes loadingGlow {
-      0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
-      }
-      50% {
-        box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
-      }
-    }
-    
-    .prayer-btn.loading {
-      animation: loadingGlow 1s infinite;
-    }
-    
-    .number-flip {
-      animation: flipUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-    
-    @keyframes flipUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) rotateX(90deg);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) rotateX(0);
-      }
-    }
-    
-    .number-pulse {
-      animation: gentlePulse 0.5s ease;
-    }
-    
-    @keyframes gentlePulse {
-      0% {
-        transform: scale(1);
-        text-shadow: 0 0 0 rgba(255, 255, 255, 0);
-      }
-      50% {
-        transform: scale(1.08);
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-      }
-      100% {
-        transform: scale(1);
-        text-shadow: 0 0 0 rgba(255, 255, 255, 0);
-      }
-    }
-    
-    .counter-wrapper {
-      display: inline-block;
-      background: linear-gradient(135deg, #fde68a, #FF8C42);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      font-weight: bold;
-    }
-
-    /* Auto-rotating Carousel Styles */
-    .carousel-container {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      border-radius: 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      background: #000;
-    }
-
-    .carousel-slides {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-    }
-
-    .carousel-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-    }
-
-    .carousel-slide.active {
-      opacity: 1;
-      z-index: 1;
-    }
-
-    .carousel-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .whatsapp-btn-white {
-      background: white;
-      color: #25D366;
-      transition: all 0.2s ease;
-    }
-    .whatsapp-btn-white:hover {
-      background: #fef3e8;
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    }
+    .prayer-btn.loading .loading-bar-fill { width: 100% !important; transition: width 2s linear; }
+    .prayer-btn.loading .btn-text { opacity: 0; transition: opacity 0.15s ease; }
+    .prayer-btn:disabled { cursor: wait; }
+    @keyframes loadingGlow { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); } 50% { box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); } }
+    .prayer-btn.loading { animation: loadingGlow 1s infinite; }
+    .number-flip { animation: flipUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+    @keyframes flipUp { 0% { opacity: 0; transform: translateY(20px) rotateX(90deg); } 100% { opacity: 1; transform: translateY(0) rotateX(0); } }
+    .number-pulse { animation: gentlePulse 0.5s ease; }
+    @keyframes gentlePulse { 0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } 50% { transform: scale(1.08); text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); } 100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } }
+    .counter-wrapper { display: inline-block; background: linear-gradient(135deg, #fde68a, #FF8C42); background-clip: text; -webkit-background-clip: text; color: transparent; font-weight: bold; }
+    .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: #000; }
+    .carousel-slides { position: relative; width: 100%; aspect-ratio: 16 / 9; }
+    .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease-in-out; }
+    .carousel-slide.active { opacity: 1; z-index: 1; }
+    .carousel-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .whatsapp-btn-white { background: white; color: #25D366; transition: all 0.2s ease; }
+    .whatsapp-btn-white:hover { background: #fef3e8; transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -516,9 +153,7 @@
 
   <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
-      <a href="#home" class="flex items-center relative z-10">
-        <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
-      </a>
+      <a href="#home" class="flex items-center relative z-10"><img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto"></a>
       <nav class="hidden md:flex space-x-6 text-sm font-medium">
         <a href="#home" class="text-white hover:text-amber-200 transition">Home</a>
         <a href="#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
@@ -529,16 +164,12 @@
         <a href="#support" class="text-white hover:text-amber-200 transition">Support Us</a>
         <a href="#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
-      <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none">
-        <i class="fas fa-bars"></i>
-      </button>
+      <button id="menuBtn" class="md:hidden text-2xl text-white focus:outline-none"><i class="fas fa-bars"></i></button>
     </div>
   </header>
 
   <div id="mobileMenu" class="sidebar-menu">
-    <div class="flex justify-start p-5">
-      <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
-    </div>
+    <div class="flex justify-start p-5"><button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button></div>
     <nav class="flex flex-col gap-3 px-6 py-4">
       <a href="#home" class="mobile-nav-link"><i class="fas fa-home"></i><span>Home</span></a>
       <a href="#gathering" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i><span>Gathering</span></a>
@@ -556,7 +187,6 @@
   <main class="content-wrapper">
     <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12 w-full">
-        
         <div class="carousel-container mb-4 md:mb-6 fade-up">
           <div class="carousel-slides">
             <div class="carousel-slide active"><img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image"></div>
@@ -564,11 +194,7 @@
             <div class="carousel-slide"><img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image"></div>
           </div>
         </div>
-        
-        <div class="hero-image-container mb-8 md:mb-12 fade-up">
-          <img src="hero-image.jpg" alt="Jesus Youth KMC Ministry" class="hero-image">
-        </div>
-        
+        <div class="hero-image-container mb-8 md:mb-12 fade-up"><img src="hero-image.jpg" alt="Jesus Youth KMC Ministry" class="hero-image"></div>
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="fade-up">
             <p class="text-amber-100 font-semibold tracking-wide text-sm uppercase mb-2">A Campus Ministry under the Jesus Youth Movement</p>
@@ -591,34 +217,23 @@
             </div>
           </div>
         </div>
-        
-        <div class="mt-32 text-center animate-bounce">
-          <a href="#jesus-youth-movement" class="text-white text-sm flex flex-col items-center gap-1">SCROLL TO EXPLORE <i class="fas fa-chevron-down"></i></a>
-        </div>
+        <div class="mt-32 text-center animate-bounce"><a href="#jesus-youth-movement" class="text-white text-sm flex flex-col items-center gap-1">SCROLL TO EXPLORE <i class="fas fa-chevron-down"></i></a></div>
       </div>
     </section>
 
     <section id="jesus-youth-movement" class="py-20 md:py-28">
       <div class="max-w-4xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
-          <a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="inline-block mb-6 transition-transform hover:scale-105">
-            <img src="jesus-youth-logo.png" alt="Jesus Youth International" class="w-28 md:w-36 h-auto mx-auto">
-          </a>
+          <a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="inline-block mb-6 transition-transform hover:scale-105"><img src="jesus-youth-logo.png" alt="Jesus Youth International" class="w-28 md:w-36 h-auto mx-auto"></a>
           <p class="text-white text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">Jesus Youth (JY) is an International Catholic Movement, approved by the Holy See.</p>
-          <div class="mt-8">
-            <a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="pulse-button inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-lg transition">Know more <i class="fas fa-arrow-right"></i></a>
-          </div>
+          <div class="mt-8"><a href="https://jesusyouth.org/" target="_blank" rel="noopener noreferrer" class="pulse-button inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-lg transition">Know more <i class="fas fa-arrow-right"></i></a></div>
         </div>
       </div>
     </section>
 
     <section id="gathering" class="py-20 md:py-28">
       <div class="max-w-5xl mx-auto px-5 md:px-8">
-        <div class="text-center mb-12 fade-up">
-          <span class="text-amber-200 text-sm font-semibold tracking-wider">WEEKLY GATHERING</span>
-          <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">Come as you are.</h2>
-          <p class="text-xl text-amber-50 mt-2">Grow in faith together.</p>
-        </div>
+        <div class="text-center mb-12 fade-up"><span class="text-amber-200 text-sm font-semibold tracking-wider">WEEKLY GATHERING</span><h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">Come as you are.</h2><p class="text-xl text-amber-50 mt-2">Grow in faith together.</p></div>
         <div class="bg-white/95 rounded-3xl p-6 md:p-10 shadow-lg fade-up transition-all text-gray-800">
           <div class="grid md:grid-cols-3 gap-6 text-center md:text-left">
             <div><i class="far fa-calendar-alt text-orange-600 text-3xl mb-3"></i><p class="font-bold text-lg text-gray-800">Every Wednesday</p><p class="text-gray-600">4:30 PM – 6:00 PM</p></div>
@@ -632,12 +247,8 @@
 
     <section id="ministries" class="py-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
-        <div class="text-center mb-14 fade-up">
-          <h2 class="text-4xl md:text-5xl font-bold text-white">Our Ministries</h2>
-          <p class="text-amber-50 text-lg mt-2">Serving Christ in different ways</p>
-        </div>
+        <div class="text-center mb-14 fade-up"><h2 class="text-4xl md:text-5xl font-bold text-white">Our Ministries</h2><p class="text-amber-50 text-lg mt-2">Serving Christ in different ways</p></div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          
           <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
             <div class="text-5xl mb-4">❤️‍🩹</div>
             <h3 class="text-2xl font-bold text-white">Nurses Ministry</h3>
@@ -653,11 +264,7 @@
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Tuesday</p>
             <p class="mt-3 text-amber-50 italic">"Pray without ceasing."</p>
             <p class="text-amber-100 text-sm mt-1">— 1 Thessalonians 5:17</p>
-            <div class="mt-5">
-              <a href="prayer-request.html" id="needPrayerBtn" class="ripple-btn ripple-orange pulse-orange inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-orange-200 hover:shadow-md">
-                <i class="fas fa-hands-praying"></i> Need a prayer?
-              </a>
-            </div>
+            <div class="mt-5"><a href="prayer-request.html" id="needPrayerBtn" class="ripple-btn ripple-orange pulse-orange inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-orange-200 hover:shadow-md"><i class="fas fa-hands-praying"></i> Need a prayer?</a></div>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
           
@@ -676,11 +283,7 @@
             <p class="text-amber-200 text-sm font-semibold mt-1">Every Friday</p>
             <p class="mt-3 text-amber-50 italic">"Before I formed you in the womb I knew you…"</p>
             <p class="text-amber-100 text-sm mt-1">— Jeremiah 1:5</p>
-            <div class="mt-5">
-              <a href="#" id="spiritualAdoptionBtn" class="ripple-btn ripple-pink pulse-pink inline-flex items-center gap-2 bg-white/90 hover:bg-pink-50 text-pink-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-pink-300 hover:shadow-md">
-                <i class="fas fa-baby-carriage"></i> Spiritually adopt a child
-              </a>
-            </div>
+            <div class="mt-5"><a href="#" id="spiritualAdoptionBtn" class="ripple-btn ripple-pink pulse-pink inline-flex items-center gap-2 bg-white/90 hover:bg-pink-50 text-pink-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-pink-300 hover:shadow-md"><i class="fas fa-baby-carriage"></i> Spiritually adopt a child</a></div>
             <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
           </div>
         </div>
@@ -693,9 +296,7 @@
           <span class="bg-white/30 text-white text-sm px-4 py-1 rounded-full font-medium backdrop-blur-sm">Free gift</span>
           <h2 class="text-4xl md:text-5xl font-bold mt-4 text-white">Bible Verse Phone Wallpapers</h2>
           <p class="text-amber-50 text-lg max-w-2xl mx-auto mt-3">Beautiful, faith-filled wallpapers to keep God's Word with you every day.</p>
-          <div class="mt-8">
-            <a href="https://drive.google.com/drive/folders/1wv_bxp4cHn9hQnkM1UsxYgtPAyYaFUHZ" target="_blank" class="inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-md transition text-lg"><i class="fas fa-download"></i> Download Wallpapers</a>
-          </div>
+          <div class="mt-8"><a href="https://drive.google.com/drive/folders/1wv_bxp4cHn9hQnkM1UsxYgtPAyYaFUHZ" target="_blank" class="inline-flex items-center gap-2 bg-white text-orange-600 hover:bg-amber-50 font-semibold px-8 py-3 rounded-full shadow-md transition text-lg"><i class="fas fa-download"></i> Download Wallpapers</a></div>
           <div class="mt-6 text-sm text-amber-100">* high-res, mobile optimized | free for personal use</div>
         </div>
       </div>
@@ -711,9 +312,7 @@
             <div class="text-6xl font-bold mb-2"><span id="prayerCountDisplay" class="counter-wrapper">0</span></div>
             <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
           </div>
-          <div class="prayer-button-container">
-            <button id="prayerButton" class="prayer-btn"><div id="loadingBarFill" class="loading-bar-fill"></div><span class="btn-text">🙏 Pray a Hail Mary</span></button>
-          </div>
+          <div class="prayer-button-container"><button id="prayerButton" class="prayer-btn"><div id="loadingBarFill" class="loading-bar-fill"></div><span class="btn-text">🙏 Pray a Hail Mary</span></button></div>
           <p class="text-white/60 text-sm mt-6">"The fervent prayer of a righteous person is very powerful." — James 5:16</p>
         </div>
       </div>
@@ -750,45 +349,31 @@
   </main>
 
   <script>
-    // ============ SOUND EFFECT FUNCTION (ENABLED - waits for prayer-sound.mp3) ============
-    // Make sure your sound file is named "prayer-sound.mp3" in the same folder as index.html
-    
+    // ============ ROBUST SOUND (creates fresh audio each time) ============
     const soundUrl = 'prayer-sound.mp3';
-    let soundAudio = null;
-    
-    // Preload sound when page loads (so it plays instantly on first click)
-    function preloadPrayerSound() {
-      try {
-        soundAudio = new Audio(soundUrl);
-        soundAudio.volume = 0.7; // Set volume to 70% (higher than default)
-        soundAudio.load();
-        console.log('Prayer sound preloaded successfully at 70% volume');
-      } catch(e) {
-        console.log('Sound file not found yet - add prayer-sound.mp3 to enable sound effects');
-      }
-    }
-    
+
     function playPrayerSound() {
       try {
-        if (soundAudio) {
-          soundAudio.currentTime = 0; // Rewind to start
-          soundAudio.volume = 0.7; // Ensure volume is set to 70%
-          soundAudio.play().catch(e => console.log('Sound play failed:', e));
-        } else {
-          const audio = new Audio(soundUrl);
-          audio.volume = 0.7; // Set volume for new audio object
-          audio.play().catch(e => console.log('Sound file not found - add prayer-sound.mp3'));
+        // Create fresh audio element each time - most reliable across browsers
+        const audio = new Audio(soundUrl);
+        audio.volume = 0.7;
+        
+        // Use promise-based play with error catching
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Silent fail - website works fine without sound
+            console.log('Sound play was prevented by browser');
+          });
         }
       } catch(e) {
-        // Silently fail - website works fine without sound
-        console.log('Sound effect not available');
+        // Silent fail
+        console.log('Sound not supported');
       }
     }
-    
-    // Preload sound when page loads
-    preloadPrayerSound();
-    
-    // ============ RIPPLE EFFECT FUNCTION ============
+
+    // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
       button.addEventListener('click', function(event) {
         const ripple = document.createElement('span');
@@ -805,31 +390,20 @@
       });
     }
     
-    // Apply ripple to Need a Prayer button
     const needPrayerBtn = document.getElementById('needPrayerBtn');
-    if (needPrayerBtn) {
-      addRippleEffect(needPrayerBtn);
-    }
+    if (needPrayerBtn) addRippleEffect(needPrayerBtn);
     
-    // Spiritual Adoption Button with device detection
     const spiritualBtn = document.getElementById('spiritualAdoptionBtn');
     if (spiritualBtn) {
       addRippleEffect(spiritualBtn);
-      
       spiritualBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
         const isAndroid = /Android/.test(userAgent);
-        
-        if (isIOS) {
-          window.location.href = 'https://apps.apple.com/us/app/army-for-life/id1557521454';
-        } else if (isAndroid) {
-          window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
-        } else {
-          window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
-        }
+        if (isIOS) window.location.href = 'https://apps.apple.com/us/app/army-for-life/id1557521454';
+        else if (isAndroid) window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
+        else window.location.href = 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
       });
     }
 
@@ -838,10 +412,8 @@
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenu = document.getElementById('closeMenu');
     const menuOverlay = document.getElementById('menuOverlay');
-
     function openMenu() { mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
     function closeMenuFunction() { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
-
     if (menuBtn) menuBtn.addEventListener('click', openMenu);
     if (closeMenu) closeMenu.addEventListener('click', closeMenuFunction);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunction);
@@ -865,7 +437,7 @@
       }, 3000);
     }
 
-    // Prayer Counter with Sound Effect (plays AFTER successful update)
+    // Prayer Counter
     const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const counterDisplay = document.getElementById('prayerCountDisplay');
     const prayerButton = document.getElementById('prayerButton');
@@ -905,7 +477,7 @@
         loadingBarFill.style.width = '0%';
         updateDisplayWithCSSAnimation(data.count);
         
-        // ============ PLAY SOUND AFTER COUNTER SUCCESSFULLY UPDATES ============
+        // Play sound AFTER successful counter update
         playPrayerSound();
         
       } catch (error) { 
