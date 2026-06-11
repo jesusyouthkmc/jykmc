@@ -178,10 +178,17 @@
       transform: scale(1.02);
     }
     
+    /* Monstrance icon - Custom PNG */
     .monstrance-icon {
       width: 3rem;
       height: 3rem;
       display: inline-block;
+    }
+    
+    .monstrance-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
     
     .hero-icon {
@@ -230,7 +237,6 @@
       opacity: 1;
     }
     
-    /* REMOVED dark overlay - no background overlay anymore */
     .card-overlay {
       position: relative;
       z-index: 2;
@@ -240,10 +246,8 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      /* No background, no backdrop-filter here - clean! */
     }
     
-    /* Fixed height container for consistent alignment */
     .icon-container {
       height: 60px;
       display: flex;
@@ -267,7 +271,6 @@
       justify-content: center;
     }
     
-    /* Title with text-shadow only - no background */
     .pilgrimage-title {
       text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
       font-weight: bold;
@@ -277,7 +280,6 @@
       color: white;
     }
     
-    /* Text background retained for description readability */
     .text-backdrop {
       backdrop-filter: blur(8px);
       background: rgba(0, 0, 0, 0.35);
@@ -290,12 +292,10 @@
       color: white;
     }
     
-    /* Icons remain fully visible with text-shadow */
     .event-icon {
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
     
-    /* Navigation Arrows - 50% smaller */
     .nav-arrow {
       position: absolute;
       top: 50%;
@@ -335,7 +335,6 @@
       right: 8px;
     }
     
-    /* Image indicator dots */
     .image-dots {
       position: absolute;
       bottom: 16px;
@@ -435,38 +434,11 @@
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
+          <!-- Monthly Night Vigil with Custom PNG Monstrance Icon -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div class="monstrance-icon">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g stroke="#fde68a" stroke-width="3" stroke-linecap="round">
-                    <line x1="50" y1="8" x2="50" y2="18"/>
-                    <line x1="50" y1="82" x2="50" y2="92"/>
-                    <line x1="8" y1="50" x2="18" y2="50"/>
-                    <line x1="82" y1="50" x2="92" y2="50"/>
-                    <line x1="20" y1="20" x2="27" y2="27"/>
-                    <line x1="73" y1="73" x2="80" y2="80"/>
-                    <line x1="20" y1="80" x2="27" y2="73"/>
-                    <line x1="73" y1="27" x2="80" y2="20"/>
-                    <line x1="35" y1="12" x2="38" y2="20"/>
-                    <line x1="65" y1="12" x2="62" y2="20"/>
-                    <line x1="35" y1="88" x2="38" y2="80"/>
-                    <line x1="65" y1="88" x2="62" y2="80"/>
-                    <line x1="12" y1="35" x2="20" y2="38"/>
-                    <line x1="12" y1="65" x2="20" y2="62"/>
-                    <line x1="88" y1="35" x2="80" y2="38"/>
-                    <line x1="88" y1="65" x2="80" y2="62"/>
-                  </g>
-                  <circle cx="50" cy="48" r="22" stroke="#fde68a" stroke-width="4" fill="none"/>
-                  <circle cx="50" cy="48" r="12" fill="#fde68a" opacity="0.3"/>
-                  <circle cx="50" cy="48" r="8" stroke="#fde68a" stroke-width="3" fill="none"/>
-                  <circle cx="50" cy="48" r="3" fill="#fde68a"/>
-                  <line x1="50" y1="26" x2="50" y2="18" stroke="#fde68a" stroke-width="3.5" stroke-linecap="round"/>
-                  <line x1="46" y1="22" x2="54" y2="22" stroke="#fde68a" stroke-width="3.5" stroke-linecap="round"/>
-                  <line x1="50" y1="70" x2="50" y2="78" stroke="#fde68a" stroke-width="4" stroke-linecap="round"/>
-                  <path d="M42 78 Q50 82 58 78" stroke="#fde68a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                  <line x1="44" y1="82" x2="56" y2="82" stroke="#fde68a" stroke-width="3.5" stroke-linecap="round"/>
-                </svg>
+                <img src="monstrance-icon.png" alt="Monstrance Icon">
               </div>
               <div class="flex-1 text-center md:text-left">
                 <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Monthly Night Vigil</h3>
@@ -509,13 +481,12 @@
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 event-card fade-up border border-white/30 text-center">
             <i class="fas fa-bus event-icon"></i>
             <h3 class="text-xl font-bold text-white mb-2 mt-3">Annual Trip</h3>
-            <p class="text-white/70 leading-relaxed">A time for fellowship, friendship, and creating memories together. Fun, bonding, and enjoying God's creation together.</p>
+            <p class="text-white/70 leading-relaxed">A time for fellowship, friendship, and creating memories together. A day or weekend of fun, bonding, and enjoying God's creation as a community.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- PILGRIMAGES - NO DARK OVERLAY -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -526,25 +497,21 @@
         </div>
         
         <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <!-- Athirampuzha Pilgrimage -->
           <div id="athirampuzhaCard" class="rotating-card rounded-2xl event-card fade-up border border-white/30">
             <div class="image-stack">
               <img src="event-images/athirampuzha-image1.jpeg" class="stack-image active" alt="Athirampuzha Pilgrimage 1">
               <img src="event-images/athirampuzha-image2.jpeg" class="stack-image" alt="Athirampuzha Pilgrimage 2">
             </div>
-            
             <div class="nav-arrow nav-arrow-left athi-prev">
               <i class="fas fa-chevron-left"></i>
             </div>
             <div class="nav-arrow nav-arrow-right athi-next">
               <i class="fas fa-chevron-right"></i>
             </div>
-            
             <div class="image-dots athi-dots">
               <div class="image-dot active" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
             </div>
-            
             <div class="card-overlay p-6">
               <div class="icon-container">
                 <i class="fas fa-church event-icon"></i>
@@ -554,31 +521,27 @@
               </div>
               <div class="description-container">
                 <p class="text-white/80 leading-relaxed">
-                  <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer and sacrifice.</span>
+                  <span class="text-backdrop">A pilgrimage on foot to the historic St. Mary's Forane Church, Athirampuzha. A journey of prayer, sacrifice, and community bonding.</span>
                 </p>
               </div>
             </div>
           </div>
           
-          <!-- Lenten Pilgrimage -->
           <div id="lentenCard" class="rotating-card rounded-2xl event-card fade-up border border-white/30">
             <div class="image-stack">
               <img src="event-images/malayatoor-image1.jpeg" class="stack-image active" alt="Lenten Pilgrimage 1">
               <img src="event-images/malayatoor-image2.jpeg" class="stack-image" alt="Lenten Pilgrimage 2">
             </div>
-            
             <div class="nav-arrow nav-arrow-left lenten-prev">
               <i class="fas fa-chevron-left"></i>
             </div>
             <div class="nav-arrow nav-arrow-right lenten-next">
               <i class="fas fa-chevron-right"></i>
             </div>
-            
             <div class="image-dots lenten-dots">
               <div class="image-dot active" data-index="0"></div>
               <div class="image-dot" data-index="1"></div>
             </div>
-            
             <div class="card-overlay p-6">
               <div class="icon-container">
                 <i class="fas fa-cross event-icon"></i>
@@ -616,7 +579,6 @@
   </main>
 
   <script>
-    // Mobile menu
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenu = document.getElementById('closeMenu');
@@ -641,7 +603,6 @@
       link.addEventListener('click', closeMenuFunction);
     });
 
-    // Fade-up animation
     const fadeElements = document.querySelectorAll('.fade-up');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -653,7 +614,6 @@
     }, { threshold: 0.1 });
     fadeElements.forEach(el => observer.observe(el));
 
-    // Setup rotating card function
     function setupRotatingCard(cardId, dotsClass, prevClass, nextClass) {
       const card = document.getElementById(cardId);
       if (!card) return;
