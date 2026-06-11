@@ -11,6 +11,15 @@
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       font-family: system-ui, 'Segoe UI', sans-serif;
     }
+    /* Shift everything up by reducing top padding on main container */
+    .main-container {
+      padding-top: 0.5rem; /* Reduced from default py-12 (3rem) / md:py-20 (5rem) to about 0.5rem (0.5cm approx) */
+    }
+    @media (min-width: 768px) {
+      .main-container {
+        padding-top: 0.5rem; /* consistent shift up on desktop too */
+      }
+    }
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -69,7 +78,8 @@
   </style>
 </head>
 <body class="min-h-screen">
-  <div class="max-w-2xl mx-auto px-5 py-12 md:py-20">
+  <!-- Apply main-container class to shift everything up by ~0.5cm -->
+  <div class="max-w-2xl mx-auto px-5 main-container pb-12 md:pb-20">
     <!-- Back button -->
     <a href="index.html#ministries" class="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition">
       <i class="fas fa-arrow-left"></i> Back to Ministries
