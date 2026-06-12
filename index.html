@@ -359,14 +359,9 @@
   </main>
 
   <script>
-    // ============ SIMPLE SOUND ============
-    function playPrayerSound() {
-      try {
-        const audio = new Audio('prayer-sound.mp3');
-        audio.volume = 0.7;
-        audio.play().catch(() => {});
-      } catch(e) {}
-    }
+    // ============ GLOBAL AUDIO INSTANCE (created once, reused) ============
+    const counterAudio = new Audio('prayer-sound.mp3');
+    counterAudio.volume = 0.7;
 
     // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
@@ -419,7 +414,7 @@
     let idx = 0;
     if (slides.length) setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 3000);
 
-    // Prayer Counter with device-specific sound timing
+    // Prayer Counter with UNLOCK → API → PLAY pattern
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -448,46 +443,53 @@
       if (processing) return;
       processing = true;
       
-      // Detect iOS device
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      
-      // On iOS: Play sound IMMEDIATELY on click (better chance with Safari)
-      if (isIOS) {
-        playPrayerSound();
-      }
+      // STEP 1: Unlock audio immediately on click (silent play + pause)
+      // This tells iOS Safari "the user intends to use this audio object"
+      counterAudio.play()
+        .then(() => {
+          counterAudio.pause();
+          counterAudio.currentTime = 0;
+        })
+        .catch(() => {});
       
       btn.classList.add('loading');
       btn.disabled = true;
       fill.style.width = '100%';
       const originalText = btn.querySelector('.btn-text').innerHTML;
+      
       try {
         await fetch(API, { method: 'POST' });
         const res = await fetch(API);
         const data = await res.json();
         await new Promise(r => setTimeout(r, 300));
+        
         btn.classList.remove('loading');
         btn.disabled = false;
         fill.style.width = '0%';
-        
-        // Update with FLIP + GLOW animation
         updateDisplayWithAnimation(data.count);
         
-        // On Android/Desktop: Play sound AFTER counter updates
-        if (!isIOS) {
-          playPrayerSound();
-        }
+        // STEP 2: Play sound AFTER counter updates
+        // On iOS, step 1 unlocked it; on Android/Desktop, it just plays normally
+        counterAudio.play().catch(() => {});
         
         const span = btn.querySelector('.btn-text');
         span.innerHTML = 'Thank You ☺️';
         btn.style.backgroundColor = '#4CAF50';
         btn.style.color = 'white';
-        setTimeout(() => { span.innerHTML = originalText; btn.style.backgroundColor = ''; btn.style.color = ''; }, 2000);
+        setTimeout(() => { 
+          span.innerHTML = originalText; 
+          btn.style.backgroundColor = ''; 
+          btn.style.color = ''; 
+        }, 2000);
+        
       } catch(e) {
         btn.classList.remove('loading');
         btn.disabled = false;
         fill.style.width = '0%';
         alert('Unable to save your prayer. Please try again later.');
-      } finally { processing = false; }
+      } finally { 
+        processing = false; 
+      }
     }
     
     fetchCount();
