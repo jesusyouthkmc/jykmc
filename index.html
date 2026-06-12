@@ -38,6 +38,16 @@
     }
     @media (min-width: 768px) { .bg-logo { right: -150px; width: 50%; } }
     @media (min-width: 1024px) { .bg-logo { right: -200px; width: 40%; opacity: 0.1; } }
+    
+    /* iPad Landscape Mode - Move background logo lower and make it smaller */
+    @media only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+      .bg-logo {
+        bottom: 20px !important;
+        right: -162px !important;
+        width: 40% !important;
+      }
+    }
+    
     .content-wrapper { position: relative; z-index: 1; }
     .curved-glass-header {
       background: rgba(255, 140, 66, 0.95);
@@ -444,7 +454,6 @@
       processing = true;
       
       // STEP 1: Unlock audio immediately on click (silent play + pause)
-      // This tells iOS Safari "the user intends to use this audio object"
       counterAudio.play()
         .then(() => {
           counterAudio.pause();
@@ -468,8 +477,7 @@
         fill.style.width = '0%';
         updateDisplayWithAnimation(data.count);
         
-        // STEP 2: Play sound AFTER counter updates
-        // On iOS, step 1 unlocked it; on Android/Desktop, it just plays normally
+        // STEP 2: Play sound AFTER counter updates (now unlocked for iOS)
         counterAudio.play().catch(() => {});
         
         const span = btn.querySelector('.btn-text');
