@@ -369,12 +369,15 @@
   </main>
 
   <script>
-    // ============ GLOBAL AUDIO INSTANCE ============
+    // ============ SILENT AUDIO UNLOCK (Works perfectly on iOS) ============
+    // 0.1-second silent MP3 base64 string to safely unlock Safari
+    const SILENT_AUDIO_SRC = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABwYWlkLXRyYWNrcy5jb20AYXJ0aXN0AGJsYW5rIGF1ZGlvAFAAMgMAAAAAAAAZAMb/MUYAAABgAAAAMwAAAAAAAAAAAAAAA";
+    
+    // Your actual prayer sound
     const counterAudio = new Audio('prayer-sound.mp3');
     counterAudio.volume = 0.7;
     
-    // Track if audio has been unlocked yet
-    let isAudioUnlocked = false;
+    let isSafariUnlocked = false;
 
     // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
@@ -427,7 +430,7 @@
     let idx = 0;
     if (slides.length) setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 3000);
 
-    // Prayer Counter with UNLOCK → API → PLAY pattern (FIXED first-click issue)
+    // Prayer Counter with SILENT AUDIO UNLOCK
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -456,15 +459,28 @@
       if (processing) return;
       processing = true;
       
-      // STEP 1: Unlock audio on first click only (silent play + pause)
-      if (!isAudioUnlocked) {
-        counterAudio.play()
-          .then(() => {
-            counterAudio.pause();
-            counterAudio.currentTime = 0;
-            isAudioUnlocked = true;
-          })
-          .catch(() => {});
+      // === SILENT AUDIO UNLOCK (only once, completely silent) ===
+      if (!isSafariUnlocked) {
+        // Store original src
+        const originalSrc = counterAudio.src;
+        
+        // Temporarily point to silent audio
+        counterAudio.src = SILENT_AUDIO_SRC;
+        
+        try {
+          await counterAudio.play();
+          counterAudio.pause();
+          counterAudio.currentTime = 0;
+          isSafariUnlocked = true;
+          
+          // Restore real sound file
+          counterAudio.src = originalSrc;
+          counterAudio.load();
+        } catch(e) {
+          // If unlock fails, restore anyway
+          counterAudio.src = originalSrc;
+          counterAudio.load();
+        }
       }
       
       btn.classList.add('loading');
@@ -483,7 +499,8 @@
         fill.style.width = '0%';
         updateDisplayWithAnimation(data.count);
         
-        // STEP 2: Play sound AFTER counter updates (never plays on first-click unlock)
+        // === PLAY REAL SOUND (now unlocked for iOS) ===
+        counterAudio.currentTime = 0;
         counterAudio.play().catch(() => {});
         
         const span = btn.querySelector('.btn-text');
