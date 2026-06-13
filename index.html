@@ -144,11 +144,35 @@
     .number-pulse { animation: gentlePulse 0.5s ease; }
     @keyframes gentlePulse { 0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } 50% { transform: scale(1.08); text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); } 100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } }
     .counter-wrapper { display: inline-block; background: linear-gradient(135deg, #fde68a, #FF8C42); background-clip: text; -webkit-background-clip: text; color: transparent; font-weight: bold; }
-    .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: #000; }
-    .carousel-slides { position: relative; width: 100%; aspect-ratio: 16 / 9; }
-    .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease-in-out; }
+    
+    /* Carousel with swipe + click - hint text removed */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: #000;
+      cursor: pointer;
+    }
+    .carousel-container:active { cursor: grabbing; }
+    .carousel-slides {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+    .carousel-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
     .carousel-slide.active { opacity: 1; z-index: 1; }
     .carousel-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+    
     .whatsapp-btn-white { background: white; color: #25D366; transition: all 0.2s ease; }
     .whatsapp-btn-white:hover { background: #fef3e8; transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
   </style>
@@ -191,16 +215,24 @@
   <div id="menuOverlay" class="menu-overlay"></div>
 
   <main class="content-wrapper">
-    <!-- Sections unchanged for brevity - same as previous version -->
     <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12 w-full">
-        <div class="carousel-container mb-4 md:mb-6 fade-up">
-          <div class="carousel-slides">
-            <div class="carousel-slide active"><img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image"></div>
-            <div class="carousel-slide"><img src="carousel/carousel-2.jpg" alt="Jesus Youth KMC Ministry 2" class="carousel-image"></div>
-            <div class="carousel-slide"><img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image"></div>
+        
+        <!-- CAROUSEL WITH SWIPE + CLICK (hint text removed) -->
+        <div class="carousel-container mb-4 md:mb-6 fade-up" id="carouselContainer">
+          <div class="carousel-slides" id="carouselSlides">
+            <div class="carousel-slide active" data-index="0">
+              <img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image">
+            </div>
+            <div class="carousel-slide" data-index="1">
+              <img src="carousel/carousel-2.jpg" alt="Jesus Youth KMC Ministry 2" class="carousel-image">
+            </div>
+            <div class="carousel-slide" data-index="2">
+              <img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image">
+            </div>
           </div>
         </div>
+        
         <div class="hero-image-container mb-8 md:mb-12 fade-up"><img src="hero-image.jpg" alt="Jesus Youth KMC Ministry" class="hero-image"></div>
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="fade-up">
@@ -356,10 +388,118 @@
   </main>
 
   <script>
-    // ============ SINGLE AUDIO INSTANCE - VOLUME ZERO UNLOCK (CLEANEST METHOD) ============
+    // ============ CAROUSEL WITH SWIPE + CLICK ============
+    const carouselContainer = document.getElementById('carouselContainer');
+    const carouselSlides = document.querySelectorAll('.carousel-slide');
+    let currentIdx = 0;
+    let autoInterval;
+
+    function startAutoRotate() {
+      if (autoInterval) clearInterval(autoInterval);
+      autoInterval = setInterval(() => {
+        goToNextSlide();
+      }, 3000);
+    }
+
+    function goToNextSlide() {
+      carouselSlides[currentIdx].classList.remove('active');
+      currentIdx = (currentIdx + 1) % carouselSlides.length;
+      carouselSlides[currentIdx].classList.add('active');
+    }
+
+    function goToPrevSlide() {
+      carouselSlides[currentIdx].classList.remove('active');
+      currentIdx = (currentIdx - 1 + carouselSlides.length) % carouselSlides.length;
+      carouselSlides[currentIdx].classList.add('active');
+    }
+
+    // Click on carousel -> go to gallery page
+    let isSwiping = false;
+    
+    if (carouselContainer) {
+      carouselContainer.addEventListener('click', (e) => {
+        if (isSwiping) return;
+        window.location.href = 'gallery.html';
+      });
+    }
+
+    // ============ SWIPE DETECTION ============
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let mouseStartX = 0;
+    let isMouseDown = false;
+
+    // Touch events (mobile)
+    carouselContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      isSwiping = false;
+      if (autoInterval) clearInterval(autoInterval);
+    });
+
+    carouselContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeDistance = touchEndX - touchStartX;
+      
+      if (Math.abs(swipeDistance) > 50) {
+        isSwiping = true;
+        if (swipeDistance > 0) {
+          goToPrevSlide();
+        } else {
+          goToNextSlide();
+        }
+        setTimeout(() => { isSwiping = false; }, 500);
+      } else {
+        isSwiping = false;
+      }
+      startAutoRotate();
+    });
+
+    // Mouse events (desktop drag)
+    carouselContainer.addEventListener('mousedown', (e) => {
+      isMouseDown = true;
+      mouseStartX = e.clientX;
+      if (autoInterval) clearInterval(autoInterval);
+      e.preventDefault();
+    });
+
+    carouselContainer.addEventListener('mouseup', (e) => {
+      if (!isMouseDown) return;
+      isMouseDown = false;
+      
+      const mouseEndX = e.clientX;
+      const swipeDistance = mouseEndX - mouseStartX;
+      
+      if (Math.abs(swipeDistance) > 50) {
+        isSwiping = true;
+        if (swipeDistance > 0) {
+          goToPrevSlide();
+        } else {
+          goToNextSlide();
+        }
+        setTimeout(() => { isSwiping = false; }, 500);
+      } else {
+        isSwiping = false;
+      }
+      startAutoRotate();
+    });
+
+    carouselContainer.addEventListener('mouseleave', () => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        isSwiping = false;
+        startAutoRotate();
+      }
+    });
+
+    carouselContainer.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+    });
+
+    startAutoRotate();
+
+    // ============ SINGLE AUDIO INSTANCE - VOLUME ZERO UNLOCK ============
     const counterAudio = new Audio('prayer-sound.mp3');
     counterAudio.volume = 0.7;
-    
     let isAudioContextUnlocked = false;
 
     // ============ RIPPLE EFFECT ============
@@ -408,12 +548,7 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Auto Carousel
-    const slides = document.querySelectorAll('.carousel-slide');
-    let idx = 0;
-    if (slides.length) setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 3000);
-
-    // Prayer Counter with VOLUME-ZERO UNLOCK (most elegant method)
+    // Prayer Counter
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -442,7 +577,7 @@
       if (processing) return;
       processing = true;
       
-      // === VOLUME-ZERO UNLOCK (only once, completely silent) ===
+      // Volume-zero unlock (only once)
       if (!isAudioContextUnlocked) {
         const originalVolume = counterAudio.volume;
         counterAudio.volume = 0;
@@ -456,7 +591,6 @@
           .catch(() => {});
       }
       
-      // Start loading animation
       btn.classList.add('loading');
       btn.disabled = true;
       fill.style.width = '100%';
@@ -468,19 +602,14 @@
         const data = await res.json();
         await new Promise(r => setTimeout(r, 300));
         
-        // Remove loading state
         btn.classList.remove('loading');
         btn.disabled = false;
         fill.style.width = '0%';
-        
-        // Update counter with animation
         updateDisplayWithAnimation(data.count);
         
-        // Play sound (now unlocked for iOS)
         counterAudio.currentTime = 0;
         counterAudio.play().catch(() => {});
         
-        // Show thank you message
         const span = btn.querySelector('.btn-text');
         span.innerHTML = 'Thank You ☺️';
         btn.style.backgroundColor = '#4CAF50';
