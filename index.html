@@ -6,9 +6,9 @@
   <title>Jesus Youth KMC | Medical College Campus Ministry</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- MapTiler CSS + JS -->
-  <link href="https://api.maptiler.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.maptiler.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <!-- Leaflet CSS + JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     html { scroll-behavior: smooth; }
     body { font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -90,6 +90,7 @@
     }
     .sidebar-menu a:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(-5px); border-color: rgba(255, 255, 255, 0.3); }
     .sidebar-menu i { width: 24px; font-size: 1.2rem; }
+    .sidebar-menu img { width: 20px; height: 20px; object-fit: contain; }
     .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); z-index: 999; display: none; }
     .menu-overlay.active { display: block; }
     .map-link { background: rgba(255, 107, 53, 0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; font-weight: 600; }
@@ -148,6 +149,7 @@
     @keyframes gentlePulse { 0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } 50% { transform: scale(1.08); text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); } 100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } }
     .counter-wrapper { display: inline-block; background: linear-gradient(135deg, #fde68a, #FF8C42); background-clip: text; -webkit-background-clip: text; color: transparent; font-weight: bold; }
     
+    /* Carousel with swipe + click */
     .carousel-container {
       position: relative;
       width: 100%;
@@ -177,6 +179,55 @@
     
     .whatsapp-btn-white { background: white; color: #25D366; transition: all 0.2s ease; }
     .whatsapp-btn-white:hover { background: #fef3e8; transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+    
+    /* Map container - responsive aspect ratios */
+    .map-responsive-wrapper {
+      position: relative;
+      height: 0;
+      overflow: hidden;
+      border-radius: 28px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+    }
+    
+    /* Mobile phones (portrait) */
+    @media (max-width: 768px) {
+      .map-responsive-wrapper {
+        padding-bottom: 125%; /* 4:5 aspect ratio */
+      }
+    }
+    
+    /* Tablets (iPad portrait) */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .map-responsive-wrapper {
+        padding-bottom: 75%; /* 4:3 aspect ratio */
+      }
+    }
+    
+    /* Desktops and landscape */
+    @media (min-width: 1025px) {
+      .map-responsive-wrapper {
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      }
+    }
+    
+    .map-responsive-wrapper > div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      border: 2px solid rgba(255,255,255,0.4);
+      z-index: 1;
+    }
+    
+    /* Remove leaflet attribution completely */
+    .leaflet-control-attribution {
+      display: none !important;
+    }
+    .leaflet-attribution-flag {
+      display: none !important;
+    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -210,7 +261,10 @@
       <a href="gallery.html" class="mobile-nav-link"><i class="fas fa-images"></i><span>Gallery</span></a>
       <a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-week"></i><span>Events</span></a>
       <a href="#resources" class="mobile-nav-link"><i class="fas fa-download"></i><span>Resources</span></a>
-      <a href="#meetjesus" class="mobile-nav-link"><i class="fas fa-church"></i><span>Meet Jesus</span></a>
+      <a href="#meetjesus" class="mobile-nav-link">
+        <img src="menu-marker.png" alt="Meet Jesus">
+        <span>Meet Jesus</span>
+      </a>
       <a href="#support" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
       <a href="#join" class="mobile-nav-link"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
@@ -221,17 +275,12 @@
   <main class="content-wrapper">
     <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12 w-full">
+        <!-- CAROUSEL -->
         <div class="carousel-container mb-4 md:mb-6 fade-up" id="carouselContainer">
           <div class="carousel-slides" id="carouselSlides">
-            <div class="carousel-slide active" data-index="0">
-              <img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image">
-            </div>
-            <div class="carousel-slide" data-index="1">
-              <img src="carousel/carousel-2.jpg" alt="Jesus Youth KMC Ministry 2" class="carousel-image">
-            </div>
-            <div class="carousel-slide" data-index="2">
-              <img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image">
-            </div>
+            <div class="carousel-slide active" data-index="0"><img src="carousel/carousel-1.jpg" alt="Jesus Youth KMC Ministry 1" class="carousel-image"></div>
+            <div class="carousel-slide" data-index="1"><img src="carousel/carousel-2.jpg" alt="Jesus Youth KMC Ministry 2" class="carousel-image"></div>
+            <div class="carousel-slide" data-index="2"><img src="carousel/carousel-3.jpg" alt="Jesus Youth KMC Ministry 3" class="carousel-image"></div>
           </div>
         </div>
         <div class="hero-image-container mb-8 md:mb-12 fade-up"><img src="hero-image.jpg" alt="Jesus Youth KMC Ministry" class="hero-image"></div>
@@ -289,43 +338,10 @@
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-14 fade-up"><h2 class="text-4xl md:text-5xl font-bold text-white">Our Ministries</h2><p class="text-amber-50 text-lg mt-2">Serving Christ in different ways</p></div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
-            <div class="text-5xl mb-4">❤️‍🩹</div>
-            <h3 class="text-2xl font-bold text-white">Nurses Ministry</h3>
-            <p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p>
-            <p class="mt-3 text-amber-50 italic">"…so that we may be able to console those who are in any affliction with the consolation with which we ourselves are consoled by God."</p>
-            <p class="text-amber-100 text-sm mt-1">— 2 Corinthians 1:4</p>
-            <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
-          </div>
-          
-          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
-            <div class="text-5xl mb-4">🙏</div>
-            <h3 class="text-2xl font-bold text-white">Intercession Ministry</h3>
-            <p class="text-amber-200 text-sm font-semibold mt-1">Every Tuesday</p>
-            <p class="mt-3 text-amber-50 italic">"Pray without ceasing."</p>
-            <p class="text-amber-100 text-sm mt-1">— 1 Thessalonians 5:17</p>
-            <div class="mt-5"><a href="prayer-request.html" id="needPrayerBtn" class="ripple-btn ripple-orange pulse-orange inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-orange-200 hover:shadow-md"><i class="fas fa-hands-praying"></i> Need a prayer?</a></div>
-            <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
-          </div>
-          
-          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
-            <div class="text-5xl mb-4">🎵</div>
-            <h3 class="text-2xl font-bold text-white">Music Ministry</h3>
-            <p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p>
-            <p class="mt-3 text-amber-50 italic">"Oh come, let us sing to the LORD..."</p>
-            <p class="text-amber-100 text-sm mt-1">— Psalm 95:1</p>
-            <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
-          </div>
-          
-          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30">
-            <div class="text-5xl mb-4">🕊️</div>
-            <h3 class="text-2xl font-bold text-white">Pro-Life Ministry</h3>
-            <p class="text-amber-200 text-sm font-semibold mt-1">Every Friday</p>
-            <p class="mt-3 text-amber-50 italic">"Before I formed you in the womb I knew you…"</p>
-            <p class="text-amber-100 text-sm mt-1">— Jeremiah 1:5</p>
-            <div class="mt-5"><a href="#" id="spiritualAdoptionBtn" class="ripple-btn ripple-pink pulse-pink inline-flex items-center gap-2 bg-white/90 hover:bg-pink-50 text-pink-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm border border-pink-300 hover:shadow-md"><i class="fas fa-baby-carriage"></i> Spiritually adopt a child</a></div>
-            <div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div>
-          </div>
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30"><div class="text-5xl mb-4">❤️‍🩹</div><h3 class="text-2xl font-bold text-white">Nurses Ministry</h3><p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p><p class="mt-3 text-amber-50 italic">"…so that we may be able to console those who are in any affliction..."</p><p class="text-amber-100 text-sm mt-1">— 2 Corinthians 1:4</p><div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div></div>
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30"><div class="text-5xl mb-4">🙏</div><h3 class="text-2xl font-bold text-white">Intercession Ministry</h3><p class="text-amber-200 text-sm font-semibold mt-1">Every Tuesday</p><p class="mt-3 text-amber-50 italic">"Pray without ceasing."</p><p class="text-amber-100 text-sm mt-1">— 1 Thessalonians 5:17</p><div class="mt-5"><a href="prayer-request.html" id="needPrayerBtn" class="ripple-btn ripple-orange pulse-orange inline-flex items-center gap-2 bg-white/90 hover:bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm"><i class="fas fa-hands-praying"></i> Need a prayer?</a></div><div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div></div>
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30"><div class="text-5xl mb-4">🎵</div><h3 class="text-2xl font-bold text-white">Music Ministry</h3><p class="text-amber-200 text-sm font-semibold mt-1">Every Monday</p><p class="mt-3 text-amber-50 italic">"Oh come, let us sing to the LORD..."</p><p class="text-amber-100 text-sm mt-1">— Psalm 95:1</p><div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div></div>
+          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg card-hover fade-up border border-white/30"><div class="text-5xl mb-4">🕊️</div><h3 class="text-2xl font-bold text-white">Pro-Life Ministry</h3><p class="text-amber-200 text-sm font-semibold mt-1">Every Friday</p><p class="mt-3 text-amber-50 italic">"Before I formed you in the womb I knew you…"</p><p class="text-amber-100 text-sm mt-1">— Jeremiah 1:5</p><div class="mt-5"><a href="#" id="spiritualAdoptionBtn" class="ripple-btn ripple-pink pulse-pink inline-flex items-center gap-2 bg-white/90 hover:bg-pink-50 text-pink-600 px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm"><i class="fas fa-baby-carriage"></i> Spiritually adopt a child</a></div><div class="mt-5 h-1 w-12 bg-amber-300 rounded-full"></div></div>
         </div>
       </div>
     </section>
@@ -342,20 +358,23 @@
       </div>
     </section>
 
-    <!-- MEET JESUS SECTION - MapTiler Interactive Map -->
+    <!-- MEET JESUS SECTION - Clean Leaflet Map -->
     <section id="meetjesus" class="py-20 md:py-28">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
           <span class="bg-amber-200/30 text-white text-sm px-5 py-1.5 rounded-full font-semibold backdrop-blur-sm"><i class="fas fa-church mr-1"></i> Eucharistic Adoration</span>
           <h2 class="text-4xl md:text-5xl font-bold mt-4 text-white">Meet Jesus in the Eucharist</h2>
           <p class="text-amber-50 text-lg max-w-2xl mx-auto mt-3">"Could you not watch one hour with me?" — Matthew 26:40</p>
-          <p class="text-white/80 text-md mt-1">Adoration chapels & retreat centres near Kottayam Medical College</p>
+          <p class="text-white/80 text-md mt-1">Adoration chapels and retreat centres near Kottayam Medical College</p>
         </div>
 
-        <!-- Map Container -->
-        <div class="fade-up">
-          <div id="maptilerMap" style="height: 500px; width: 100%; border-radius: 28px; box-shadow: 0 12px 28px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.4);"></div>
-          <p class="text-white/70 text-xs mt-3 text-center"><i class="fas fa-map-marker-alt text-amber-200"></i> Click on markers for location details & directions</p>
+        <!-- Clean Interactive Map - responsive aspect ratio, custom marker -->
+        <div class="fade-up map-responsive-wrapper">
+          <div id="cleanMap"></div>
+        </div>
+        
+        <div class="text-center mt-6 fade-up">
+          <p class="text-white/70 text-sm"><i class="fas fa-map-marker-alt text-amber-200 mr-1"></i> Click on any marker to view details and get directions</p>
         </div>
       </div>
     </section>
@@ -366,10 +385,7 @@
           <div class="text-5xl mb-4">💝</div>
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Support Us</h2>
           <p class="text-amber-100 text-lg mb-8">Your prayers are the foundation of our ministry. Every Hail Mary lifts us up!</p>
-          <div class="bg-white/5 rounded-2xl p-8 mb-8">
-            <div class="text-6xl font-bold mb-2"><span id="prayerCountDisplay" class="counter-wrapper">0</span></div>
-            <p class="text-white/80 text-lg">Hail Mary's received from all supporters</p>
-          </div>
+          <div class="bg-white/5 rounded-2xl p-8 mb-8"><div class="text-6xl font-bold mb-2"><span id="prayerCountDisplay" class="counter-wrapper">0</span></div><p class="text-white/80 text-lg">Hail Mary's received from all supporters</p></div>
           <div class="prayer-button-container"><button id="prayerButton" class="prayer-btn"><div id="loadingBarFill" class="loading-bar-fill"></div><span class="btn-text">🙏 Pray a Hail Mary</span></button></div>
           <p class="text-white/60 text-sm mt-6">"The fervent prayer of a righteous person is very powerful." — James 5:16</p>
         </div>
@@ -379,318 +395,122 @@
     <section id="join" class="py-20 relative overflow-hidden">
       <div class="absolute inset-0 opacity-20"><i class="fas fa-dove text-9xl absolute -bottom-10 -left-10 text-white"></i><i class="fas fa-cross text-8xl absolute top-10 right-10 text-white"></i></div>
       <div class="max-w-4xl mx-auto px-5 md:px-8 text-center relative z-10">
-        <div class="fade-up">
-          <i class="fas fa-users text-5xl text-white mb-4"></i>
-          <h2 class="text-4xl md:text-5xl font-bold text-white">Join the Family</h2>
-          <p class="text-amber-50 text-lg md:text-xl max-w-2xl mx-auto mt-4">Be part of a vibrant community of young believers growing in faith, prayer and mission on the Medical College campus.</p>
-          <div class="flex flex-wrap justify-center gap-5 mt-10">
-            <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="whatsapp-btn-white inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold shadow-md transition"><i class="fab fa-whatsapp text-xl"></i> WhatsApp group</a>
-            <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition transform hover:scale-105"><i class="fab fa-instagram text-white mr-2"></i> Follow us</a>
-          </div>
-          <p class="text-amber-100 text-sm mt-8"><i class="fas fa-map-marker-alt text-amber-200 mr-1"></i> Kottayam Medical College Campus & <a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-white/90 hover:text-white"><i class="fas fa-map-marker-alt"></i> St. Luke's Convent</a></p>
-        </div>
+        <div class="fade-up"><i class="fas fa-users text-5xl text-white mb-4"></i><h2 class="text-4xl md:text-5xl font-bold text-white">Join the Family</h2><p class="text-amber-50 text-lg md:text-xl max-w-2xl mx-auto mt-4">Be part of a vibrant community of young believers growing in faith, prayer and mission on the Medical College campus.</p><div class="flex flex-wrap justify-center gap-5 mt-10"><a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="whatsapp-btn-white inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold shadow-md transition"><i class="fab fa-whatsapp text-xl"></i> WhatsApp group</a><a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition transform hover:scale-105"><i class="fab fa-instagram text-white mr-2"></i> Follow us</a></div><p class="text-amber-100 text-sm mt-8"><i class="fas fa-map-marker-alt text-amber-200 mr-1"></i> Kottayam Medical College Campus & <a href="https://www.google.com/maps?q=9.632410,76.522703" target="_blank" rel="noopener noreferrer" class="map-link text-white/90 hover:text-white"><i class="fas fa-map-marker-alt"></i> St. Luke's Convent</a></p></div>
       </div>
     </section>
 
     <footer class="bg-black/30 text-white/80 py-10 text-center text-sm backdrop-blur-sm">
-      <div class="max-w-6xl mx-auto px-5">
-        <p class="font-semibold text-white">Jesus Youth KMC — Kottayam Medical College Campus Ministry</p>
-        <p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p>
-        <p class="text-amber-100">Young hearts on fire for Christ</p>
-        <div class="flex justify-center gap-5 mt-4 text-white text-lg">
-          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-instagram"></i></a>
-          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        <p class="mt-6 text-white/60 text-xs">© 2026 Jesus Youth KMC · All glory to God</p>
-      </div>
+      <div class="max-w-6xl mx-auto px-5"><p class="font-semibold text-white">Jesus Youth KMC — Kottayam Medical College Campus Ministry</p><p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p><p class="text-amber-100">Young hearts on fire for Christ</p><div class="flex justify-center gap-5 mt-4 text-white text-lg"><a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-instagram"></i></a><a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-whatsapp"></i></a></div><p class="mt-6 text-white/60 text-xs">© 2026 Jesus Youth KMC · All glory to God</p></div>
     </footer>
   </main>
 
   <script>
-    // ============ CAROUSEL WITH SWIPE + CLICK ============
-    const carouselContainer = document.getElementById('carouselContainer');
+    // ============ CAROUSEL & MENU & PRAYER COUNTER ============
     const carouselSlides = document.querySelectorAll('.carousel-slide');
-    let currentIdx = 0;
-    let autoInterval;
-
-    function startAutoRotate() {
-      if (autoInterval) clearInterval(autoInterval);
-      autoInterval = setInterval(() => {
-        goToNextSlide();
-      }, 3000);
+    let currentIdx = 0, autoInterval;
+    function startAutoRotate() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(() => { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx+1)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }, 3000); }
+    function goToNextSlide() { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx+1)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }
+    function goToPrevSlide() { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx-1+carouselSlides.length)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }
+    const carouselContainer = document.getElementById('carouselContainer');
+    let isSwiping=false;
+    if(carouselContainer){
+      carouselContainer.addEventListener('click',(e)=>{ if(!isSwiping) window.location.href='gallery.html'; });
+      let touchStartX=0, touchEndX=0, mouseStartX=0, isMouseDown=false;
+      carouselContainer.addEventListener('touchstart',(e)=>{ touchStartX=e.changedTouches[0].screenX; isSwiping=false; if(autoInterval) clearInterval(autoInterval); });
+      carouselContainer.addEventListener('touchend',(e)=>{ touchEndX=e.changedTouches[0].screenX; let dist = touchEndX-touchStartX; if(Math.abs(dist)>50){ isSwiping=true; dist>0?goToPrevSlide():goToNextSlide(); setTimeout(()=>{isSwiping=false;},500); } else isSwiping=false; startAutoRotate(); });
+      carouselContainer.addEventListener('mousedown',(e)=>{ isMouseDown=true; mouseStartX=e.clientX; if(autoInterval) clearInterval(autoInterval); e.preventDefault(); });
+      carouselContainer.addEventListener('mouseup',(e)=>{ if(!isMouseDown) return; isMouseDown=false; let dist=e.clientX-mouseStartX; if(Math.abs(dist)>50){ isSwiping=true; dist>0?goToPrevSlide():goToNextSlide(); setTimeout(()=>{isSwiping=false;},500); } else isSwiping=false; startAutoRotate(); });
+      carouselContainer.addEventListener('mouseleave',()=>{ if(isMouseDown){ isMouseDown=false; isSwiping=false; startAutoRotate(); } });
+      carouselContainer.addEventListener('dragstart',(e)=>e.preventDefault());
     }
-
-    function goToNextSlide() {
-      carouselSlides[currentIdx].classList.remove('active');
-      currentIdx = (currentIdx + 1) % carouselSlides.length;
-      carouselSlides[currentIdx].classList.add('active');
-    }
-
-    function goToPrevSlide() {
-      carouselSlides[currentIdx].classList.remove('active');
-      currentIdx = (currentIdx - 1 + carouselSlides.length) % carouselSlides.length;
-      carouselSlides[currentIdx].classList.add('active');
-    }
-
-    let isSwiping = false;
-    
-    if (carouselContainer) {
-      carouselContainer.addEventListener('click', (e) => {
-        if (isSwiping) return;
-        window.location.href = 'gallery.html';
-      });
-    }
-
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let mouseStartX = 0;
-    let isMouseDown = false;
-
-    carouselContainer.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      isSwiping = false;
-      if (autoInterval) clearInterval(autoInterval);
-    });
-
-    carouselContainer.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const swipeDistance = touchEndX - touchStartX;
-      
-      if (Math.abs(swipeDistance) > 50) {
-        isSwiping = true;
-        if (swipeDistance > 0) {
-          goToPrevSlide();
-        } else {
-          goToNextSlide();
-        }
-        setTimeout(() => { isSwiping = false; }, 500);
-      } else {
-        isSwiping = false;
-      }
-      startAutoRotate();
-    });
-
-    carouselContainer.addEventListener('mousedown', (e) => {
-      isMouseDown = true;
-      mouseStartX = e.clientX;
-      if (autoInterval) clearInterval(autoInterval);
-      e.preventDefault();
-    });
-
-    carouselContainer.addEventListener('mouseup', (e) => {
-      if (!isMouseDown) return;
-      isMouseDown = false;
-      
-      const mouseEndX = e.clientX;
-      const swipeDistance = mouseEndX - mouseStartX;
-      
-      if (Math.abs(swipeDistance) > 50) {
-        isSwiping = true;
-        if (swipeDistance > 0) {
-          goToPrevSlide();
-        } else {
-          goToNextSlide();
-        }
-        setTimeout(() => { isSwiping = false; }, 500);
-      } else {
-        isSwiping = false;
-      }
-      startAutoRotate();
-    });
-
-    carouselContainer.addEventListener('mouseleave', () => {
-      if (isMouseDown) {
-        isMouseDown = false;
-        isSwiping = false;
-        startAutoRotate();
-      }
-    });
-
-    carouselContainer.addEventListener('dragstart', (e) => {
-      e.preventDefault();
-    });
-
     startAutoRotate();
+    function addRippleEffect(btn){ btn.addEventListener('click',function(e){ let ripple=document.createElement('span'); ripple.classList.add('ripple'); let rect=btn.getBoundingClientRect(); let size=Math.max(rect.width,rect.height); ripple.style.width=ripple.style.height=`${size}px`; ripple.style.left=`${e.clientX-rect.left-size/2}px`; ripple.style.top=`${e.clientY-rect.top-size/2}px`; btn.appendChild(ripple); setTimeout(()=>ripple.remove(),600); }); }
+    const needBtn=document.getElementById('needPrayerBtn'); if(needBtn) addRippleEffect(needBtn);
+    const spiritualBtn=document.getElementById('spiritualAdoptionBtn'); if(spiritualBtn){ addRippleEffect(spiritualBtn); spiritualBtn.addEventListener('click',(e)=>{ e.preventDefault(); let isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent); window.location.href=isIOS?'https://apps.apple.com/us/app/army-for-life/id1557521454':'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN'; }); }
+    const menuBtn=document.getElementById('menuBtn'), mobileMenu=document.getElementById('mobileMenu'), closeMenuBtn=document.getElementById('closeMenu'), menuOverlay=document.getElementById('menuOverlay');
+    function openMenu(){ mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeMenuFunction(){ mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow=''; }
+    if(menuBtn) menuBtn.addEventListener('click',openMenu); if(closeMenuBtn) closeMenuBtn.addEventListener('click',closeMenuFunction); if(menuOverlay) menuOverlay.addEventListener('click',closeMenuFunction); document.querySelectorAll('.mobile-nav-link').forEach(l=>l.addEventListener('click',closeMenuFunction));
+    const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
+    document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+    const API='https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
+    const display=document.getElementById('prayerCountDisplay'), btn=document.getElementById('prayerButton'), fill=document.getElementById('loadingBarFill');
+    let processing=false, counterAudio=new Audio('prayer-sound.mp3'); counterAudio.volume=0.7; let isAudioUnlocked=false;
+    function updateDisplayDirect(val){ if(display) display.innerHTML=`<span class="counter-wrapper">${val.toLocaleString()}</span>`; }
+    async function fetchCount(){ try{ let res=await fetch(API); let data=await res.json(); updateDisplayDirect(data.count); }catch(e){ if(display) display.innerHTML='<span class="counter-wrapper">—</span>'; } }
+    async function increment(){ if(processing) return; processing=true; if(!isAudioUnlocked){ let vol=counterAudio.volume; counterAudio.volume=0; counterAudio.play().then(()=>{ counterAudio.pause(); counterAudio.currentTime=0; counterAudio.volume=vol; isAudioUnlocked=true; }).catch(()=>{}); }
+    btn.classList.add('loading'); btn.disabled=true; fill.style.width='100%'; let originalText=btn.querySelector('.btn-text').innerHTML;
+    try{ await fetch(API,{method:'POST'}); let res=await fetch(API); let data=await res.json(); await new Promise(r=>setTimeout(r,300)); btn.classList.remove('loading'); btn.disabled=false; fill.style.width='0%'; updateDisplayDirect(data.count); counterAudio.currentTime=0; counterAudio.play().catch(()=>{}); let span=btn.querySelector('.btn-text'); span.innerHTML='Thank You ☺️'; btn.style.backgroundColor='#4CAF50'; btn.style.color='white'; setTimeout(()=>{ span.innerHTML=originalText; btn.style.backgroundColor=''; btn.style.color=''; },2000); }catch(e){ btn.classList.remove('loading'); btn.disabled=false; fill.style.width='0%'; alert('Unable to save your prayer. Please try again later.'); }finally{ processing=false; } }
+    fetchCount(); if(btn) btn.addEventListener('click',increment);
 
-    // ============ RIPPLE EFFECT ============
-    function addRippleEffect(button) {
-      button.addEventListener('click', function(e) {
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
-        ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
-        button.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
+    // ============ CLEAN LEAFLET MAP - RESPONSIVE ASPECT RATIO, CUSTOM PNG MARKER ============
+    document.addEventListener('DOMContentLoaded', function() {
+      const medicalCollege = [9.6334589, 76.5240756];
+      const chapels = [
+        { name: "St. Joseph's Monastery Church, Mannanam", lat: 9.6461875, lng: 76.5199375, address: "മാന്നാനം സെന്റ് ജോസഫ് കത്തോലിക്കാ ദേവാലയം" },
+        { name: "St. Mary's Syro-Malabar Church, Athirampuzha", lat: 9.6673125, lng: 76.5381875, address: "സെന്റ് മേരീസ് ഫൊറോനാ പള്ളി, അതിരമ്പുഴ" },
+        { name: "Parithrana Retreat Centre", lat: 9.6325625, lng: 76.5456875, address: "പരിത്രാണ റിട്രീറ്റ് സെന്റർ" },
+        { name: "CharisBhavan Retreat Centre, Athirampuzha", lat: 9.6740625, lng: 76.5343125, address: "കാരിസ്ഭവന്‍, അതിരമ്പുഴ" },
+        { name: "Christeen Retreat Centre", lat: 9.5935625, lng: 76.5530625, address: "ക്രിസ്റ്റീൻ റിട്രീറ്റ് സെന്റർ" },
+        { name: "Good Shepherd Church", lat: 9.5918125, lng: 76.5334375, address: "" }
+      ];
+
+      // Initialize map with attributionControl disabled (removes flag and all Leaflet branding)
+      const map = L.map('cleanMap', {
+        attributionControl: false,
+        zoomControl: true
+      }).setView(medicalCollege, 13);
+
+      // CartoDB Light basemap - clean, neutral, no political symbols
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd',
+        attribution: ''
+      }).addTo(map);
+
+      // ============ CUSTOM MARKER FOR MAP (chapel-marker.png) ============
+      const customChapelIcon = L.icon({
+        iconUrl: 'chapel-marker.png',
+        iconSize: [38, 38],
+        iconAnchor: [19, 38],
+        popupAnchor: [0, -38],
+        className: 'custom-chapel-marker'
       });
-    }
-    
-    const needPrayerBtn = document.getElementById('needPrayerBtn');
-    if (needPrayerBtn) addRippleEffect(needPrayerBtn);
-    
-    const spiritualBtn = document.getElementById('spiritualAdoptionBtn');
-    if (spiritualBtn) {
-      addRippleEffect(spiritualBtn);
-      spiritualBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        window.location.href = isIOS ? 'https://apps.apple.com/us/app/army-for-life/id1557521454' : 'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN';
+
+      // Medical College Junction marker (Font Awesome blue marker)
+      const originIcon = L.divIcon({
+        html: '<i class="fas fa-map-marker-alt" style="font-size: 34px; color: #2563eb; text-shadow: 0 0 3px white; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));"></i>',
+        iconSize: [34, 34],
+        className: 'bg-transparent'
       });
-    }
 
-    // Mobile menu
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMenu = document.getElementById('closeMenu');
-    const menuOverlay = document.getElementById('menuOverlay');
-    function openMenu() { mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-    function closeMenuFunction() { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
-    if (menuBtn) menuBtn.addEventListener('click', openMenu);
-    if (closeMenu) closeMenu.addEventListener('click', closeMenuFunction);
-    if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunction);
-    document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeMenuFunction));
+      // Add Medical College Junction marker
+      L.marker(medicalCollege, { icon: originIcon })
+        .addTo(map)
+        .bindPopup(`
+          <div style="padding: 8px; font-family: system-ui; min-width: 180px;">
+            <strong style="color: #2563eb;">📍 Medical College Junction</strong>
+          </div>
+        `);
 
-    // Fade-up animation
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-    // Prayer Counter
-    const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
-    const display = document.getElementById('prayerCountDisplay');
-    const btn = document.getElementById('prayerButton');
-    const fill = document.getElementById('loadingBarFill');
-    let processing = false;
-    
-    function updateDisplayWithAnimation(newValue) {
-      if (!display) return;
-      display.classList.remove('number-flip', 'number-pulse');
-      void display.offsetWidth;
-      display.innerHTML = `<span class="counter-wrapper">${newValue.toLocaleString()}</span>`;
-      display.classList.add('number-flip', 'number-pulse');
-      setTimeout(() => {
-        if (display) display.classList.remove('number-flip', 'number-pulse');
-      }, 500);
-    }
-    
-    function updateDisplayDirect(value) { if (display) display.innerHTML = `<span class="counter-wrapper">${value.toLocaleString()}</span>`; }
-    
-    async function fetchCount() {
-      try { const res = await fetch(API); const data = await res.json(); updateDisplayDirect(data.count); } 
-      catch(e) { if (display) display.innerHTML = '<span class="counter-wrapper">—</span>'; }
-    }
-    
-    async function increment() {
-      if (processing) return;
-      processing = true;
-      
-      const counterAudio = new Audio('prayer-sound.mp3');
-      counterAudio.volume = 0.7;
-      
-      btn.classList.add('loading');
-      btn.disabled = true;
-      fill.style.width = '100%';
-      const originalText = btn.querySelector('.btn-text').innerHTML;
-      
-      try {
-        await fetch(API, { method: 'POST' });
-        const res = await fetch(API);
-        const data = await res.json();
-        await new Promise(r => setTimeout(r, 300));
-        
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        fill.style.width = '0%';
-        updateDisplayWithAnimation(data.count);
-        
-        counterAudio.currentTime = 0;
-        counterAudio.play().catch(() => {});
-        
-        const span = btn.querySelector('.btn-text');
-        span.innerHTML = 'Thank You ☺️';
-        btn.style.backgroundColor = '#4CAF50';
-        btn.style.color = 'white';
-        setTimeout(() => { 
-          span.innerHTML = originalText; 
-          btn.style.backgroundColor = ''; 
-          btn.style.color = ''; 
-        }, 2000);
-        
-      } catch(e) {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        fill.style.width = '0%';
-        alert('Unable to save your prayer. Please try again later.');
-      } finally { 
-        processing = false; 
-      }
-    }
-    
-    fetchCount();
-    if (btn) btn.addEventListener('click', increment);
-
-    // ============ MAPTILER MAP with your locations ============
-    const origin = [76.5240756, 9.6334589];  // [lng, lat] format for MapTiler
-    
-    const locations = [
-      { name: "St. Joseph's Monastery Church, Mannanam", lng: 76.5199375, lat: 9.6461875, address: "Mannanam, Kottayam" },
-      { name: "St. Mary's Syro-Malabar Church, Athirampuzha", lng: 76.5381875, lat: 9.6673125, address: "Athirampuzha, Kottayam" },
-      { name: "Parithrana Retreat Centre", lng: 76.5456875, lat: 9.6325625, address: "Near Medical College, Kottayam" },
-      { name: "CharisBhavan Retreat Centre, Athirampuzha", lng: 76.5343125, lat: 9.6740625, address: "Athirampuzha, Kottayam" },
-      { name: "Christeen Retreat Centre", lng: 76.5530625, lat: 9.5935625, address: "Kottayam" },
-      { name: "Good Shepherd Church", lng: 76.5334375, lat: 9.5918125, address: "Kottayam" }
-    ];
-    
-    const MAPTILER_KEY = 'nTh2vp3Gx3JFxn5JmZeQ';
-    
-    mapboxgl.accessToken = MAPTILER_KEY;
-    
-    const map = new mapboxgl.Map({
-      container: 'maptilerMap',
-      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`,
-      center: origin,
-      zoom: 12
-    });
-    
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    
-    map.on('load', () => {
-      // Add Medical College Junction marker (origin)
-      const originEl = document.createElement('div');
-      originEl.innerHTML = '<i class="fas fa-map-marker-alt" style="font-size: 32px; color: #ffffff; text-shadow: 0 0 5px #FF6B35; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>';
-      new mapboxgl.Marker(originEl)
-        .setLngLat(origin)
-        .setPopup(new mapboxgl.Popup().setHTML('<b style="color:#FF6B35;">🏥 Medical College Junction</b><br>Starting point<br><br><a href="https://www.google.com/maps/dir/?api=1&destination=9.6334589,76.5240756" target="_blank" style="color:#FF8C42; text-decoration:underline;">Get directions →</a>'))
-        .addTo(map);
-      
-      // Add chapel markers
-      locations.forEach(loc => {
-        const markerEl = document.createElement('div');
-        markerEl.innerHTML = '<i class="fas fa-church" style="font-size: 28px; color: #FF8C42; text-shadow: 0 0 3px white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>';
-        
-        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
-        const fromOriginUrl = `https://www.google.com/maps/dir/9.6334589,76.5240756/${loc.lat},${loc.lng}`;
-        
-        new mapboxgl.Marker(markerEl)
-          .setLngLat([loc.lng, loc.lat])
-          .setPopup(new mapboxgl.Popup().setHTML(`
-            <div style="font-family: system-ui; min-width: 200px;">
-              <b style="color:#FF6B35;">${loc.name}</b><br>
-              📍 ${loc.address}<br><br>
-              <a href="${directionsUrl}" target="_blank" style="color:#FF8C42; text-decoration:underline;">🚗 Get directions from anywhere</a><br>
-              <a href="${fromOriginUrl}" target="_blank" style="color:#FF8C42; text-decoration:underline;">🏁 From Medical College Junction</a>
+      // Add all chapel markers with custom PNG icon
+      chapels.forEach(chapel => {
+        L.marker([chapel.lat, chapel.lng], { icon: customChapelIcon })
+          .addTo(map)
+          .bindPopup(`
+            <div style="padding: 10px; font-family: system-ui; max-width: 280px; min-width: 200px;">
+              <strong style="color: #FF6B35; font-size: 14px;">⛪ ${chapel.name}</strong><br>
+              <span style="font-size: 11px; color: #555; display: block; margin: 4px 0;">${chapel.address || ''}</span>
+              <hr style="margin: 6px 0;">
+              <a href="https://www.google.com/maps/dir/?api=1&origin=${medicalCollege[0]},${medicalCollege[1]}&destination=${chapel.lat},${chapel.lng}&travelmode=driving" 
+                 target="_blank" 
+                 style="color: #FF6B35; font-weight: 600; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                Get directions from Medical College
+              </a>
             </div>
-          `))
-          .addTo(map);
+          `);
       });
     });
-    
-    setTimeout(() => {
-      map.resize();
-    }, 500);
   </script>
 </body>
 </html>
