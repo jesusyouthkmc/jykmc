@@ -198,7 +198,7 @@
     }
     .hope-message .message-card:hover { background: rgba(255, 245, 220, 0.28); transform: scale(1.02); }
     
-    /* CUSTOM LIGHTBOX WITH LEFT/RIGHT TAP ZONES */
+    /* CUSTOM LIGHTBOX WITH LEFT/RIGHT TAP ZONES - NO FLASH/SCALE ANIMATIONS */
     .custom-lightbox {
       display: none;
       position: fixed;
@@ -242,9 +242,7 @@
       padding: 6px;
       border: 1px solid rgba(255, 255, 255, 0.25);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      transition: transform 0.1s ease;
-      cursor: pointer;
-      pointer-events: none; /* let overlay handle taps, but image itself can be clicked? We'll keep interactive zones on wrapper */
+      /* No transition effects */
     }
     /* Left and right tap zones (invisible but clickable areas) */
     .lightbox-tap-left, .lightbox-tap-right {
@@ -255,7 +253,6 @@
       z-index: 10;
       cursor: pointer;
       background: transparent;
-      transition: background 0.2s;
     }
     .lightbox-tap-left {
       left: 0;
@@ -267,7 +264,7 @@
       border-top-right-radius: 28px;
       border-bottom-right-radius: 28px;
     }
-    /* subtle visual hint on hover for desktop, but no distraction on mobile */
+    /* subtle visual hint on hover for desktop */
     @media (hover: hover) {
       .lightbox-tap-left:hover {
         background: linear-gradient(90deg, rgba(0,0,0,0.2), transparent);
@@ -275,11 +272,6 @@
       .lightbox-tap-right:hover {
         background: linear-gradient(270deg, rgba(0,0,0,0.2), transparent);
       }
-    }
-    /* Optional mini visual hint on mobile tap (quick flash effect) */
-    .tap-flash {
-      background: rgba(255, 215, 150, 0.3) !important;
-      transition: background 0.05s;
     }
     
     /* Navigation arrows decoration (optional minimal style) */
@@ -407,7 +399,7 @@
     </footer>
   </main>
 
-  <!-- Custom Lightbox with Left/Right Tap Zones -->
+  <!-- Custom Lightbox with Left/Right Tap Zones (No Flash/Scaled Animations) -->
   <div id="customLightbox" class="custom-lightbox">
     <div class="lightbox-content">
       <!-- Left tap zone (previous image) -->
@@ -423,23 +415,7 @@
 
   <script>
     // =========== YOUR PHOTOS - UPDATE THESE PATHS ===========
-    // For demonstration we'll use high-quality placeholder images with spiritual/community theme,
-    // but you can replace with your actual 'images/photoX.jpg' files.
-    // The code will show your LOCAL_IMAGES if they exist. I keep your placeholder array but will also create a fallback set
-    // to ensure the gallery looks beautiful while you replace images.
-    
-    // Default real images to showcase (you can replace these with your actual jy_kmc images)
-    const DEMO_FALLBACK = [
-      "https://picsum.photos/id/104/600/600",   // peaceful landscape
-      "https://picsum.photos/id/30/600/600",   // coffee & laptop community
-      "https://picsum.photos/id/169/600/600",  // sunset gathering
-      "https://picsum.photos/id/155/600/600",  // group prayer
-      "https://picsum.photos/id/26/600/600",   // venice walk
-      "https://picsum.photos/id/29/600/600"    // mountain group
-    ];
-    
-    // Your LOCAL images array (Update these with actual paths like "images/photo1.jpg")
-    // NOTE: if these files do not exist, images will fallback to DEMO images to avoid broken UI.
+    // Replace these with your actual image paths
     const LOCAL_IMAGES = [
       "images/photo1.jpg",
       "images/photo2.jpg",
@@ -449,18 +425,17 @@
       "images/photo6.jpg"
     ];
     
-    // Function to test image existence and create a final array with fallback for broken paths.
-    // Because we want seamless experience, we'll pre-check with a simple loader? Instead we'll render gallery with original paths and use onerror fallback.
-    // But also we can map final images by attempting to load? For simplicity, we just build gallery with given paths and each image has onerror fallback to demo picture.
-    // That ensures no empty frames.
+    // Fallback demo images (only shown if your actual images fail to load)
+    const DEMO_FALLBACK = [
+      "https://picsum.photos/id/104/600/600",
+      "https://picsum.photos/id/30/600/600",
+      "https://picsum.photos/id/169/600/600",
+      "https://picsum.photos/id/155/600/600",
+      "https://picsum.photos/id/26/600/600",
+      "https://picsum.photos/id/29/600/600"
+    ];
     
     let rawImages = [...LOCAL_IMAGES];
-    // For users with no images, we make sure it shows at least something if all broken. We'll also provide a few memorable images.
-    // To make gallery attractive even when photos are missing, we will show demo images only if the main array is empty or after loading we could use default set if length zero.
-    // But since LOCAL_IMAGES length is 6, but those paths likely missing, we will rely on image onerror to show placeholder (but still those paths remain). Better: create actual working array by mapping and using fallback url on error.
-    // However the requirement is to show the photos they have. I'll implement logic to use a mix: if photo loads, it's fine; else fallback to demo image but with same aspect.
-    // So final gallery will never show broken icons.
-    
     let galleryPhotos = [...rawImages];
     
     // DOM elements
@@ -476,22 +451,17 @@
     
     let currentIdx = 0;
     
-    // Helper: next/prev logic
+    // Navigation functions - NO animations, just direct image change
     function nextImage() {
       if (!galleryPhotos.length) return;
       currentIdx = (currentIdx + 1) % galleryPhotos.length;
       lightboxImg.src = galleryPhotos[currentIdx];
-      // subtle scale effect on transition
-      lightboxImg.style.transform = 'scale(0.97)';
-      setTimeout(() => { if(lightboxImg) lightboxImg.style.transform = ''; }, 120);
     }
     
     function prevImage() {
       if (!galleryPhotos.length) return;
       currentIdx = (currentIdx - 1 + galleryPhotos.length) % galleryPhotos.length;
       lightboxImg.src = galleryPhotos[currentIdx];
-      lightboxImg.style.transform = 'scale(0.97)';
-      setTimeout(() => { if(lightboxImg) lightboxImg.style.transform = ''; }, 120);
     }
     
     function openLightbox(index) {
@@ -508,27 +478,22 @@
     }
     
     // TAP ZONE HANDLERS: Right side -> next image, Left side -> previous image.
+    // No flash effects, just immediate navigation
     if (tapRightZone) {
       tapRightZone.addEventListener('click', (e) => {
         e.stopPropagation();
         nextImage();
-        // flash effect
-        tapRightZone.classList.add('tap-flash');
-        setTimeout(() => tapRightZone.classList.remove('tap-flash'), 120);
       });
     }
     if (tapLeftZone) {
       tapLeftZone.addEventListener('click', (e) => {
         e.stopPropagation();
         prevImage();
-        tapLeftZone.classList.add('tap-flash');
-        setTimeout(() => tapLeftZone.classList.remove('tap-flash'), 120);
       });
     }
     
-    // Click on background closes lightbox (but not on tap zones, they already consumed)
+    // Click on background closes lightbox
     lightbox.addEventListener('click', (e) => {
-      // if clicked directly on lightbox background (not on tap zones or image wrapper)
       if (e.target === lightbox) {
         closeLightbox();
       }
@@ -542,7 +507,7 @@
       if (e.key === 'ArrowLeft') prevImage();
     });
     
-    // Swipe support for mobile (keep for comfort but primary taps are now zone-based)
+    // Swipe support for mobile (kept as secondary, no animations)
     let touchStartX = 0;
     let touchEndX = 0;
     lightboxImg.addEventListener('touchstart', (e) => {
@@ -560,11 +525,11 @@
       }
     });
     
-    // Render gallery with onerror fallback to prevent broken images: each img will have fallback to high quality demo images
+    // Render gallery with onerror fallback
     function renderLocalGallery(imagesArray) {
       if (!galleryContainer) return;
       let finalArray = imagesArray.length ? imagesArray : DEMO_FALLBACK;
-      // if imagesArray has elements but all potentially broken, we still keep original but add error handling
+      
       if (!finalArray.length) {
         galleryContainer.innerHTML = `<div class="empty-state"><i class="fas fa-images text-5xl text-white/40 mb-4"></i><p class="text-white/80 text-xl font-medium">Preparing sacred memories</p><p class="text-white/60 text-sm mt-2">Soon we'll share beautiful moments</p></div>`;
         if (photoCountSpan) photoCountSpan.innerText = '0';
@@ -573,31 +538,21 @@
         return;
       }
       
-      // update global galleryPhotos array for lightbox
       galleryPhotos = [...finalArray];
       
       let html = '';
       for (let i = 0; i < finalArray.length; i++) {
         const originalSrc = finalArray[i];
-        // We'll use onerror to reassign a demo image from DEMO_FALLBACK based on index to keep consistency
         const fallbackSrc = DEMO_FALLBACK[i % DEMO_FALLBACK.length];
         html += `<div class="gallery-card" data-index="${i}"><div class="card-image"><img src="${originalSrc}" alt="Campus memory" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSrc}'; this.setAttribute('data-fallback','true');"><div class="card-overlay"></div></div></div>`;
       }
       galleryContainer.innerHTML = html;
-      
-      // Re-attach click events and ensure that if any image gets fallback, lightbox uses updated galleryPhotos which are original paths
-      // but when user clicks, we still use the global array. However if an image was replaced by onerror, the global array still has original src that might break in lightbox.
-      // To fix that, after all images load we can update the galleryPhotos with actual src from DOM? simpler: we will just update lightbox array with the final displayed source after loading?
-      // Actually to keep consistent, after rendering we can re-scan images and adjust galleryPhotos mapping to current displayed src for lightbox.
-      // Let's implement a robust method: after each card click, we get the actual img src that is currently displayed (including fallback) and navigate with that same image set.
-      // This ensures lightbox shows what user sees.
       
       const cards = document.querySelectorAll('.gallery-card');
       cards.forEach((card, idx) => {
         card.addEventListener('click', (e) => {
           const imgElement = card.querySelector('.card-image img');
           if (imgElement && imgElement.src) {
-            // rebuild current gallery photo array based on actual displayed images in the grid (ensures correct fallback)
             const currentDisplayedSrcs = Array.from(document.querySelectorAll('.gallery-card .card-image img')).map(img => img.src);
             if (currentDisplayedSrcs.length) {
               galleryPhotos = currentDisplayedSrcs;
@@ -614,7 +569,6 @@
         });
       });
       
-      // update badge and hope message
       if (photoCountSpan) photoCountSpan.innerText = finalArray.length;
       if (hopeMessageDiv && finalArray.length) {
         setTimeout(() => {
@@ -632,17 +586,13 @@
       }
     }
     
-    // Start with original local images, after load we let onerror handle fallback but galleryPhotos will be updated after click.
-    // For initial lightbox open correctness we also pre-populate galleryPhotos with actual images eventually.
     renderLocalGallery(rawImages);
     
-    // After the page fully loads, we ensure galleryPhotos stores actual displayed image URLs for perfect lightbox.
     window.addEventListener('load', () => {
       const imgs = document.querySelectorAll('.gallery-card .card-image img');
       if (imgs.length) {
         const actualSrcs = Array.from(imgs).map(img => img.src);
         galleryPhotos = actualSrcs;
-        // Also re-render badge count remains same
         if (photoCountSpan) photoCountSpan.innerText = actualSrcs.length;
       }
     });
