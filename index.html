@@ -6,6 +6,9 @@
   <title>Jesus Youth KMC | Medical College Campus Ministry</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- MapTiler CSS + JS -->
+  <link href="https://api.maptiler.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.maptiler.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <style>
     html { scroll-behavior: smooth; }
     body { font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -145,7 +148,6 @@
     @keyframes gentlePulse { 0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } 50% { transform: scale(1.08); text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); } 100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 255, 255, 0); } }
     .counter-wrapper { display: inline-block; background: linear-gradient(135deg, #fde68a, #FF8C42); background-clip: text; -webkit-background-clip: text; color: transparent; font-weight: bold; }
     
-    /* Carousel with swipe + click - hint text removed */
     .carousel-container {
       position: relative;
       width: 100%;
@@ -191,6 +193,7 @@
         <a href="gallery.html" class="text-white hover:text-amber-200 transition">Gallery</a>
         <a href="events.html" class="text-white hover:text-amber-200 transition">Events</a>
         <a href="#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="#meetjesus" class="text-white hover:text-amber-200 transition">Meet Jesus</a>
         <a href="#support" class="text-white hover:text-amber-200 transition">Support Us</a>
         <a href="#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
@@ -207,6 +210,7 @@
       <a href="gallery.html" class="mobile-nav-link"><i class="fas fa-images"></i><span>Gallery</span></a>
       <a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-week"></i><span>Events</span></a>
       <a href="#resources" class="mobile-nav-link"><i class="fas fa-download"></i><span>Resources</span></a>
+      <a href="#meetjesus" class="mobile-nav-link"><i class="fas fa-church"></i><span>Meet Jesus</span></a>
       <a href="#support" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
       <a href="#join" class="mobile-nav-link"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
@@ -217,8 +221,6 @@
   <main class="content-wrapper">
     <section id="home" class="min-h-screen flex items-center relative pt-20">
       <div class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12 w-full">
-        
-        <!-- CAROUSEL WITH SWIPE + CLICK (hint text removed) -->
         <div class="carousel-container mb-4 md:mb-6 fade-up" id="carouselContainer">
           <div class="carousel-slides" id="carouselSlides">
             <div class="carousel-slide active" data-index="0">
@@ -232,7 +234,6 @@
             </div>
           </div>
         </div>
-        
         <div class="hero-image-container mb-8 md:mb-12 fade-up"><img src="hero-image.jpg" alt="Jesus Youth KMC Ministry" class="hero-image"></div>
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="fade-up">
@@ -341,6 +342,24 @@
       </div>
     </section>
 
+    <!-- MEET JESUS SECTION - MapTiler Interactive Map -->
+    <section id="meetjesus" class="py-20 md:py-28">
+      <div class="max-w-6xl mx-auto px-5 md:px-8">
+        <div class="text-center mb-12 fade-up">
+          <span class="bg-amber-200/30 text-white text-sm px-5 py-1.5 rounded-full font-semibold backdrop-blur-sm"><i class="fas fa-church mr-1"></i> Eucharistic Adoration</span>
+          <h2 class="text-4xl md:text-5xl font-bold mt-4 text-white">Meet Jesus in the Eucharist</h2>
+          <p class="text-amber-50 text-lg max-w-2xl mx-auto mt-3">"Could you not watch one hour with me?" — Matthew 26:40</p>
+          <p class="text-white/80 text-md mt-1">Adoration chapels & retreat centres near Kottayam Medical College</p>
+        </div>
+
+        <!-- Map Container -->
+        <div class="fade-up">
+          <div id="maptilerMap" style="height: 500px; width: 100%; border-radius: 28px; box-shadow: 0 12px 28px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.4);"></div>
+          <p class="text-white/70 text-xs mt-3 text-center"><i class="fas fa-map-marker-alt text-amber-200"></i> Click on markers for location details & directions</p>
+        </div>
+      </div>
+    </section>
+
     <section id="support" class="py-20 md:py-28">
       <div class="max-w-3xl mx-auto px-5 md:px-8">
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-lg fade-up border border-white/30 text-center">
@@ -413,7 +432,6 @@
       carouselSlides[currentIdx].classList.add('active');
     }
 
-    // Click on carousel -> go to gallery page
     let isSwiping = false;
     
     if (carouselContainer) {
@@ -423,13 +441,11 @@
       });
     }
 
-    // ============ SWIPE DETECTION ============
     let touchStartX = 0;
     let touchEndX = 0;
     let mouseStartX = 0;
     let isMouseDown = false;
 
-    // Touch events (mobile)
     carouselContainer.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
       isSwiping = false;
@@ -454,7 +470,6 @@
       startAutoRotate();
     });
 
-    // Mouse events (desktop drag)
     carouselContainer.addEventListener('mousedown', (e) => {
       isMouseDown = true;
       mouseStartX = e.clientX;
@@ -496,11 +511,6 @@
     });
 
     startAutoRotate();
-
-    // ============ SINGLE AUDIO INSTANCE - VOLUME ZERO UNLOCK ============
-    const counterAudio = new Audio('prayer-sound.mp3');
-    counterAudio.volume = 0.7;
-    let isAudioContextUnlocked = false;
 
     // ============ RIPPLE EFFECT ============
     function addRippleEffect(button) {
@@ -577,19 +587,8 @@
       if (processing) return;
       processing = true;
       
-      // Volume-zero unlock (only once)
-      if (!isAudioContextUnlocked) {
-        const originalVolume = counterAudio.volume;
-        counterAudio.volume = 0;
-        counterAudio.play()
-          .then(() => {
-            counterAudio.pause();
-            counterAudio.currentTime = 0;
-            counterAudio.volume = originalVolume;
-            isAudioContextUnlocked = true;
-          })
-          .catch(() => {});
-      }
+      const counterAudio = new Audio('prayer-sound.mp3');
+      counterAudio.volume = 0.7;
       
       btn.classList.add('loading');
       btn.disabled = true;
@@ -632,6 +631,66 @@
     
     fetchCount();
     if (btn) btn.addEventListener('click', increment);
+
+    // ============ MAPTILER MAP with your locations ============
+    const origin = [76.5240756, 9.6334589];  // [lng, lat] format for MapTiler
+    
+    const locations = [
+      { name: "St. Joseph's Monastery Church, Mannanam", lng: 76.5199375, lat: 9.6461875, address: "Mannanam, Kottayam" },
+      { name: "St. Mary's Syro-Malabar Church, Athirampuzha", lng: 76.5381875, lat: 9.6673125, address: "Athirampuzha, Kottayam" },
+      { name: "Parithrana Retreat Centre", lng: 76.5456875, lat: 9.6325625, address: "Near Medical College, Kottayam" },
+      { name: "CharisBhavan Retreat Centre, Athirampuzha", lng: 76.5343125, lat: 9.6740625, address: "Athirampuzha, Kottayam" },
+      { name: "Christeen Retreat Centre", lng: 76.5530625, lat: 9.5935625, address: "Kottayam" },
+      { name: "Good Shepherd Church", lng: 76.5334375, lat: 9.5918125, address: "Kottayam" }
+    ];
+    
+    const MAPTILER_KEY = 'I8LQ9ngX6I6sCGcZyO0j';
+    
+    mapboxgl.accessToken = MAPTILER_KEY;
+    
+    const map = new mapboxgl.Map({
+      container: 'maptilerMap',
+      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`,
+      center: origin,
+      zoom: 12
+    });
+    
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    
+    map.on('load', () => {
+      // Add Medical College Junction marker (origin)
+      const originEl = document.createElement('div');
+      originEl.innerHTML = '<i class="fas fa-map-marker-alt" style="font-size: 32px; color: #ffffff; text-shadow: 0 0 5px #FF6B35; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>';
+      new mapboxgl.Marker(originEl)
+        .setLngLat(origin)
+        .setPopup(new mapboxgl.Popup().setHTML('<b style="color:#FF6B35;">🏥 Medical College Junction</b><br>Starting point<br><br><a href="https://www.google.com/maps/dir/?api=1&destination=9.6334589,76.5240756" target="_blank" style="color:#FF8C42; text-decoration:underline;">Get directions →</a>'))
+        .addTo(map);
+      
+      // Add chapel markers
+      locations.forEach(loc => {
+        const markerEl = document.createElement('div');
+        markerEl.innerHTML = '<i class="fas fa-church" style="font-size: 28px; color: #FF8C42; text-shadow: 0 0 3px white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>';
+        
+        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
+        const fromOriginUrl = `https://www.google.com/maps/dir/9.6334589,76.5240756/${loc.lat},${loc.lng}`;
+        
+        new mapboxgl.Marker(markerEl)
+          .setLngLat([loc.lng, loc.lat])
+          .setPopup(new mapboxgl.Popup().setHTML(`
+            <div style="font-family: system-ui; min-width: 200px;">
+              <b style="color:#FF6B35;">${loc.name}</b><br>
+              📍 ${loc.address}<br><br>
+              <a href="${directionsUrl}" target="_blank" style="color:#FF8C42; text-decoration:underline;">🚗 Get directions from anywhere</a><br>
+              <a href="${fromOriginUrl}" target="_blank" style="color:#FF8C42; text-decoration:underline;">🏁 From Medical College Junction</a>
+            </div>
+          `))
+          .addTo(map);
+      });
+    });
+    
+    setTimeout(() => {
+      map.resize();
+    }, 500);
   </script>
 </body>
 </html>
