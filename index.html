@@ -412,7 +412,7 @@
       </div>
     </section>
 
-    <!-- MEET JESUS SECTION - Clean Leaflet Map -->
+    <!-- MEET JESUS SECTION - Clean Leaflet Map with Voyager (Labels ON) -->
     <section id="meetjesus" class="py-20 md:py-28">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -422,7 +422,7 @@
           <p class="text-white/80 text-md mt-1">Adoration chapels and retreat centres near Kottayam Medical College</p>
         </div>
 
-        <!-- Clean Interactive Map - responsive aspect ratio, custom marker, zoom level 12 -->
+        <!-- Clean Interactive Map - responsive aspect ratio, custom marker, zoom level 12, Voyager basemap with labels -->
         <div class="fade-up map-responsive-wrapper">
           <div id="cleanMap"></div>
         </div>
@@ -582,7 +582,7 @@
     fetchCount();
     if (btn) btn.addEventListener('click', increment);
 
-    // ============ CLEAN LEAFLET MAP - ZOOM LEVEL 12 ============
+    // ============ CLEAN LEAFLET MAP - ZOOM LEVEL 12 WITH VOYAGER BASEMAP (LABELS ON) ============
     document.addEventListener('DOMContentLoaded', function() {
       const medicalCollege = [9.6334589, 76.5240756];
       const chapels = [
@@ -599,7 +599,8 @@
         zoomControl: true
       }).setView(medicalCollege, 12);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      // NEW: CartoDB Voyager basemap with labels ON
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/voyager/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         subdomains: 'abcd',
         attribution: ''
