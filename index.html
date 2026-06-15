@@ -437,11 +437,12 @@
     </footer>
   </main>
 
-  <!-- Hidden audio element for prayer sound -->
+  <!-- Hidden audio elements -->
+  <audio id="silentUnlock" src="silent.mp3" preload="auto" style="display: none;"></audio>
   <audio id="prayerSound" src="prayer-sound.mp3" preload="auto" style="display: none;"></audio>
 
   <script>
-    // ============ CAROUSEL & MENU & PRAYER COUNTER ============
+    // ============ CAROUSEL & MENU ============
     const carouselSlides = document.querySelectorAll('.carousel-slide');
     let currentIdx = 0, autoInterval;
     function startAutoRotate() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(() => { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx+1)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }, 3000); }
@@ -470,7 +471,7 @@
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-    // ============ PRAYER COUNTER WITH FIXED AUDIO (NO RESET - NO DOUBLE PLAY) ============
+    // ============ PRAYER COUNTER WITH SEPARATE UNLOCK AUDIO (NO DOUBLE PLAY) ============
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -478,15 +479,16 @@
 
     let processing = false;
     let audioUnlocked = false;
-    const counterAudio = document.getElementById('prayerSound');
-    if (counterAudio) counterAudio.volume = 0.7;
+    const unlockAudioElem = document.getElementById('silentUnlock');
+    const prayerSoundElem = document.getElementById('prayerSound');
+    if (prayerSoundElem) prayerSoundElem.volume = 0.7;
 
-    // Unlock audio on first user interaction (plays and pauses silently)
+    // Unlock using a separate silent audio file (never touches the prayer sound)
     function unlockAudio() {
-      if (!audioUnlocked && counterAudio) {
-        counterAudio.play().then(() => {
-          counterAudio.pause();
-          // DO NOT reset currentTime - keeps position in the silent intro
+      if (!audioUnlocked && unlockAudioElem) {
+        unlockAudioElem.play().then(() => {
+          unlockAudioElem.pause();
+          unlockAudioElem.currentTime = 0;
           audioUnlocked = true;
         }).catch(() => {});
       }
@@ -509,7 +511,7 @@
     async function increment() {
       if (processing) return;
       
-      // Unlock audio silently on first press (plays first few ms of silence)
+      // Unlock using silent audio (doesn't affect prayer sound)
       unlockAudio();
       
       processing = true;
@@ -529,11 +531,10 @@
         fill.style.width = '0%';
         updateDisplayDirect(data.count);
         
-        // Play sound from where unlock paused (NO reset to 0)
-        // This continues from the silent intro position, then plays the full sound
-        if (counterAudio && audioUnlocked) {
-          // REMOVED: counterAudio.currentTime = 0;  ← This was causing double play
-          counterAudio.play().catch(() => {});
+        // Play prayer sound fresh from the beginning (never played before)
+        if (prayerSoundElem && audioUnlocked) {
+          prayerSoundElem.currentTime = 0;
+          prayerSoundElem.play().catch(() => {});
         }
         
         let span = btn.querySelector('.btn-text');
