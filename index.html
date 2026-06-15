@@ -437,8 +437,7 @@
     </footer>
   </main>
 
-  <!-- Hidden audio elements -->
-  <audio id="silentUnlock" src="silent.mp3" preload="auto" style="display: none;"></audio>
+  <!-- Single audio element for both unlock and prayer sound -->
   <audio id="prayerSound" src="prayer-sound.mp3" preload="auto" style="display: none;"></audio>
 
   <script>
@@ -471,17 +470,15 @@
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-    // ============ PRAYER COUNTER - PLAYS ON FIRST PRESS ============
+    // ============ PRAYER COUNTER - ONE AUDIO ELEMENT (WORKS ON FIRST PRESS) ============
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
     const fill = document.getElementById('loadingBarFill');
+    const audio = document.getElementById('prayerSound');
+    if (audio) audio.volume = 0.7;
 
     let processing = false;
-    let audioUnlocked = false;
-    const unlockAudioElem = document.getElementById('silentUnlock');
-    const prayerSoundElem = document.getElementById('prayerSound');
-    if (prayerSoundElem) prayerSoundElem.volume = 0.7;
 
     function updateDisplayDirect(val) {
       if (display) display.innerHTML = `<span class="counter-wrapper">${val.toLocaleString()}</span>`;
@@ -506,10 +503,11 @@
       fill.style.width = '100%';
       let originalText = btn.querySelector('.btn-text').innerHTML;
       
-      // Start silent audio to unlock browser audio context (plays silently during API call)
-      if (!audioUnlocked && unlockAudioElem) {
-        unlockAudioElem.play().catch(() => {});
-        audioUnlocked = true;
+      // UNLOCK: Load silent.mp3 into the SAME audio element and play it
+      if (audio) {
+        audio.src = 'silent.mp3';
+        await audio.play().catch(() => {});
+        audio.pause();
       }
       
       try {
@@ -523,16 +521,11 @@
         fill.style.width = '0%';
         updateDisplayDirect(data.count);
         
-        // Stop the silent audio
-        if (unlockAudioElem) {
-          unlockAudioElem.pause();
-          unlockAudioElem.currentTime = 0;
-        }
-        
-        // Play the prayer sound (will play on first press now)
-        if (prayerSoundElem) {
-          prayerSoundElem.currentTime = 0;
-          prayerSoundElem.play().catch(() => {});
+        // Play real sound using the SAME audio element (now unlocked!)
+        if (audio) {
+          audio.src = 'prayer-sound.mp3';
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
         }
         
         let span = btn.querySelector('.btn-text');
