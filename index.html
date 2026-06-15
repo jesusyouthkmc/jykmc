@@ -116,17 +116,13 @@
     }
     .sidebar-menu a:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(-5px); border-color: rgba(255, 255, 255, 0.3); }
     .sidebar-menu i { width: 24px; font-size: 1.2rem; }
-    .sidebar-menu img { 
-  width: 26px; 
-  height: 26px; 
-  object-fit: contain;
-}
-
-/* Target only the Meet Jesus menu icon */
-.sidebar-menu a[href="#meetjesus"] img {
-  margin-left: -3px;  /* Adjust this value as needed */
-  margin-right: 1px;
-}
+    .sidebar-menu img { width: 26px; height: 26px; object-fit: contain; }
+    
+    /* Target only the Meet Jesus menu icon for alignment */
+    .sidebar-menu a[href="#meetjesus"] img {
+      margin-left: -3px;
+      margin-right: 1px;
+    }
     
     .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); z-index: 999; display: none; }
     .menu-overlay.active { display: block; }
@@ -441,6 +437,9 @@
     </footer>
   </main>
 
+  <!-- Hidden audio element for prayer sound -->
+  <audio id="prayerSound" src="prayer-sound.mp3" preload="auto" style="display: none;"></audio>
+
   <script>
     // ============ CAROUSEL & MENU & PRAYER COUNTER ============
     const carouselSlides = document.querySelectorAll('.carousel-slide');
@@ -470,15 +469,93 @@
     if(menuBtn) menuBtn.addEventListener('click',openMenu); if(closeMenuBtn) closeMenuBtn.addEventListener('click',closeMenuFunction); if(menuOverlay) menuOverlay.addEventListener('click',closeMenuFunction); document.querySelectorAll('.mobile-nav-link').forEach(l=>l.addEventListener('click',closeMenuFunction));
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
-    const API='https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
-    const display=document.getElementById('prayerCountDisplay'), btn=document.getElementById('prayerButton'), fill=document.getElementById('loadingBarFill');
-    let processing=false, counterAudio=new Audio('prayer-sound.mp3'); counterAudio.volume=0.7; let isAudioUnlocked=false;
-    function updateDisplayDirect(val){ if(display) display.innerHTML=`<span class="counter-wrapper">${val.toLocaleString()}</span>`; }
-    async function fetchCount(){ try{ let res=await fetch(API); let data=await res.json(); updateDisplayDirect(data.count); }catch(e){ if(display) display.innerHTML='<span class="counter-wrapper">—</span>'; } }
-    async function increment(){ if(processing) return; processing=true; if(!isAudioUnlocked){ let vol=counterAudio.volume; counterAudio.volume=0; counterAudio.play().then(()=>{ counterAudio.pause(); counterAudio.currentTime=0; counterAudio.volume=vol; isAudioUnlocked=true; }).catch(()=>{}); }
-    btn.classList.add('loading'); btn.disabled=true; fill.style.width='100%'; let originalText=btn.querySelector('.btn-text').innerHTML;
-    try{ await fetch(API,{method:'POST'}); let res=await fetch(API); let data=await res.json(); await new Promise(r=>setTimeout(r,300)); btn.classList.remove('loading'); btn.disabled=false; fill.style.width='0%'; updateDisplayDirect(data.count); counterAudio.currentTime=0; counterAudio.play().catch(()=>{}); let span=btn.querySelector('.btn-text'); span.innerHTML='Thank You ☺️'; btn.style.backgroundColor='#4CAF50'; btn.style.color='white'; setTimeout(()=>{ span.innerHTML=originalText; btn.style.backgroundColor=''; btn.style.color=''; },2000); }catch(e){ btn.classList.remove('loading'); btn.disabled=false; fill.style.width='0%'; alert('Unable to save your prayer. Please try again later.'); }finally{ processing=false; } }
-    fetchCount(); if(btn) btn.addEventListener('click',increment);
+
+    // ============ PRAYER COUNTER WITH FIXED AUDIO (NO DOUBLE PLAY) ============
+    const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
+    const display = document.getElementById('prayerCountDisplay');
+    const btn = document.getElementById('prayerButton');
+    const fill = document.getElementById('loadingBarFill');
+
+    let processing = false;
+    let audioUnlocked = false;
+    const counterAudio = document.getElementById('prayerSound');
+    if (counterAudio) counterAudio.volume = 0.7;
+
+    // Unlock audio on first user interaction (no double play)
+    function unlockAudio() {
+      if (!audioUnlocked && counterAudio) {
+        counterAudio.play().then(() => {
+          counterAudio.pause();
+          counterAudio.currentTime = 0;
+          audioUnlocked = true;
+        }).catch(() => {});
+      }
+    }
+
+    function updateDisplayDirect(val) {
+      if (display) display.innerHTML = `<span class="counter-wrapper">${val.toLocaleString()}</span>`;
+    }
+
+    async function fetchCount() {
+      try {
+        let res = await fetch(API);
+        let data = await res.json();
+        updateDisplayDirect(data.count);
+      } catch (e) {
+        if (display) display.innerHTML = '<span class="counter-wrapper">—</span>';
+      }
+    }
+
+    async function increment() {
+      if (processing) return;
+      
+      // Unlock audio silently on first press (no double play)
+      unlockAudio();
+      
+      processing = true;
+      btn.classList.add('loading');
+      btn.disabled = true;
+      fill.style.width = '100%';
+      let originalText = btn.querySelector('.btn-text').innerHTML;
+      
+      try {
+        await fetch(API, { method: 'POST' });
+        let res = await fetch(API);
+        let data = await res.json();
+        await new Promise(r => setTimeout(r, 300));
+        
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        fill.style.width = '0%';
+        updateDisplayDirect(data.count);
+        
+        // Play the actual sound (now unlocked, plays once)
+        if (counterAudio && audioUnlocked) {
+          counterAudio.currentTime = 0;
+          counterAudio.play().catch(() => {});
+        }
+        
+        let span = btn.querySelector('.btn-text');
+        span.innerHTML = 'Thank You ☺️';
+        btn.style.backgroundColor = '#4CAF50';
+        btn.style.color = 'white';
+        setTimeout(() => {
+          span.innerHTML = originalText;
+          btn.style.backgroundColor = '';
+          btn.style.color = '';
+        }, 2000);
+      } catch (e) {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        fill.style.width = '0%';
+        alert('Unable to save your prayer. Please try again later.');
+      } finally {
+        processing = false;
+      }
+    }
+
+    fetchCount();
+    if (btn) btn.addEventListener('click', increment);
 
     // ============ CLEAN LEAFLET MAP - ZOOM LEVEL 12 ============
     document.addEventListener('DOMContentLoaded', function() {
