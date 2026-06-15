@@ -582,65 +582,64 @@
     fetchCount();
     if (btn) btn.addEventListener('click', increment);
 
-    // ============ CLEAN LEAFLET MAP - ZOOM LEVEL 12 WITH VOYAGER BASEMAP (LABELS ON) ============
-    document.addEventListener('DOMContentLoaded', function() {
-      const medicalCollege = [9.6334589, 76.5240756];
-      const chapels = [
-        { name: "St. Joseph's Monastery Church, Mannanam", lat: 9.6461875, lng: 76.5199375, address: "മാന്നാനം സെന്റ് ജോസഫ് കത്തോലിക്കാ ദേവാലയം" },
-        { name: "St. Mary's Syro-Malabar Church, Athirampuzha", lat: 9.6673125, lng: 76.5381875, address: "സെന്റ് മേരീസ് ഫൊറോനാ പള്ളി, അതിരമ്പുഴ" },
-        { name: "Parithrana Retreat Centre", lat: 9.6325625, lng: 76.5456875, address: "പരിത്രാണ റിട്രീറ്റ് സെന്റർ" },
-        { name: "CharisBhavan Retreat Centre, Athirampuzha", lat: 9.6740625, lng: 76.5343125, address: "കാരിസ്ഭവന്‍, അതിരമ്പുഴ" },
-        { name: "Christeen Retreat Centre", lat: 9.5935625, lng: 76.5530625, address: "ക്രിസ്റ്റീൻ റിട്രീറ്റ് സെന്റർ" },
-        { name: "Good Shepherd Church", lat: 9.5918125, lng: 76.5334375, address: "" }
-      ];
+    // ============ CLEAN LEAFLET MAP - ZOOM LEVEL 12 WITH OPENSTREETMAP (LABELS ON) ============
+document.addEventListener('DOMContentLoaded', function() {
+  const medicalCollege = [9.6334589, 76.5240756];
+  const chapels = [
+    { name: "St. Joseph's Monastery Church, Mannanam", lat: 9.6461875, lng: 76.5199375, address: "മാന്നാനം സെന്റ് ജോസഫ് കത്തോലിക്കാ ദേവാലയം" },
+    { name: "St. Mary's Syro-Malabar Church, Athirampuzha", lat: 9.6673125, lng: 76.5381875, address: "സെന്റ് മേരീസ് ഫൊറോനാ പള്ളി, അതിരമ്പുഴ" },
+    { name: "Parithrana Retreat Centre", lat: 9.6325625, lng: 76.5456875, address: "പരിത്രാണ റിട്രീറ്റ് സെന്റർ" },
+    { name: "CharisBhavan Retreat Centre, Athirampuzha", lat: 9.6740625, lng: 76.5343125, address: "കാരിസ്ഭവന്‍, അതിരമ്പുഴ" },
+    { name: "Christeen Retreat Centre", lat: 9.5935625, lng: 76.5530625, address: "ക്രിസ്റ്റീൻ റിട്രീറ്റ് സെന്റർ" },
+    { name: "Good Shepherd Church", lat: 9.5918125, lng: 76.5334375, address: "" }
+  ];
 
-      const map = L.map('cleanMap', {
-        attributionControl: false,
-        zoomControl: true
-      }).setView(medicalCollege, 12);
+  const map = L.map('cleanMap', {
+    attributionControl: false,
+    zoomControl: true
+  }).setView(medicalCollege, 12);
 
-      // NEW: CartoDB Voyager basemap with labels ON
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/voyager/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd',
-        attribution: ''
-      }).addTo(map);
+  // OpenStreetMap - reliable, shows labels, no political symbols
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: ''
+  }).addTo(map);
 
-      const customChapelIcon = L.icon({
-        iconUrl: 'chapel-marker.png',
-        iconSize: [30, 44],
-        iconAnchor: [15, 44],
-        popupAnchor: [0, -44],
-        className: 'custom-chapel-marker'
-      });
+  const customChapelIcon = L.icon({
+    iconUrl: 'chapel-marker.png',
+    iconSize: [30, 44],
+    iconAnchor: [15, 44],
+    popupAnchor: [0, -44],
+    className: 'custom-chapel-marker'
+  });
 
-      const originIcon = L.divIcon({
-        html: '<i class="fas fa-map-marker-alt" style="font-size: 34px; color: #2563eb; text-shadow: 0 0 3px white; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));"></i>',
-        iconSize: [34, 34],
-        className: 'bg-transparent'
-      });
+  const originIcon = L.divIcon({
+    html: '<i class="fas fa-map-marker-alt" style="font-size: 34px; color: #2563eb; text-shadow: 0 0 3px white; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));"></i>',
+    iconSize: [34, 34],
+    className: 'bg-transparent'
+  });
 
-      L.marker(medicalCollege, { icon: originIcon })
-        .addTo(map)
-        .bindPopup(`<div style="padding: 8px; font-family: system-ui; min-width: 180px;"><strong style="color: #2563eb;">📍 Medical College Junction</strong></div>`);
+  L.marker(medicalCollege, { icon: originIcon })
+    .addTo(map)
+    .bindPopup(`<div style="padding: 8px; font-family: system-ui; min-width: 180px;"><strong style="color: #2563eb;">📍 Medical College Junction</strong></div>`);
 
-      chapels.forEach(chapel => {
-        L.marker([chapel.lat, chapel.lng], { icon: customChapelIcon })
-          .addTo(map)
-          .bindPopup(`
-            <div style="padding: 10px; font-family: system-ui; max-width: 280px; min-width: 200px;">
-              <strong style="color: #FF6B35; font-size: 14px;">⛪ ${chapel.name}</strong><br>
-              <span style="font-size: 11px; color: #555; display: block; margin: 4px 0;">${chapel.address || ''}</span>
-              <hr style="margin: 6px 0;">
-              <a href="https://www.google.com/maps/dir/?api=1&origin=${medicalCollege[0]},${medicalCollege[1]}&destination=${chapel.lat},${chapel.lng}&travelmode=driving" 
-                 target="_blank" 
-                 style="color: #FF6B35; font-weight: 600; text-decoration: none; font-size: 12px;">
-                Get directions from Medical College
-              </a>
-            </div>
-          `);
-      });
-    });
+  chapels.forEach(chapel => {
+    L.marker([chapel.lat, chapel.lng], { icon: customChapelIcon })
+      .addTo(map)
+      .bindPopup(`
+        <div style="padding: 10px; font-family: system-ui; max-width: 280px; min-width: 200px;">
+          <strong style="color: #FF6B35; font-size: 14px;">⛪ ${chapel.name}</strong><br>
+          <span style="font-size: 11px; color: #555; display: block; margin: 4px 0;">${chapel.address || ''}</span>
+          <hr style="margin: 6px 0;">
+          <a href="https://www.google.com/maps/dir/?api=1&origin=${medicalCollege[0]},${medicalCollege[1]}&destination=${chapel.lat},${chapel.lng}&travelmode=driving" 
+             target="_blank" 
+             style="color: #FF6B35; font-weight: 600; text-decoration: none; font-size: 12px;">
+            Get directions from Medical College
+          </a>
+        </div>
+      `);
+  });
+});
   </script>
 </body>
 </html>
