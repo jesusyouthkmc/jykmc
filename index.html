@@ -437,7 +437,8 @@
     </footer>
   </main>
 
-  <!-- Hidden audio element for prayer sound -->
+  <!-- TWO AUDIO ELEMENTS - One for unlock, one for actual sound -->
+  <audio id="unlockAudio" src="prayer-sound.mp3" preload="auto" style="display: none;"></audio>
   <audio id="prayerSound" src="prayer-sound.mp3" preload="auto" style="display: none;"></audio>
 
   <script>
@@ -470,7 +471,7 @@
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-    // ============ PRAYER COUNTER WITH FIXED AUDIO (NO DOUBLE PLAY) ============
+    // ============ PRAYER COUNTER WITH TWO AUDIO ELEMENTS (NO DOUBLE PLAY) ============
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -478,15 +479,18 @@
 
     let processing = false;
     let audioUnlocked = false;
-    const counterAudio = document.getElementById('prayerSound');
-    if (counterAudio) counterAudio.volume = 0.7;
+    const unlockAudio = document.getElementById('unlockAudio');
+    const prayerSound = document.getElementById('prayerSound');
+    
+    if (unlockAudio) unlockAudio.volume = 0.7;
+    if (prayerSound) prayerSound.volume = 0.7;
 
-    // Unlock audio on first user interaction (no double play)
-    function unlockAudio() {
-      if (!audioUnlocked && counterAudio) {
-        counterAudio.play().then(() => {
-          counterAudio.pause();
-          counterAudio.currentTime = 0;
+    // Unlock audio on first user interaction (plays and pauses instantly - user hears nothing)
+    function unlockAudioBrowser() {
+      if (!audioUnlocked && unlockAudio) {
+        unlockAudio.play().then(() => {
+          unlockAudio.pause();
+          unlockAudio.currentTime = 0;
           audioUnlocked = true;
         }).catch(() => {});
       }
@@ -509,8 +513,8 @@
     async function increment() {
       if (processing) return;
       
-      // Unlock audio silently on first press (no double play)
-      unlockAudio();
+      // Unlock audio silently on first press (no sound heard)
+      unlockAudioBrowser();
       
       processing = true;
       btn.classList.add('loading');
@@ -529,10 +533,10 @@
         fill.style.width = '0%';
         updateDisplayDirect(data.count);
         
-        // Play the actual sound (now unlocked, plays once)
-        if (counterAudio && audioUnlocked) {
-          counterAudio.currentTime = 0;
-          counterAudio.play().catch(() => {});
+        // Play the actual sound (now unlocked, plays once, no double play)
+        if (prayerSound && audioUnlocked) {
+          prayerSound.currentTime = 0;
+          prayerSound.play().catch(() => {});
         }
         
         let span = btn.querySelector('.btn-text');
