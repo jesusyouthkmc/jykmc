@@ -471,7 +471,7 @@
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-    // ============ PRAYER COUNTER WITH SEPARATE UNLOCK AUDIO (NO DOUBLE PLAY) ============
+    // ============ PRAYER COUNTER - PLAYS ON FIRST PRESS ============
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -482,17 +482,6 @@
     const unlockAudioElem = document.getElementById('silentUnlock');
     const prayerSoundElem = document.getElementById('prayerSound');
     if (prayerSoundElem) prayerSoundElem.volume = 0.7;
-
-    // Unlock using a separate silent audio file (never touches the prayer sound)
-    function unlockAudio() {
-      if (!audioUnlocked && unlockAudioElem) {
-        unlockAudioElem.play().then(() => {
-          unlockAudioElem.pause();
-          unlockAudioElem.currentTime = 0;
-          audioUnlocked = true;
-        }).catch(() => {});
-      }
-    }
 
     function updateDisplayDirect(val) {
       if (display) display.innerHTML = `<span class="counter-wrapper">${val.toLocaleString()}</span>`;
@@ -511,14 +500,17 @@
     async function increment() {
       if (processing) return;
       
-      // Unlock using silent audio (doesn't affect prayer sound)
-      unlockAudio();
-      
       processing = true;
       btn.classList.add('loading');
       btn.disabled = true;
       fill.style.width = '100%';
       let originalText = btn.querySelector('.btn-text').innerHTML;
+      
+      // Start silent audio to unlock browser audio context (plays silently during API call)
+      if (!audioUnlocked && unlockAudioElem) {
+        unlockAudioElem.play().catch(() => {});
+        audioUnlocked = true;
+      }
       
       try {
         await fetch(API, { method: 'POST' });
@@ -531,8 +523,14 @@
         fill.style.width = '0%';
         updateDisplayDirect(data.count);
         
-        // Play prayer sound fresh from the beginning (never played before)
-        if (prayerSoundElem && audioUnlocked) {
+        // Stop the silent audio
+        if (unlockAudioElem) {
+          unlockAudioElem.pause();
+          unlockAudioElem.currentTime = 0;
+        }
+        
+        // Play the prayer sound (will play on first press now)
+        if (prayerSoundElem) {
           prayerSoundElem.currentTime = 0;
           prayerSoundElem.play().catch(() => {});
         }
@@ -571,7 +569,6 @@
         { name: "Good Shepherd Church", lat: 9.5918125, lng: 76.5334375, address: "" }
       ];
 
-      // Map with zoom level 12 (wider view)
       const map = L.map('cleanMap', {
         attributionControl: false,
         zoomControl: true
