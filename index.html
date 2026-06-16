@@ -282,12 +282,6 @@
     .leaflet-attribution-flag {
       display: none !important;
     }
-
-    /* GRAYSCALE FILTER FOR THE MAP */
-    .map-grayscale .leaflet-tile-pane {
-      filter: grayscale(100%) brightness(1.1) contrast(1.05);
-      -webkit-filter: grayscale(100%) brightness(1.1) contrast(1.05);
-    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -418,7 +412,7 @@
       </div>
     </section>
 
-    <!-- MEET JESUS SECTION - OpenStreetMap with CSS Grayscale Filter -->
+    <!-- MEET JESUS SECTION -->
     <section id="meetjesus" class="py-20 md:py-28">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -428,8 +422,7 @@
           <p class="text-white/80 text-md mt-1">Adoration chapels and retreat centres near Kottayam Medical College</p>
         </div>
 
-        <!-- Map with CSS grayscale filter - responsive aspect ratio -->
-        <div class="fade-up map-responsive-wrapper map-grayscale">
+        <div class="fade-up map-responsive-wrapper">
           <div id="cleanMap"></div>
         </div>
         
@@ -464,8 +457,8 @@
     </footer>
   </main>
 
-  <!-- Single audio element for both unlock and prayer sound -->
-  <audio id="prayerSound" src="prayer-sound.mp3" preload="auto" style="display: none;"></audio>
+  <!-- Audio elements -->
+  <audio id="prayerSound" preload="auto" style="display: none;"></audio>
 
   <script>
     // ============ CAROUSEL & MENU ============
@@ -497,25 +490,33 @@
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-    // ============ PRAYER COUNTER - ONE AUDIO ELEMENT (WITH GLOW) ============
+    // ============ PRAYER COUNTER WITH PRELOADED AUDIO ============
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
     const fill = document.getElementById('loadingBarFill');
     const audio = document.getElementById('prayerSound');
-    if (audio) audio.volume = 0.7;
+    
+    // Preload both audio files
+    if (audio) {
+      audio.volume = 0.7;
+      audio.preload = 'auto';
+      // Preload prayer sound first (it will be cached)
+      audio.src = 'prayer-sound.mp3';
+      audio.load();
+      // Then switch to silent for iOS unlock (will be used on first click)
+      // We'll handle the switching in the increment function
+    }
 
     let processing = false;
+    let audioUnlocked = false;
 
     function updateDisplayDirect(val) {
       if (display) {
-        // Add glow animation
         display.classList.remove('counter-glow');
-        // Force reflow to restart animation
         void display.offsetWidth;
         display.innerHTML = `<span class="counter-wrapper">${val.toLocaleString()}</span>`;
         display.classList.add('counter-glow');
-        // Remove class after animation ends
         setTimeout(() => {
           display.classList.remove('counter-glow');
         }, 500);
@@ -541,27 +542,31 @@
       fill.style.width = '100%';
       let originalText = btn.querySelector('.btn-text').innerHTML;
       
-      // UNLOCK: Load silent.mp3 into the SAME audio element and play it
-      if (audio) {
+      // UNLOCK: Play silent.mp3 on first click to unlock iOS audio
+      if (audio && !audioUnlocked) {
         audio.src = 'silent.mp3';
         await audio.play().catch(() => {});
         audio.pause();
+        audioUnlocked = true;
+        // Preload the real sound immediately after unlock
+        audio.src = 'prayer-sound.mp3';
+        audio.load();
       }
       
       try {
         await fetch(API, { method: 'POST' });
+        // Wait for Google Sheets to update
+        await new Promise(r => setTimeout(r, 300));
         let res = await fetch(API);
         let data = await res.json();
-        await new Promise(r => setTimeout(r, 300));
         
         btn.classList.remove('loading');
         btn.disabled = false;
         fill.style.width = '0%';
         updateDisplayDirect(data.count);
         
-        // Play real sound using the SAME audio element (now unlocked!)
+        // Play sound - now it's preloaded and ready!
         if (audio) {
-          audio.src = 'prayer-sound.mp3';
           audio.currentTime = 0;
           audio.play().catch(() => {});
         }
@@ -588,7 +593,7 @@
     fetchCount();
     if (btn) btn.addEventListener('click', increment);
 
-    // ============ OPENSTREETMAP WITH CSS GRAYSCALE FILTER ============
+    // ============ MAP ============
     document.addEventListener('DOMContentLoaded', function() {
       const medicalCollege = [9.6334589, 76.5240756];
       const chapels = [
@@ -605,7 +610,6 @@
         zoomControl: true
       }).setView(medicalCollege, 12);
 
-      // REGULAR OPENSTREETMAP - Full details, all labels, then CSS grayscale filter is applied
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: ''
