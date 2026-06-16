@@ -282,6 +282,12 @@
     .leaflet-attribution-flag {
       display: none !important;
     }
+
+    /* GRAYSCALE FILTER FOR THE MAP */
+    .map-grayscale .leaflet-tile-pane {
+      filter: grayscale(100%) brightness(1.1) contrast(1.05);
+      -webkit-filter: grayscale(100%) brightness(1.1) contrast(1.05);
+    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -412,7 +418,7 @@
       </div>
     </section>
 
-    <!-- MEET JESUS SECTION -->
+    <!-- MEET JESUS SECTION - OpenStreetMap with Grayscale Filter -->
     <section id="meetjesus" class="py-20 md:py-28">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
@@ -422,7 +428,8 @@
           <p class="text-white/80 text-md mt-1">Adoration chapels and retreat centres near Kottayam Medical College</p>
         </div>
 
-        <div class="fade-up map-responsive-wrapper">
+        <!-- Map with CSS grayscale filter - responsive aspect ratio -->
+        <div class="fade-up map-responsive-wrapper map-grayscale">
           <div id="cleanMap"></div>
         </div>
         
