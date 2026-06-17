@@ -144,6 +144,20 @@
       margin-bottom: 0.75rem;
     }
     
+    /* Custom section icon for Pilgrimages - using PNG */
+    .custom-section-icon {
+      width: 3rem;
+      height: 3rem;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+    }
+    
+    .custom-section-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
     .event-icon {
       font-size: 3rem;
       color: #fde68a;
@@ -434,7 +448,6 @@
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="grid md:grid-cols-1 lg:grid-cols-1 gap-8 max-w-4xl mx-auto">
-          <!-- Monthly Night Vigil with Custom PNG Monstrance Icon - NOW EVEN LARGER -->
           <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 event-card fade-up border border-white/30">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div class="monstrance-icon">
@@ -487,10 +500,14 @@
       </div>
     </section>
 
+    <!-- PILGRIMAGES - WITH CUSTOM LOGO -->
     <section class="py-12 md:py-16">
       <div class="max-w-6xl mx-auto px-5 md:px-8">
         <div class="text-center mb-12 fade-up">
-          <i class="fas fa-walking section-icon"></i>
+          <!-- Custom PNG logo replacing the walking icon -->
+          <div class="custom-section-icon">
+            <img src="pilgrimage-logo.png" alt="Pilgrimage Logo">
+          </div>
           <h2 class="text-3xl md:text-4xl font-bold text-white">Pilgrimages</h2>
           <div class="section-divider"></div>
           <p class="text-amber-100 text-lg">Walking in faith, journeying together</p>
