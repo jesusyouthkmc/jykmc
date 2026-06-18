@@ -288,15 +288,6 @@
       filter: grayscale(100%) brightness(1.1) contrast(1.05);
       -webkit-filter: grayscale(100%) brightness(1.1) contrast(1.05);
     }
-
-    /* Thank you icon */
-    .thank-you-icon {
-      width: 24px;
-      height: 24px;
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 6px;
-    }
   </style>
 </head>
 <body class="glossy-orange-bg">
@@ -506,57 +497,26 @@
     const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
     document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
-    // ============ PRAYER COUNTER WITH PRELOADED AUDIO & BLUETOOTH FIX ============
+    // ============ PRAYER COUNTER WITH PRELOADED AUDIO ============
     const API = 'https://script.google.com/macros/s/AKfycby7vGr846Orq0YiSStjW-RfC-73WOK8Q2CU9HTeKR2tnKaajsvCgOKnnJT2ayhWVuw5FQ/exec';
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
     const fill = document.getElementById('loadingBarFill');
     const audio = document.getElementById('prayerSound');
     
-    // Preload audio
+    // Preload both audio files
     if (audio) {
       audio.volume = 0.7;
       audio.preload = 'auto';
+      // Preload prayer sound first (it will be cached)
       audio.src = 'prayer-sound.mp3';
       audio.load();
+      // Then switch to silent for iOS unlock (will be used on first click)
+      // We'll handle the switching in the increment function
     }
 
     let processing = false;
     let audioUnlocked = false;
-
-    // ============ PLAY SOUND WITH BLUETOOTH FIX ============
-    async function playSound() {
-        if (!audio) return;
-
-        // Give Bluetooth time to route the audio
-        await new Promise(r => setTimeout(r, 80));
-
-        try {
-            audio.currentTime = 0;
-            await audio.play();
-            console.log('✅ Audio played.');
-            return true;
-        } catch (e) {
-            console.warn('⚠️ Audio play failed, retrying...', e);
-            
-            // Bluetooth retry with longer delay
-            await new Promise(r => setTimeout(r, 250));
-            
-            try {
-                audio.src = 'prayer-sound.mp3';
-                audio.load();
-                await new Promise(r => setTimeout(r, 150));
-                audio.currentTime = 0;
-                await audio.play();
-                console.log('✅ Audio played on retry.');
-                return true;
-            } catch (e2) {
-                console.error('❌ Audio failed:', e2);
-                audioUnlocked = false;
-                return false;
-            }
-        }
-    }
 
     function updateDisplayDirect(val) {
       if (display) {
@@ -612,11 +572,14 @@
         fill.style.width = '0%';
         updateDisplayDirect(data.count);
         
-        // Play sound using the Bluetooth-safe function
-        await playSound();
+        // Play sound - now it's preloaded and ready!
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
         
         let span = btn.querySelector('.btn-text');
-        span.innerHTML = 'Thank You <img src="MM-icon.png" alt="MM Icon" class="thank-you-icon">';
+        span.innerHTML = 'Thank You ☺️';
         btn.style.backgroundColor = '#4CAF50';
         btn.style.color = 'white';
         setTimeout(() => {
