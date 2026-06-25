@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Jesus Youth KMC | Sacred Moments Gallery</title>
-  <!-- Tailwind + Font Awesome -->
+  <title>Jesus Youth KMC | Sacred Moments Gallery – Campus Ministry</title>
+  <!-- Tailwind CSS v3 + Font Awesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* base & glossy */
-    html { scroll-behavior: smooth; }
-    body { font-family: system-ui, 'Segoe UI', Inter, sans-serif; }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    /* glossy orange gradient background */
     .glossy-orange-bg {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       position: relative;
@@ -19,72 +24,112 @@
     .glossy-orange-bg::before {
       content: '';
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: linear-gradient(125deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 40%);
       pointer-events: none;
     }
+    
     .bg-logo {
       position: fixed;
       pointer-events: none;
       z-index: 0;
       object-fit: contain;
     }
-    @media (orientation: portrait) { .bg-logo { bottom: 20px; right: -100px; width: 70%; max-width: 800px; opacity: 0.12; } }
-    @media (orientation: landscape) { .bg-logo { bottom: -50px; right: -80px; width: 40%; max-width: 500px; opacity: 0.1; } }
-    @media (min-width: 768px) and (orientation: portrait) { .bg-logo { right: -150px; bottom: 50px; width: 60%; opacity: 0.1; } }
-    @media (min-width: 1024px) { .bg-logo { right: -200px; bottom: 80px; width: 50%; opacity: 0.08; } }
+    @media (orientation: portrait) {
+      .bg-logo { bottom: 20px; right: -100px; width: 70%; max-width: 800px; opacity: 0.12; }
+    }
+    @media (orientation: landscape) {
+      .bg-logo { bottom: -50px; right: -80px; width: 40%; max-width: 500px; opacity: 0.1; }
+    }
+    @media (min-width: 768px) and (orientation: portrait) {
+      .bg-logo { right: -150px; bottom: 50px; width: 60%; opacity: 0.1; }
+    }
+    @media (min-width: 1024px) {
+      .bg-logo { right: -200px; bottom: 80px; width: 50%; opacity: 0.08; }
+    }
+    
     .content-wrapper { position: relative; z-index: 1; }
-
-    /* header & sidebar */
+    
     .curved-glass-header {
       background: rgba(255, 140, 66, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 0 0 30px 30px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       border-bottom: 1px solid rgba(255,255,255,0.3);
+      position: relative;
       z-index: 100;
     }
+    
     .sidebar-menu {
-      position: fixed; top: 0; right: 0; height: 100%; width: 75%;
-      background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px);
-      box-shadow: -5px 0 30px rgba(0,0,0,0.2); z-index: 1000;
-      transform: translateX(100%); transition: transform 0.3s ease-in-out;
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 75%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
     }
     .sidebar-menu.open { transform: translateX(0); }
     .sidebar-menu a {
-      color: rgba(255,255,255,0.9); font-weight: 600; padding: 14px 20px;
-      border-radius: 12px; display: flex; align-items: center; gap: 12px;
-      background: transparent; margin-bottom: 8px;
-      border: 1px solid rgba(255,255,255,0.15); text-decoration: none;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      padding: 14px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-decoration: none;
     }
-    .sidebar-menu a:hover { background: rgba(255,255,255,0.1); transform: translateX(-5px); }
+    .sidebar-menu a:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(-5px); }
     .menu-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px);
-      z-index: 999; display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(2px);
+      z-index: 999;
+      display: none;
     }
     .menu-overlay.active { display: block; }
-
-    /* gallery grid */
+    
+    /* GALLERY GRID */
     .stylish-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px; padding: 20px 24px; max-width: 1400px; margin: 0 auto;
+      gap: 20px;
+      padding: 20px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
     }
     .gallery-card {
       position: relative;
-      background: rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(12px);
-      border-radius: 28px; overflow: hidden;
-      box-shadow: 0 15px 35px -12px rgba(0,0,0,0.3);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.3);
       transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      border: 1px solid rgba(255,255,255,0.25);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       cursor: pointer;
       animation: fadeScaleUp 0.5s ease forwards;
-      opacity: 0; transform: scale(0.96);
+      opacity: 0;
+      transform: scale(0.96);
     }
     @keyframes fadeScaleUp { to { opacity: 1; transform: scale(1); } }
-    .gallery-card:hover { transform: translateY(-8px) scale(1.02); background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
-    .card-image { width: 100%; aspect-ratio: 1/1; overflow: hidden; position: relative; }
+    .gallery-card:hover { transform: translateY(-8px) scale(1.02); background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.5); }
+    .card-image { width: 100%; aspect-ratio: 1 / 1; overflow: hidden; position: relative; }
     .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
     .gallery-card:hover .card-image img { transform: scale(1.08); }
     .card-overlay {
@@ -93,7 +138,7 @@
       opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
     }
     .gallery-card:hover .card-overlay { opacity: 1; }
-
+    
     .gallery-header { text-align: center; padding: 32px 20px 16px; }
     .gallery-header h1 {
       font-size: 2.5rem; font-weight: 800;
@@ -108,26 +153,59 @@
       padding: 6px 18px; border-radius: 60px; font-size: 0.85rem;
       color: #FFF2DF; margin-top: 16px; border: 1px solid rgba(255,255,200,0.3);
     }
-    .ornament { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 8px 0 4px; }
-    .ornament span { width: 50px; height: 2px; background: rgba(255,215,150,0.6); border-radius: 2px; }
-    .camera-icon-large { font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: transform 0.3s ease; }
-    .camera-icon-large:hover { transform: scale(1.1); }
-
-    .empty-state { text-align: center; padding: 80px 30px; background: rgba(255,255,240,0.08); backdrop-filter: blur(12px); border-radius: 56px; margin: 40px auto; max-width: 500px; }
+    .ornament { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      gap: 16px; 
+      margin: 8px 0 4px; 
+    }
+    .ornament span { 
+      width: 50px; 
+      height: 2px; 
+      background: rgba(255,215,150,0.6); 
+      border-radius: 2px; 
+    }
+    /* Larger camera icon */
+    .camera-icon-large {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: transform 0.3s ease;
+    }
+    .camera-icon-large:hover {
+      transform: scale(1.1);
+    }
+    @media (max-width: 640px) {
+      .camera-icon-large {
+        font-size: 1.8rem;
+      }
+      .ornament span {
+        width: 35px;
+      }
+    }
+    
+    .empty-state {
+      text-align: center; padding: 80px 30px;
+      background: rgba(255,255,240,0.08); backdrop-filter: blur(12px);
+      border-radius: 56px; margin: 40px auto; max-width: 500px;
+    }
     .hope-message { text-align: center; margin: 32px auto 20px; padding: 20px 24px; max-width: 600px; }
     .hope-message .message-card {
-      background: rgba(255,245,220,0.15); backdrop-filter: blur(12px); border-radius: 80px;
+      background: rgba(255, 245, 220, 0.15); backdrop-filter: blur(12px); border-radius: 80px;
       padding: 12px 28px; display: inline-flex; align-items: center; gap: 12px;
       font-size: 1.25rem; font-weight: 500; color: #FFF5E6;
-      border: 1px solid rgba(255,220,150,0.5); transition: all 0.3s ease;
+      border: 1px solid rgba(255, 220, 150, 0.5); transition: all 0.3s ease;
     }
-    .hope-message .message-card:hover { background: rgba(255,245,220,0.28); transform: scale(1.02); }
-
-    /* LIGHTBOX – arrows OUTSIDE, subtle hint */
+    .hope-message .message-card:hover { background: rgba(255, 245, 220, 0.28); transform: scale(1.02); }
+    
+    /* CUSTOM LIGHTBOX WITH LEFT/RIGHT TAP ZONES - NO FLASH/SCALE ANIMATIONS */
     .custom-lightbox {
       display: none;
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0, 0, 0, 0.94);
       backdrop-filter: blur(14px);
       z-index: 2000;
@@ -164,94 +242,83 @@
       padding: 6px;
       border: 1px solid rgba(255, 255, 255, 0.25);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      /* No transition effects */
     }
-    /* tap zones (invisible) */
+    /* Left and right tap zones (invisible but clickable areas) */
     .lightbox-tap-left, .lightbox-tap-right {
       position: absolute;
-      top: 0; bottom: 0;
+      top: 0;
+      bottom: 0;
       width: 50%;
       z-index: 10;
       cursor: pointer;
       background: transparent;
     }
-    .lightbox-tap-left { left: 0; border-top-left-radius: 28px; border-bottom-left-radius: 28px; }
-    .lightbox-tap-right { right: 0; border-top-right-radius: 28px; border-bottom-right-radius: 28px; }
+    .lightbox-tap-left {
+      left: 0;
+      border-top-left-radius: 28px;
+      border-bottom-left-radius: 28px;
+    }
+    .lightbox-tap-right {
+      right: 0;
+      border-top-right-radius: 28px;
+      border-bottom-right-radius: 28px;
+    }
+    /* subtle visual hint on hover for desktop */
     @media (hover: hover) {
-      .lightbox-tap-left:hover { background: linear-gradient(90deg, rgba(0,0,0,0.2), transparent); }
-      .lightbox-tap-right:hover { background: linear-gradient(270deg, rgba(0,0,0,0.2), transparent); }
+      .lightbox-tap-left:hover {
+        background: linear-gradient(90deg, rgba(0,0,0,0.2), transparent);
+      }
+      .lightbox-tap-right:hover {
+        background: linear-gradient(270deg, rgba(0,0,0,0.2), transparent);
+      }
     }
-
-    /* ARROWS OUTSIDE THE LIGHTBOX (positioned relative to viewport) */
-    .nav-arrow-outside {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2100;
-      font-size: 3.2rem;
-      color: rgba(255, 215, 150, 0.7);
-      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-      cursor: pointer;
-      transition: color 0.2s, transform 0.1s;
-      background: rgba(0,0,0,0.2);
-      backdrop-filter: blur(4px);
-      border-radius: 60px;
-      padding: 0 12px;
-      line-height: 1.4;
-      border: 1px solid rgba(255,215,150,0.2);
-      display: none; /* hidden by default, shown when lightbox active */
-    }
-    .nav-arrow-outside:hover {
-      color: #FFE0B5;
-      transform: translateY(-50%) scale(1.05);
-      background: rgba(0,0,0,0.35);
-    }
-    .nav-arrow-left { left: 18px; }
-    .nav-arrow-right { right: 18px; }
-    .custom-lightbox.active ~ .nav-arrow-outside,
-    .custom-lightbox.active .nav-arrow-outside {
-      display: block;
-    }
-    /* show arrows when lightbox is active, using sibling selector */
-    .custom-lightbox.active ~ .nav-arrow-outside {
-      display: block;
-    }
-    /* also if they are inside .lightbox-content we can keep them fixed, but we put them outside in html */
     
-    /* subtle hint message */
+    /* Remove arrow markers completely */
+    .nav-hint {
+      display: none; /* fully hidden */
+    }
+    
+    /* Lightbox hint message - subtle, under the image */
     .lightbox-hint {
-      position: fixed;
-      bottom: 28px;
+      position: absolute;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 2100;
-      background: rgba(0,0,0,0.45);
-      backdrop-filter: blur(8px);
-      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
+      padding: 8px 22px;
       border-radius: 60px;
-      color: rgba(255, 240, 210, 0.85);
+      color: rgba(255, 255, 240, 0.7);
       font-size: 0.9rem;
       font-weight: 400;
       letter-spacing: 0.3px;
-      border: 1px solid rgba(255,215,150,0.2);
-      display: none;
-      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       white-space: nowrap;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0.6;
+      transition: opacity 0.3s;
     }
-    .custom-lightbox.active ~ .lightbox-hint {
-      display: block;
+    .custom-lightbox:hover .lightbox-hint {
+      opacity: 0.9;
     }
-
-    /* responsive */
+    @media (max-width: 640px) {
+      .lightbox-hint {
+        font-size: 0.7rem;
+        padding: 5px 14px;
+        bottom: 10px;
+        white-space: normal;
+        max-width: 80%;
+        text-align: center;
+      }
+    }
+    
     @media (max-width: 640px) {
       .stylish-gallery { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 16px; }
       .gallery-header h1 { font-size: 1.8rem; }
       .hope-message .message-card { font-size: 1rem; padding: 10px 20px; }
       .lightbox-image { max-width: 92vw; max-height: 80vh; }
-      .nav-arrow-outside { font-size: 2.4rem; padding: 0 8px; }
-      .nav-arrow-left { left: 6px; }
-      .nav-arrow-right { right: 6px; }
-      .lightbox-hint { font-size: 0.75rem; padding: 6px 16px; bottom: 16px; white-space: normal; max-width: 80%; }
     }
     @media (min-width: 1024px) {
       .stylish-gallery { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; padding: 32px 40px; }
@@ -263,10 +330,10 @@
   </style>
 </head>
 <body class="glossy-orange-bg">
-
+  
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo" onerror="this.style.opacity='0'">
 
-  <!-- Header -->
+  <!-- Header with working menu links -->
   <header class="fixed top-0 left-0 w-full curved-glass-header z-50">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
       <a href="index.html#home" class="flex items-center">
@@ -288,7 +355,7 @@
     </div>
   </header>
 
-  <!-- Mobile Sidebar -->
+  <!-- Mobile Sidebar Menu -->
   <div id="mobileMenu" class="sidebar-menu">
     <div class="flex justify-start p-5">
       <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
@@ -309,14 +376,28 @@
   <main class="content-wrapper">
     <div class="pt-24 pb-12">
       <div class="gallery-header">
-        <div class="ornament"><span></span><i class="fas fa-camera-retro camera-icon-large text-amber-200/80"></i><span></span></div>
+        <div class="ornament">
+          <span></span>
+          <i class="fas fa-camera-retro camera-icon-large text-amber-200/80"></i>
+          <span></span>
+        </div>
         <h1>Sacred Moments</h1>
         <p>glimpses of faith, fellowship & joy</p>
-        <div class="photo-badge"><i class="fas fa-images"></i><span id="photoCountDisplay">--</span><span>memories</span></div>
+        <div class="photo-badge" id="photoBadge">
+          <i class="fas fa-images"></i>
+          <span id="photoCountDisplay">--</span>
+          <span>memories</span>
+        </div>
       </div>
+      
       <div id="galleryGrid" class="stylish-gallery"></div>
+      
       <div class="hope-message" id="hopeMessageContainer" style="display: none;">
-        <div class="message-card"><i class="fas fa-seedling"></i><span>… and many more to make. ☺️</span><i class="fas fa-heart" style="font-size: 1.1rem;"></i></div>
+        <div class="message-card">
+          <i class="fas fa-seedling"></i>
+          <span>… and many more to make. ☺️</span>
+          <i class="fas fa-heart" style="font-size: 1.1rem;"></i>
+        </div>
       </div>
     </div>
 
@@ -327,35 +408,39 @@
         <p class="mt-2 text-amber-100">A Campus Ministry under the Jesus Youth Movement</p>
         <p class="text-amber-100">Young hearts on fire for Christ</p>
         <div class="flex justify-center gap-5 mt-4 text-white text-lg">
-          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-instagram"></i></a>
-          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://www.instagram.com/jy_kmc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://chat.whatsapp.com/ErFPeoEgqWnEW9GKsQACzj" target="_blank" class="hover:text-amber-200 transition cursor-pointer">
+            <i class="fab fa-whatsapp"></i>
+          </a>
         </div>
         <p class="mt-6 text-white/60 text-xs">© 2026 Jesus Youth KMC · All glory to God</p>
       </div>
     </footer>
   </main>
 
-  <!-- LIGHTBOX (with invisible tap zones inside) -->
+  <!-- Custom Lightbox with Left/Right Tap Zones and subtle hint -->
   <div id="customLightbox" class="custom-lightbox">
     <div class="lightbox-content">
-      <!-- tap zones left/right (inside, still functional) -->
+      <!-- Left tap zone (previous image) -->
       <div id="lightboxTapLeft" class="lightbox-tap-left"></div>
+      <!-- Right tap zone (next image) -->
       <div id="lightboxTapRight" class="lightbox-tap-right"></div>
+      
       <img id="lightboxImg" class="lightbox-image" src="" alt="Enlarged view">
+      
+      <!-- Subtle hint message: click on image to navigate -->
+      <div class="lightbox-hint">
+        <i class="fas fa-arrow-left" style="margin-right: 8px; opacity: 0.6;"></i>
+        tap / click to navigate
+        <i class="fas fa-arrow-right" style="margin-left: 8px; opacity: 0.6;"></i>
+      </div>
     </div>
   </div>
 
-  <!-- ARROWS OUTSIDE the lightbox (fixed to viewport) -->
-  <div id="arrowLeft" class="nav-arrow-outside nav-arrow-left"><i class="fas fa-chevron-circle-left"></i></div>
-  <div id="arrowRight" class="nav-arrow-outside nav-arrow-right"><i class="fas fa-chevron-circle-right"></i></div>
-
-  <!-- SUBTLE HINT MESSAGE (outside lightbox) -->
-  <div class="lightbox-hint" id="lightboxHint">
-    <i class="fas fa-hand-pointer mr-2"></i> tap left / right to browse
-  </div>
-
   <script>
-    // =========== YOUR PHOTOS ===========
+    // =========== YOUR PHOTOS - UPDATE THESE PATHS ===========
     const LOCAL_IMAGES = [
       "images/photo1.jpg",
       "images/photo2.jpg",
@@ -364,6 +449,7 @@
       "images/photo5.jpg",
       "images/photo6.jpg"
     ];
+    
     const DEMO_FALLBACK = [
       "https://picsum.photos/id/104/600/600",
       "https://picsum.photos/id/30/600/600",
@@ -380,14 +466,10 @@
     const photoCountSpan = document.getElementById('photoCountDisplay');
     const hopeMessageDiv = document.getElementById('hopeMessageContainer');
     
-    // Lightbox elements
     const lightbox = document.getElementById('customLightbox');
     const lightboxImg = document.getElementById('lightboxImg');
-    const tapLeft = document.getElementById('lightboxTapLeft');
-    const tapRight = document.getElementById('lightboxTapRight');
-    const arrowLeft = document.getElementById('arrowLeft');
-    const arrowRight = document.getElementById('arrowRight');
-    const hint = document.getElementById('lightboxHint');
+    const tapLeftZone = document.getElementById('lightboxTapLeft');
+    const tapRightZone = document.getElementById('lightboxTapRight');
     
     let currentIdx = 0;
     
@@ -396,36 +478,48 @@
       currentIdx = (currentIdx + 1) % galleryPhotos.length;
       lightboxImg.src = galleryPhotos[currentIdx];
     }
+    
     function prevImage() {
       if (!galleryPhotos.length) return;
       currentIdx = (currentIdx - 1 + galleryPhotos.length) % galleryPhotos.length;
       lightboxImg.src = galleryPhotos[currentIdx];
     }
+    
     function openLightbox(index) {
       if (!galleryPhotos.length) return;
       currentIdx = (index + galleryPhotos.length) % galleryPhotos.length;
       lightboxImg.src = galleryPhotos[currentIdx];
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
-      // show arrows & hint (they are visible via CSS .custom-lightbox.active ~ .nav-arrow-outside)
     }
+    
     function closeLightbox() {
       lightbox.classList.remove('active');
       document.body.style.overflow = '';
     }
     
-    // event listeners: tap zones + arrows
-    if (tapRight) tapRight.addEventListener('click', (e) => { e.stopPropagation(); nextImage(); });
-    if (tapLeft) tapLeft.addEventListener('click', (e) => { e.stopPropagation(); prevImage(); });
-    if (arrowRight) arrowRight.addEventListener('click', (e) => { e.stopPropagation(); nextImage(); });
-    if (arrowLeft) arrowLeft.addEventListener('click', (e) => { e.stopPropagation(); prevImage(); });
+    // Tap zone handlers
+    if (tapRightZone) {
+      tapRightZone.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nextImage();
+      });
+    }
+    if (tapLeftZone) {
+      tapLeftZone.addEventListener('click', (e) => {
+        e.stopPropagation();
+        prevImage();
+      });
+    }
     
-    // click on background closes
+    // Click on background closes lightbox
     lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
     });
     
-    // keyboard
+    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('active')) return;
       if (e.key === 'Escape') closeLightbox();
@@ -433,20 +527,29 @@
       if (e.key === 'ArrowLeft') prevImage();
     });
     
-    // swipe
-    let touchStartX = 0, touchEndX = 0;
-    lightboxImg.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    // Swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    lightboxImg.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
     lightboxImg.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].screenX;
-      const threshold = 45;
-      if (touchEndX < touchStartX - threshold) { nextImage(); e.preventDefault(); }
-      else if (touchEndX > touchStartX + threshold) { prevImage(); e.preventDefault(); }
+      const swipeThreshold = 45;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        nextImage();
+        e.preventDefault();
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        prevImage();
+        e.preventDefault();
+      }
     });
     
-    // render gallery
+    // Render gallery
     function renderLocalGallery(imagesArray) {
       if (!galleryContainer) return;
       let finalArray = imagesArray.length ? imagesArray : DEMO_FALLBACK;
+      
       if (!finalArray.length) {
         galleryContainer.innerHTML = `<div class="empty-state"><i class="fas fa-images text-5xl text-white/40 mb-4"></i><p class="text-white/80 text-xl font-medium">Preparing sacred memories</p><p class="text-white/60 text-sm mt-2">Soon we'll share beautiful moments</p></div>`;
         if (photoCountSpan) photoCountSpan.innerText = '0';
@@ -454,23 +557,35 @@
         galleryPhotos = [];
         return;
       }
+      
       galleryPhotos = [...finalArray];
+      
       let html = '';
       for (let i = 0; i < finalArray.length; i++) {
-        const src = finalArray[i];
-        const fallback = DEMO_FALLBACK[i % DEMO_FALLBACK.length];
-        html += `<div class="gallery-card" data-index="${i}"><div class="card-image"><img src="${src}" alt="Campus memory" loading="lazy" onerror="this.onerror=null; this.src='${fallback}'; this.setAttribute('data-fallback','true');"><div class="card-overlay"></div></div></div>`;
+        const originalSrc = finalArray[i];
+        const fallbackSrc = DEMO_FALLBACK[i % DEMO_FALLBACK.length];
+        html += `<div class="gallery-card" data-index="${i}"><div class="card-image"><img src="${originalSrc}" alt="Campus memory" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSrc}'; this.setAttribute('data-fallback','true');"><div class="card-overlay"></div></div></div>`;
       }
       galleryContainer.innerHTML = html;
       
       const cards = document.querySelectorAll('.gallery-card');
       cards.forEach((card, idx) => {
-        card.addEventListener('click', () => {
-          const imgs = document.querySelectorAll('.gallery-card .card-image img');
-          const srcs = Array.from(imgs).map(img => img.src);
-          if (srcs.length) galleryPhotos = srcs;
-          const index = Array.from(cards).indexOf(card);
-          openLightbox(index !== -1 ? index : idx);
+        card.addEventListener('click', (e) => {
+          const imgElement = card.querySelector('.card-image img');
+          if (imgElement && imgElement.src) {
+            const currentDisplayedSrcs = Array.from(document.querySelectorAll('.gallery-card .card-image img')).map(img => img.src);
+            if (currentDisplayedSrcs.length) {
+              galleryPhotos = currentDisplayedSrcs;
+            }
+            const clickedIndex = Array.from(cards).indexOf(card);
+            if (clickedIndex !== -1) {
+              openLightbox(clickedIndex);
+            } else {
+              openLightbox(idx);
+            }
+          } else {
+            openLightbox(idx);
+          }
         });
       });
       
@@ -492,6 +607,7 @@
     }
     
     renderLocalGallery(rawImages);
+    
     window.addEventListener('load', () => {
       const imgs = document.querySelectorAll('.gallery-card .card-image img');
       if (imgs.length) {
@@ -506,8 +622,10 @@
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
     const menuOverlay = document.getElementById('menuOverlay');
+    
     function openMenu() { if (mobileMenu && menuOverlay) { mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; } }
     function closeMenuFunc() { if (mobileMenu && menuOverlay) { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow = ''; } }
+    
     if (menuBtn) menuBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenuFunc);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunc);
