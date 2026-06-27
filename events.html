@@ -79,10 +79,38 @@
       z-index: 1000;
       transform: translateX(100%);
       transition: transform 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
     
     .sidebar-menu.open {
       transform: translateX(0);
+    }
+    
+    .sidebar-menu .flex {
+      flex-shrink: 0;
+    }
+    
+    .sidebar-menu nav {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 20px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.3) transparent;
+    }
+    
+    .sidebar-menu nav::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .sidebar-menu nav::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .sidebar-menu nav::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
     }
     
     .sidebar-menu a {
@@ -94,14 +122,15 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(255, 255, 255, 0.08);
+      background: transparent;
       margin-bottom: 8px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       text-decoration: none;
+      flex-shrink: 0;
     }
     
     .sidebar-menu a:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
       transform: translateX(-5px);
       border-color: rgba(255, 255, 255, 0.3);
     }
@@ -109,6 +138,17 @@
     .sidebar-menu i {
       width: 24px;
       font-size: 1.2rem;
+    }
+    
+    .sidebar-menu img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+    }
+    
+    .sidebar-menu a[href*="meetjesus"] img {
+      margin-left: -3px;
+      margin-right: 1px;
     }
     
     .menu-overlay {
@@ -386,12 +426,14 @@
         <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto">
       </a>
       <nav class="hidden md:flex space-x-6 text-sm font-medium">
-        <a href="index.html" class="text-white hover:text-amber-200 transition">Home</a>
+        <a href="index.html#home" class="text-white hover:text-amber-200 transition">Home</a>
         <a href="index.html#gathering" class="text-white hover:text-amber-200 transition">Gathering</a>
         <a href="index.html#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
         <a href="gallery.html" class="text-white hover:text-amber-200 transition">Gallery</a>
         <a href="events.html" class="text-amber-200 border-b-2 border-amber-200 transition">Events</a>
-        <a href="index.html#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="catholic-resources.html" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="prayer-request.html" class="text-white hover:text-amber-200 transition">Prayer Requests</a>
+        <a href="index.html#meetjesus" class="text-white hover:text-amber-200 transition">Meet Jesus</a>
         <a href="index.html#support" class="text-white hover:text-amber-200 transition">Support Us</a>
         <a href="index.html#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
@@ -406,14 +448,19 @@
       <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
     </div>
     <nav class="flex flex-col gap-3 px-6 py-4">
-      <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
-      <a href="index.html#gathering"><i class="fas fa-calendar-alt"></i><span>Gathering</span></a>
-      <a href="index.html#ministries"><i class="fas fa-church"></i><span>Ministries</span></a>
-      <a href="gallery.html"><i class="fas fa-images"></i><span>Gallery</span></a>
-      <a href="events.html"><i class="fas fa-calendar-week"></i><span>Events</span></a>
-      <a href="index.html#resources"><i class="fas fa-download"></i><span>Resources</span></a>
-      <a href="index.html#support"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
-      <a href="index.html#join"><i class="fas fa-users"></i><span>Join</span></a>
+      <a href="index.html#home" class="mobile-nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="index.html#gathering" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i><span>Gathering</span></a>
+      <a href="index.html#ministries" class="mobile-nav-link"><i class="fas fa-church"></i><span>Ministries</span></a>
+      <a href="gallery.html" class="mobile-nav-link"><i class="fas fa-images"></i><span>Gallery</span></a>
+      <a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-week"></i><span>Events</span></a>
+      <a href="catholic-resources.html" class="mobile-nav-link"><i class="fas fa-book-open"></i><span>Resources</span></a>
+      <a href="prayer-request.html" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Prayer Requests</span></a>
+      <a href="index.html#meetjesus" class="mobile-nav-link">
+        <img src="menu-marker.png" alt="Meet Jesus">
+        <span>Meet Jesus</span>
+      </a>
+      <a href="index.html#support" class="mobile-nav-link"><i class="fas fa-seedling"></i><span>Support Us</span></a>
+      <a href="index.html#join" class="mobile-nav-link"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
   </div>
   
@@ -616,7 +663,7 @@
     if (menuBtn) menuBtn.addEventListener('click', openMenu);
     if (closeMenu) closeMenu.addEventListener('click', closeMenuFunction);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenuFunction);
-    document.querySelectorAll('.sidebar-menu a').forEach(link => {
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
       link.addEventListener('click', closeMenuFunction);
     });
 
