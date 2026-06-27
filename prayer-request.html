@@ -11,14 +11,6 @@
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       font-family: system-ui, 'Segoe UI', sans-serif;
     }
-    .main-container {
-      padding-top: 0.5rem;
-    }
-    @media (min-width: 768px) {
-      .main-container {
-        padding-top: 0.5rem;
-      }
-    }
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -72,7 +64,7 @@
     .back-wrapper {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 1.5rem; /* equivalent to mb-6 */
+      margin-bottom: 1.5rem;
     }
     .back-btn {
       display: inline-flex;
@@ -81,6 +73,10 @@
       color: rgba(255,255,255,0.8);
       transition: color 0.2s;
       font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
     }
     .back-btn:hover {
       color: white;
@@ -88,7 +84,8 @@
   </style>
 </head>
 <body class="min-h-screen">
-  <div class="max-w-2xl mx-auto px-5 main-container pb-12 md:pb-20">
+  <!-- DEFAULT PADDING restored: py-12 (mobile) md:py-20 (desktop) -->
+  <div class="max-w-2xl mx-auto px-5 py-12 md:py-20">
     <!-- Back button: on the right, says "Back", uses history.back() -->
     <div class="back-wrapper">
       <button onclick="window.history.back()" class="back-btn">
