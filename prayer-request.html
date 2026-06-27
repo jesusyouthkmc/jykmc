@@ -10,6 +10,11 @@
     body {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       font-family: system-ui, 'Segoe UI', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
@@ -18,30 +23,39 @@
     }
     .input-field {
       width: 100%;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border: 2px solid #e5e7eb;
-      border-radius: 16px;
+      border-radius: 14px;
       transition: all 0.2s ease;
       outline: none;
       font-family: inherit;
+      font-size: 0.9rem;
     }
     .input-field:focus {
       border-color: #FF8C42;
       box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.2);
     }
     textarea.input-field {
-      resize: vertical;
+      resize: none;
+      height: 70px;
     }
     .submit-btn {
       background: linear-gradient(135deg, #FF8C42, #FF6B35);
       transition: all 0.2s ease;
+      padding: 10px;
+      font-size: 0.95rem;
     }
     .submit-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
     }
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
     .optional-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: normal;
       background: #e5e7eb;
       padding: 2px 8px;
@@ -52,41 +66,109 @@
       background: linear-gradient(135deg, #fef3e8, #fff5eb);
       border-left: 4px solid #FF8C42;
       transition: all 0.3s ease;
+      padding: 10px 16px;
+    }
+    .verse-card p {
+      font-size: 0.85rem;
     }
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .fade-in-up {
-      animation: fadeInUp 0.5s ease forwards;
+      animation: fadeInUp 0.4s ease forwards;
     }
     /* Back button on the right */
     .back-wrapper {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
     }
     .back-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       color: rgba(255,255,255,0.8);
       transition: color 0.2s;
       font-weight: 500;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
+      padding: 4px 8px;
     }
     .back-btn:hover {
       color: white;
     }
+    /* Compact everything */
+    .compact-container {
+      width: 100%;
+      max-width: 560px;
+      padding: 0 20px;
+    }
+    .glass-card-inner {
+      padding: 20px 28px !important;
+    }
+    .form-title {
+      margin-bottom: 16px;
+    }
+    .form-title i {
+      font-size: 2.2rem;
+    }
+    .form-title h1 {
+      font-size: 1.6rem;
+    }
+    .form-title p {
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+    .mb-5 {
+      margin-bottom: 12px;
+    }
+    .mb-6 {
+      margin-bottom: 14px;
+    }
+    .mt-6 {
+      margin-top: 12px;
+    }
+    .mt-8 {
+      margin-top: 12px;
+    }
+    label {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .text-xs {
+      font-size: 0.7rem;
+    }
+    .text-sm {
+      font-size: 0.8rem;
+    }
+    .success-text {
+      font-size: 0.85rem;
+      padding: 8px 16px;
+    }
+    .footer-verse {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+    #bibleVerseContainer {
+      padding: 10px 16px;
+    }
+    #bibleVerseContainer i {
+      font-size: 1.4rem;
+    }
+    #bibleVerseContainer p {
+      font-size: 0.85rem;
+    }
+    #bibleVerseContainer .text-sm {
+      font-size: 0.75rem;
+    }
   </style>
 </head>
-<body class="min-h-screen">
-  <!-- DEFAULT PADDING restored: py-12 (mobile) md:py-20 (desktop) -->
-  <div class="max-w-2xl mx-auto px-5 py-12 md:py-20">
-    <!-- Back button: on the right, says "Back", uses history.back() -->
+<body>
+  <div class="compact-container">
+    <!-- Back button: on the right -->
     <div class="back-wrapper">
       <button onclick="window.history.back()" class="back-btn">
         <i class="fas fa-arrow-left"></i> Back
@@ -94,16 +176,16 @@
     </div>
 
     <!-- Prayer Request Form -->
-    <div class="glass-card p-6 md:p-10 shadow-xl">
-      <div class="text-center mb-8">
-        <i class="fas fa-hands-praying text-5xl text-orange-600 mb-3"></i>
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Prayer Request</h1>
-        <p class="text-gray-600 mt-2">Our Intercession Ministry will pray for your intentions</p>
+    <div class="glass-card shadow-xl glass-card-inner">
+      <div class="text-center form-title">
+        <i class="fas fa-hands-praying text-orange-600"></i>
+        <h1 class="font-bold text-gray-800">Prayer Request</h1>
+        <p class="text-gray-600">Our Intercession Ministry will pray for you</p>
       </div>
 
       <form id="prayerForm">
         <div class="mb-5">
-          <label class="block text-gray-700 font-semibold mb-2">
+          <label class="block text-gray-700 font-semibold">
             Your Name
             <span class="optional-badge">Optional</span>
           </label>
@@ -112,37 +194,37 @@
         </div>
 
         <div class="mb-6">
-          <label class="block text-gray-700 font-semibold mb-2">Prayer Request *</label>
-          <textarea id="prayerRequest" rows="5" class="input-field" placeholder="Share your prayer intention..." required></textarea>
+          <label class="block text-gray-700 font-semibold">Prayer Request *</label>
+          <textarea id="prayerRequest" rows="3" class="input-field" placeholder="Share your prayer intention..." required></textarea>
         </div>
 
-        <button type="submit" class="submit-btn w-full text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center gap-2">
+        <button type="submit" class="submit-btn w-full text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
           <i class="fas fa-hands-praying"></i> Submit Prayer Request
         </button>
       </form>
 
       <!-- Success Message with Random Bible Verse -->
       <div id="successMessage" class="hidden mt-6">
-        <div class="bg-green-100 text-green-700 p-4 rounded-xl text-center mb-4">
+        <div class="bg-green-100 text-green-700 rounded-xl text-center success-text mb-3">
           <i class="fas fa-check-circle text-green-600 mr-2"></i>
-          Your prayer request has been submitted! Our Intercession Ministry will pray for you.
+          Prayer request submitted!
         </div>
-        <div id="bibleVerseContainer" class="verse-card p-5 rounded-xl shadow-md fade-in-up">
-          <div class="flex items-start gap-3">
-            <i class="fas fa-bible text-orange-600 text-2xl mt-1"></i>
+        <div id="bibleVerseContainer" class="verse-card rounded-xl shadow-md fade-in-up">
+          <div class="flex items-start gap-2">
+            <i class="fas fa-bible text-orange-600 mt-1"></i>
             <div>
               <p id="verseText" class="text-gray-700 italic leading-relaxed">"Trust in the Lord with all your heart and lean not on your own understanding."</p>
-              <p id="verseRef" class="text-orange-600 font-semibold text-sm mt-2">— Proverbs 3:5</p>
+              <p id="verseRef" class="text-orange-600 font-semibold text-sm mt-1">— Proverbs 3:5</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="errorMessage" class="hidden mt-6 bg-red-100 text-red-700 p-4 rounded-xl text-center"></div>
+      <div id="errorMessage" class="hidden mt-6 bg-red-100 text-red-700 p-3 rounded-xl text-center text-sm"></div>
     </div>
 
     <!-- Scripture Verse -->
-    <div class="text-center mt-8 text-white/80 text-sm">
+    <div class="text-center mt-8 text-white/80 footer-verse">
       <i class="fas fa-quote-left mr-1"></i>
       Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God.
       <i class="fas fa-quote-right ml-1"></i><br />
@@ -235,7 +317,7 @@
         verseContainer.classList.add('fade-in-up');
 
         form.reset();
-        successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
       } catch (error) {
         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Unable to submit. Please try again later.';
