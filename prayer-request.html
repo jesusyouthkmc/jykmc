@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prayer Requests | Jesus Youth KMC</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
     body {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       font-family: system-ui, 'Segoe UI', sans-serif;
     }
-    /* Shift everything up by reducing top padding on main container */
     .main-container {
-      padding-top: 0.5rem; /* Reduced from default py-12 (3rem) / md:py-20 (5rem) to about 0.5rem (0.5cm approx) */
+      padding-top: 0.5rem;
     }
     @media (min-width: 768px) {
       .main-container {
-        padding-top: 0.5rem; /* consistent shift up on desktop too */
+        padding-top: 0.5rem;
       }
     }
     .glass-card {
@@ -63,28 +62,40 @@
       transition: all 0.3s ease;
     }
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .fade-in-up {
       animation: fadeInUp 0.5s ease forwards;
     }
+    /* Back button on the right */
+    .back-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5rem; /* equivalent to mb-6 */
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.8);
+      transition: color 0.2s;
+      font-weight: 500;
+    }
+    .back-btn:hover {
+      color: white;
+    }
   </style>
 </head>
 <body class="min-h-screen">
-  <!-- Apply main-container class to shift everything up by ~0.5cm -->
   <div class="max-w-2xl mx-auto px-5 main-container pb-12 md:pb-20">
-    <!-- Back button -->
-    <a href="index.html#ministries" class="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition">
-      <i class="fas fa-arrow-left"></i> Back to Ministries
-    </a>
-    
+    <!-- Back button: on the right, says "Back", uses history.back() -->
+    <div class="back-wrapper">
+      <button onclick="window.history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+    </div>
+
     <!-- Prayer Request Form -->
     <div class="glass-card p-6 md:p-10 shadow-xl">
       <div class="text-center mb-8">
@@ -92,35 +103,33 @@
         <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Prayer Request</h1>
         <p class="text-gray-600 mt-2">Our Intercession Ministry will pray for your intentions</p>
       </div>
-      
+
       <form id="prayerForm">
         <div class="mb-5">
           <label class="block text-gray-700 font-semibold mb-2">
-            Your Name 
+            Your Name
             <span class="optional-badge">Optional</span>
           </label>
-          <input type="text" id="name" class="input-field" placeholder="Enter your name (or leave blank)">
+          <input type="text" id="name" class="input-field" placeholder="Enter your name (or leave blank)" />
           <p class="text-gray-400 text-xs mt-1">Leave blank to submit anonymously</p>
         </div>
-        
+
         <div class="mb-6">
           <label class="block text-gray-700 font-semibold mb-2">Prayer Request *</label>
           <textarea id="prayerRequest" rows="5" class="input-field" placeholder="Share your prayer intention..." required></textarea>
         </div>
-        
+
         <button type="submit" class="submit-btn w-full text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center gap-2">
           <i class="fas fa-hands-praying"></i> Submit Prayer Request
         </button>
       </form>
-      
+
       <!-- Success Message with Random Bible Verse -->
       <div id="successMessage" class="hidden mt-6">
         <div class="bg-green-100 text-green-700 p-4 rounded-xl text-center mb-4">
-          <i class="fas fa-check-circle text-green-600 mr-2"></i> 
+          <i class="fas fa-check-circle text-green-600 mr-2"></i>
           Your prayer request has been submitted! Our Intercession Ministry will pray for you.
         </div>
-        
-        <!-- Random Bible Verse will appear here -->
         <div id="bibleVerseContainer" class="verse-card p-5 rounded-xl shadow-md fade-in-up">
           <div class="flex items-start gap-3">
             <i class="fas fa-bible text-orange-600 text-2xl mt-1"></i>
@@ -131,15 +140,15 @@
           </div>
         </div>
       </div>
-      
+
       <div id="errorMessage" class="hidden mt-6 bg-red-100 text-red-700 p-4 rounded-xl text-center"></div>
     </div>
-    
+
     <!-- Scripture Verse -->
     <div class="text-center mt-8 text-white/80 text-sm">
-      <i class="fas fa-quote-left mr-1"></i> 
-      Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God. 
-      <i class="fas fa-quote-right ml-1"></i><br>
+      <i class="fas fa-quote-left mr-1"></i>
+      Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God.
+      <i class="fas fa-quote-right ml-1"></i><br />
       — Philippians 4:6
     </div>
   </div>
@@ -168,51 +177,43 @@
       { text: "My grace is sufficient for you, for my power is made perfect in weakness.", ref: "2 Corinthians 12:9" },
       { text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref: "Jeremiah 29:11" }
     ];
-    
-    // Function to get random Bible verse
+
     function getRandomVerse() {
       const randomIndex = Math.floor(Math.random() * bibleVerses.length);
       return bibleVerses[randomIndex];
     }
-    
+
     // Replace with your Google Apps Script URL after deploying
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDeJsRh3KAwCtwPv9CSLlW6gDQes4wA1WRLoI020_8uSDDLtwl7UOs8LsWFBDFEJNNeA/exec';
-    
+
     const form = document.getElementById('prayerForm');
     const successDiv = document.getElementById('successMessage');
     const errorDiv = document.getElementById('errorMessage');
     const verseText = document.getElementById('verseText');
     const verseRef = document.getElementById('verseRef');
-    
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      // Hide previous messages
+
       successDiv.classList.add('hidden');
       errorDiv.classList.add('hidden');
-      
-      // Get form values
+
       let name = document.getElementById('name').value.trim();
       const prayerRequest = document.getElementById('prayerRequest').value.trim();
-      
-      // If name is empty, set to "Anonymous"
-      if (name === '') {
-        name = 'Anonymous';
-      }
-      
-      // Validate prayer request only
+
+      if (name === '') name = 'Anonymous';
+
       if (!prayerRequest) {
         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Please enter your prayer request.';
         errorDiv.classList.remove('hidden');
         return;
       }
-      
-      // Disable submit button
+
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
       submitBtn.disabled = true;
-      
+
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
@@ -224,29 +225,21 @@
             timestamp: new Date().toLocaleString()
           })
         });
-        
-        // Get a random Bible verse
+
         const randomVerse = getRandomVerse();
-        
-        // Update the verse display
         verseText.textContent = `"${randomVerse.text}"`;
         verseRef.textContent = `— ${randomVerse.ref}`;
-        
-        // Show success message with verse
+
         successDiv.classList.remove('hidden');
-        
-        // Add animation class to verse container
+
         const verseContainer = document.getElementById('bibleVerseContainer');
         verseContainer.classList.remove('fade-in-up');
-        void verseContainer.offsetWidth; // Force reflow
+        void verseContainer.offsetWidth;
         verseContainer.classList.add('fade-in-up');
-        
-        // Reset form
+
         form.reset();
-        
-        // Scroll to success message
         successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
+
       } catch (error) {
         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Unable to submit. Please try again later.';
         errorDiv.classList.remove('hidden');
