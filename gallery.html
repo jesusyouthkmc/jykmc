@@ -75,13 +75,31 @@
       z-index: 1000;
       transform: translateX(100%);
       transition: transform 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
     .sidebar-menu.open { transform: translateX(0); }
+    .sidebar-menu .flex { flex-shrink: 0; }
+    .sidebar-menu nav {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 20px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.3) transparent;
+    }
+    .sidebar-menu nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-menu nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-menu nav::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+    }
     .sidebar-menu a {
       color: rgba(255, 255, 255, 0.9);
       font-weight: 600;
       padding: 14px 20px;
       border-radius: 12px;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -89,8 +107,20 @@
       margin-bottom: 8px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       text-decoration: none;
+      flex-shrink: 0;
     }
-    .sidebar-menu a:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(-5px); }
+    .sidebar-menu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(-5px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .sidebar-menu i { width: 24px; font-size: 1.2rem; }
+    .sidebar-menu img { width: 26px; height: 26px; object-fit: contain; }
+    .sidebar-menu a[href*="meetjesus"] img {
+      margin-left: -3px;
+      margin-right: 1px;
+    }
+    
     .menu-overlay {
       position: fixed;
       top: 0;
@@ -324,10 +354,10 @@
   
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo" onerror="this.style.opacity='0'">
 
-  <!-- Header with working menu links (matching index.html) -->
+  <!-- Header with updated menu links (matching new code) -->
   <header class="fixed top-0 left-0 w-full curved-glass-header z-50">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
-      <a href="index.html#home" class="flex items-center">
+      <a href="index.html" class="flex items-center">
         <img src="logo.png" alt="Jesus Youth KMC Logo" class="h-10 md:h-12 w-auto" onerror="this.src='https://placehold.co/50x50?text=JY'">
       </a>
       <nav class="hidden md:flex space-x-6 text-sm font-medium">
@@ -336,7 +366,9 @@
         <a href="index.html#ministries" class="text-white hover:text-amber-200 transition">Ministries</a>
         <a href="gallery.html" class="text-amber-200 border-b-2 border-amber-200 transition">Gallery</a>
         <a href="events.html" class="text-white hover:text-amber-200 transition">Events</a>
-        <a href="index.html#resources" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="catholic-resources.html" class="text-white hover:text-amber-200 transition">Resources</a>
+        <a href="prayer-request.html" class="text-white hover:text-amber-200 transition">Prayer Requests</a>
+        <a href="index.html#meetjesus" class="text-white hover:text-amber-200 transition">Meet Jesus</a>
         <a href="index.html#support" class="text-white hover:text-amber-200 transition">Support Us</a>
         <a href="index.html#join" class="text-white hover:text-amber-200 transition">Join</a>
       </nav>
@@ -346,7 +378,7 @@
     </div>
   </header>
 
-  <!-- Mobile Sidebar Menu with working links -->
+  <!-- Mobile Sidebar Menu with updated links -->
   <div id="mobileMenu" class="sidebar-menu">
     <div class="flex justify-start p-5">
       <button id="closeMenu" class="text-3xl text-white/80 hover:text-white">&times;</button>
@@ -357,8 +389,13 @@
       <a href="index.html#ministries" class="mobile-nav-link"><i class="fas fa-church"></i><span>Ministries</span></a>
       <a href="gallery.html" class="mobile-nav-link"><i class="fas fa-images"></i><span>Gallery</span></a>
       <a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-week"></i><span>Events</span></a>
-      <a href="index.html#resources" class="mobile-nav-link"><i class="fas fa-download"></i><span>Resources</span></a>
-      <a href="index.html#support" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Support Us</span></a>
+      <a href="catholic-resources.html" class="mobile-nav-link"><i class="fas fa-book-open"></i><span>Resources</span></a>
+      <a href="prayer-request.html" class="mobile-nav-link"><i class="fas fa-hands-praying"></i><span>Prayer Requests</span></a>
+      <a href="index.html#meetjesus" class="mobile-nav-link">
+        <img src="menu-marker.png" alt="Meet Jesus">
+        <span>Meet Jesus</span>
+      </a>
+      <a href="index.html#support" class="mobile-nav-link"><i class="fas fa-seedling"></i><span>Support Us</span></a>
       <a href="index.html#join" class="mobile-nav-link"><i class="fas fa-users"></i><span>Join</span></a>
     </nav>
   </div>
