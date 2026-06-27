@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
-    /* --- RESET & FULL HEIGHT --- */
+    /* ----- reset / base ----- */
     * {
       margin: 0;
       padding: 0;
@@ -15,45 +15,46 @@
     }
     html, body {
       height: 100%;
-      overflow: hidden;          /* no scrolling at all */
+      overflow: hidden;          /* prevent page scroll */
     }
     body {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       font-family: system-ui, 'Segoe UI', sans-serif;
       display: flex;
-      align-items: center;
+      align-items: center;       /* vertical center */
       justify-content: center;
     }
 
-    /* main container: exactly fits viewport */
+    /* main container – exactly viewport height, no scroll */
     .main-container {
-      width: 100%;
-      max-width: 640px;          /* slightly narrower for better fit */
-      padding: 0.25rem 1rem 0.5rem; /* top padding reduced, bottom minimal */
       height: 100vh;
-      max-height: 700px;         /* keeps everything compact */
+      width: 100%;
+      max-width: 640px;          /* comfortable reading width */
+      margin: 0 auto;
+      padding: 0.5rem 1rem 0.5rem 1rem;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
+      justify-content: center;   /* center card vertically */
     }
 
-    /* glass card – compact padding */
+    /* glass card – flex column so we can shrink content */
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 28px;
-      padding: 1.25rem 1.5rem 1.5rem; /* reduced from md:p-10 */
-      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.25);
-      flex-shrink: 0;
+      padding: 1.2rem 1.8rem 1.5rem 1.8rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      flex: 0 1 auto;           /* shrink if needed */
+      max-height: calc(100vh - 2rem); /* avoid touching edges */
     }
 
-    /* --- Back button: right aligned, 2px down --- */
+    /* back button – right aligned, compact */
     .back-wrapper {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 0.25rem;    /* minimal spacing */
-      transform: translateY(2px); /* 2px down as requested */
+      margin-bottom: 0.3rem;
     }
     .back-btn {
       display: inline-flex;
@@ -62,105 +63,110 @@
       color: rgba(255,255,255,0.85);
       transition: color 0.2s;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 0.1rem 0.2rem;
+      padding: 0.2rem 0.4rem;
     }
     .back-btn:hover {
       color: white;
     }
 
-    /* header section – tighter */
-    .header-icon {
-      font-size: 2.2rem;        /* smaller icon */
+    /* header – compact */
+    .form-header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .form-header i {
+      font-size: 2.2rem;
+      color: #e05a1a;
       margin-bottom: 0.1rem;
     }
-    .header-title {
-      font-size: 1.6rem;        /* 3xl → smaller */
+    .form-header h1 {
+      font-size: 1.6rem;
       font-weight: 700;
       color: #1f2937;
       line-height: 1.2;
     }
-    .header-sub {
-      font-size: 0.8rem;
+    .form-header p {
+      font-size: 0.85rem;
       color: #4b5563;
       margin-top: 0.1rem;
     }
 
-    /* form fields – compact */
+    /* form elements – tighter spacing */
+    .field-group {
+      margin-bottom: 0.5rem;
+    }
+    .field-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1f2937;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
     .input-field {
       width: 100%;
-      padding: 8px 14px;        /* smaller padding */
+      padding: 8px 12px;
       border: 2px solid #e5e7eb;
       border-radius: 14px;
+      font-size: 0.9rem;
       transition: all 0.2s ease;
       outline: none;
       font-family: inherit;
-      font-size: 0.9rem;
+      background: white;
     }
     .input-field:focus {
       border-color: #FF8C42;
       box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.2);
     }
     textarea.input-field {
-      resize: none;             /* no resize to keep height fixed */
-      min-height: 68px;
-      max-height: 68px;         /* fixed height – fits without scroll */
-    }
-
-    .label-text {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #374151;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      margin-bottom: 2px;
+      resize: none;
+      min-height: 60px;         /* reduced from 5 rows */
+      padding: 8px 12px;
     }
     .optional-badge {
-      font-size: 0.6rem;
-      font-weight: 500;
+      font-size: 0.65rem;
+      font-weight: 400;
       background: #e5e7eb;
       padding: 1px 8px;
       border-radius: 20px;
-      margin-left: 4px;
+      margin-left: 6px;
     }
-    .helper-text {
+    .hint-text {
       font-size: 0.65rem;
       color: #9ca3af;
-      margin-top: 1px;
+      margin-top: 0.1rem;
     }
 
+    /* submit button – compact */
     .submit-btn {
       background: linear-gradient(135deg, #FF8C42, #FF6B35);
       transition: all 0.2s ease;
-      font-size: 0.95rem;
+      width: 100%;
+      color: white;
+      font-weight: 700;
       padding: 10px 0;
       border-radius: 16px;
       border: none;
-      color: white;
-      font-weight: 700;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      width: 100%;
       cursor: pointer;
+      margin-top: 0.3rem;
     }
     .submit-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 8px 20px -5px rgba(0,0,0,0.2);
     }
-    .submit-btn:disabled {
-      opacity: 0.7;
-      transform: none;
-    }
 
-    /* success / error */
+    /* success / error messages – compact */
     #successMessage, #errorMessage {
-      margin-top: 0.6rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
     }
     .success-box {
       background: #d1fae5;
@@ -168,120 +174,111 @@
       padding: 0.5rem 0.8rem;
       border-radius: 14px;
       text-align: center;
-      font-size: 0.8rem;
+      font-weight: 500;
     }
-    .error-box {
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 0.5rem 0.8rem;
-      border-radius: 14px;
-      text-align: center;
-      font-size: 0.8rem;
-    }
-
-    /* verse card – compact */
     .verse-card {
       background: linear-gradient(135deg, #fef3e8, #fff5eb);
       border-left: 4px solid #FF8C42;
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 14px;
       margin-top: 0.4rem;
       display: flex;
       align-items: flex-start;
       gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .verse-icon {
-      font-size: 1.4rem;
-      color: #ea580c;
-      margin-top: 1px;
+    .verse-card i {
+      font-size: 1.2rem;
+      color: #e05a1a;
+      margin-top: 0.1rem;
     }
-    .verse-text {
-      font-size: 0.78rem;
+    .verse-card p {
+      font-size: 0.8rem;
+      line-height: 1.4;
       color: #374151;
       font-style: italic;
-      line-height: 1.4;
     }
-    .verse-ref {
+    .verse-card .ref {
       font-size: 0.7rem;
       font-weight: 600;
-      color: #ea580c;
-      margin-top: 1px;
+      color: #e05a1a;
+      margin-top: 0.1rem;
+      font-style: normal;
+    }
+    #errorMessage {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 0.4rem 0.8rem;
+      border-radius: 14px;
+      text-align: center;
     }
 
-    /* bottom scripture – tiny & clean */
-    .bottom-verse {
+    /* footer scripture – tiny */
+    .footer-verse {
       text-align: center;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255,255,255,0.7);
       font-size: 0.65rem;
-      padding-top: 0.4rem;
-      flex-shrink: 0;
+      margin-top: 0.4rem;
       line-height: 1.3;
     }
 
-    /* hide/show */
-    .hidden {
-      display: none !important;
+    /* fade-in animation */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .fade-in-up {
       animation: fadeInUp 0.35s ease forwards;
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    /* hidden utility */
+    .hidden {
+      display: none !important;
     }
 
-    /* spacing tweaks inside form */
-    .field-group {
-      margin-bottom: 0.5rem;
-    }
-    .field-group:last-of-type {
-      margin-bottom: 0.6rem;
-    }
-
-    /* extra small screens: keep everything tight */
-    @media (max-height: 640px) {
-      .glass-card { padding: 0.8rem 1rem 1rem; }
-      .header-title { font-size: 1.3rem; }
-      .header-icon { font-size: 1.8rem; }
-      textarea.input-field { min-height: 56px; max-height: 56px; }
-      .input-field { padding: 6px 12px; font-size: 0.8rem; }
-      .submit-btn { font-size: 0.85rem; padding: 8px 0; }
-      .verse-text { font-size: 0.7rem; }
-      .bottom-verse { font-size: 0.55rem; }
+    /* small screens: even tighter */
+    @media (max-height: 700px) {
+      .glass-card { padding: 0.8rem 1.2rem 1rem 1.2rem; }
+      .form-header h1 { font-size: 1.3rem; }
+      .form-header i { font-size: 1.8rem; }
+      textarea.input-field { min-height: 48px; }
+      .input-field { padding: 6px 10px; font-size: 0.8rem; }
+      .submit-btn { padding: 8px 0; font-size: 0.85rem; }
+      .verse-card p { font-size: 0.7rem; }
     }
   </style>
 </head>
 <body>
   <div class="main-container">
-    <!-- Back button: right, says "Back", 2px down via transform -->
+    <!-- Back button – right, says "Back" -->
     <div class="back-wrapper">
       <button onclick="window.history.back()" class="back-btn">
         <i class="fas fa-arrow-left"></i> Back
       </button>
     </div>
 
-    <!-- Glass card – everything fits without scroll -->
+    <!-- Glass card – compact -->
     <div class="glass-card">
-      <!-- Header -->
-      <div class="text-center" style="margin-bottom: 0.2rem;">
-        <i class="fas fa-hands-praying header-icon text-orange-600"></i>
-        <h1 class="header-title">Prayer Request</h1>
-        <p class="header-sub">Our Intercession Ministry will pray for your intentions</p>
+      <!-- header -->
+      <div class="form-header">
+        <i class="fas fa-hands-praying"></i>
+        <h1>Prayer Request</h1>
+        <p>Our Intercession Ministry will pray for you</p>
       </div>
 
-      <!-- Form -->
+      <!-- form -->
       <form id="prayerForm">
         <div class="field-group">
-          <div class="label-text">
+          <label>
             Your Name
             <span class="optional-badge">Optional</span>
-          </div>
+          </label>
           <input type="text" id="name" class="input-field" placeholder="Enter your name (or leave blank)" />
-          <p class="helper-text">Leave blank to submit anonymously</p>
+          <div class="hint-text">Leave blank to submit anonymously</div>
         </div>
 
-        <div class="field-group">
-          <div class="label-text">Prayer Request <span style="color:#ef4444;">*</span></div>
+        <div class="field-group" style="margin-bottom: 0.3rem;">
+          <label>Prayer Request *</label>
           <textarea id="prayerRequest" rows="2" class="input-field" placeholder="Share your prayer intention..." required></textarea>
         </div>
 
@@ -290,32 +287,29 @@
         </button>
       </form>
 
-      <!-- Success / Error -->
+      <!-- Success Message + Bible Verse (hidden by default) -->
       <div id="successMessage" class="hidden">
         <div class="success-box">
-          <i class="fas fa-check-circle mr-1"></i>
+          <i class="fas fa-check-circle text-green-600 mr-1"></i>
           Submitted! Our Intercession Ministry will pray for you.
         </div>
         <div id="bibleVerseContainer" class="verse-card fade-in-up">
-          <i class="fas fa-bible verse-icon"></i>
+          <i class="fas fa-bible"></i>
           <div>
-            <p id="verseText" class="verse-text">"Trust in the Lord with all your heart and lean not on your own understanding."</p>
-            <p id="verseRef" class="verse-ref">— Proverbs 3:5</p>
+            <p id="verseText">"Trust in the Lord with all your heart and lean not on your own understanding."</p>
+            <div class="ref" id="verseRef">— Proverbs 3:5</div>
           </div>
         </div>
       </div>
 
-      <div id="errorMessage" class="hidden error-box">
-        <i class="fas fa-exclamation-triangle mr-1"></i> Unable to submit. Please try again.
-      </div>
+      <!-- Error message -->
+      <div id="errorMessage" class="hidden"></div>
     </div>
 
-    <!-- Bottom scripture – fits without scroll -->
-    <div class="bottom-verse">
-      <i class="fas fa-quote-left mr-1" style="font-size:0.6rem;"></i>
-      Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God.
-      <i class="fas fa-quote-right ml-1" style="font-size:0.6rem;"></i><br />
-      — Philippians 4:6
+    <!-- Footer scripture – minimal -->
+    <div class="footer-verse">
+      <i class="fas fa-quote-left mr-1"></i> Philippians 4:6
+      <i class="fas fa-quote-right ml-1"></i>
     </div>
   </div>
 
@@ -348,6 +342,7 @@
       return bibleVerses[Math.floor(Math.random() * bibleVerses.length)];
     }
 
+    // Google Apps Script URL
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDeJsRh3KAwCtwPv9CSLlW6gDQes4wA1WRLoI020_8uSDDLtwl7UOs8LsWFBDFEJNNeA/exec';
 
     const form = document.getElementById('prayerForm');
@@ -358,12 +353,12 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       successDiv.classList.add('hidden');
       errorDiv.classList.add('hidden');
 
-      let name = document.getElementById('name').value.trim();
+      let name = document.getElementById('name').value.trim() || 'Anonymous';
       const prayerRequest = document.getElementById('prayerRequest').value.trim();
-      if (name === '') name = 'Anonymous';
 
       if (!prayerRequest) {
         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Please enter your prayer request.';
@@ -371,7 +366,7 @@
         return;
       }
 
-      const submitBtn = form.querySelector('.submit-btn');
+      const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
       submitBtn.disabled = true;
@@ -382,8 +377,8 @@
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: name,
-            prayerRequest: prayerRequest,
+            name,
+            prayerRequest,
             timestamp: new Date().toLocaleString()
           })
         });
@@ -393,15 +388,16 @@
         verseRef.textContent = `— ${verse.ref}`;
 
         successDiv.classList.remove('hidden');
-        const vc = document.getElementById('bibleVerseContainer');
-        vc.classList.remove('fade-in-up');
-        void vc.offsetWidth;
-        vc.classList.add('fade-in-up');
+        const container = document.getElementById('bibleVerseContainer');
+        container.classList.remove('fade-in-up');
+        void container.offsetWidth;
+        container.classList.add('fade-in-up');
 
         form.reset();
-        successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } catch (_) {
-        errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Unable to submit. Please try again later.';
+        // no scroll – everything stays in view
+
+      } catch (err) {
+        errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Unable to submit. Please try again.';
         errorDiv.classList.remove('hidden');
       } finally {
         submitBtn.innerHTML = originalText;
