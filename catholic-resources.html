@@ -7,9 +7,22 @@
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'jy-orange': '#FF630A',
+          }
+        }
+      }
+    }
+  </script>
   
-  <!-- Font Awesome -->
+  <!-- Font Awesome 6 (for all other icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Font Awesome 4.7.0 (for key icon only) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   
   <style>
     /* ===== COMPLETE THEME STYLES ===== */
@@ -203,21 +216,6 @@
       filter: drop-shadow(0 1px 4px rgba(0,0,0,0.15));
     }
 
-    /* GLASS PANELS - NO FROSTED EFFECT, just solid color */
-    .glass-panel {
-      background: rgba(255, 99, 10, 0.85);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 28px;
-      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
-      padding: 1.8rem 1.8rem 2rem;
-    }
-    .glass-panel:hover {
-      background: rgba(255, 99, 10, 0.95);
-      box-shadow: 0 28px 48px -16px rgba(0,0,0,0.4);
-      transform: translateY(-3px);
-    }
-
     /* FROSTED EFFECT FOR BIBLE VERSE - BLACKER BACKGROUND */
     .bible-verse-glass {
       background: rgba(0, 0, 0, 0.45);
@@ -234,48 +232,129 @@
       display: flex;
       flex-direction: column;
       gap: 0.1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
     .section-header .main-icon { font-size: 2.2rem; color: #fff; display: block; text-shadow: 0 2px 10px rgba(0,0,0,0.4); }
     .section-header .section-title { font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1.2; display: block; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
     .section-header .section-desc { color: rgba(255,255,255,0.75); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; display: block; text-shadow: 0 1px 8px rgba(0,0,0,0.3); }
 
-    .resource-entry {
-      padding: 0.9rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+    /* ===== HORIZONTAL SCROLLABLE CARDS ===== */
+    .scroll-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 1.2rem;
+      padding: 0.5rem 1rem 1rem 1rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-behavior: smooth;
     }
-    .resource-entry:last-child { border-bottom: none; padding-bottom: 0; }
-    .resource-entry:first-child { padding-top: 0; }
-
-    .resource-entry .title-line { display: block; margin-bottom: 0.1rem; }
-    .resource-entry .title-line .sub-icon { color: #FFD8A0; font-size: 0.9rem; margin-right: 6px; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.3)); }
-    .resource-entry .title-line .main-title {
+    .scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Cards - FROSTED ORANGE */
+    .resource-card {
+      min-width: 280px;
+      max-width: 320px;
+      flex: 0 0 auto;
+      scroll-snap-align: center;
+      background: rgba(255, 99, 10, 0.25);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 1.2rem 1.2rem 1.5rem;
+      transition: all 0.3s ease;
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+    
+    .resource-card.active {
+      transform: scale(1);
+      opacity: 1;
+      background: rgba(255, 99, 10, 0.35);
+      border-color: rgba(255,255,255,0.25);
+    }
+    
+    .resource-card:hover {
+      background: rgba(255, 99, 10, 0.35);
+      transform: translateY(-3px) scale(0.96);
+      border-color: rgba(255,255,255,0.25);
+      opacity: 0.9;
+    }
+    .resource-card.active:hover {
+      transform: translateY(-3px) scale(1);
+      opacity: 1;
+    }
+    
+    /* Thumbnail image - 16:9 ratio */
+    .resource-card .card-thumbnail {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 0.8rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .resource-card .card-icon {
+      font-size: 1.8rem;
+      color: #FFD8A0;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    
+    .resource-card .card-title {
       font-weight: 700;
       font-size: 1.05rem;
       color: #FFD8A0;
       text-decoration: none;
-      transition: all 0.2s;
-      border-bottom: 1px solid transparent;
-      text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+      display: block;
+      margin-bottom: 0.3rem;
+      transition: color 0.2s;
     }
-    .resource-entry .title-line .main-title:hover { color: #fff; border-bottom-color: rgba(255,216,160,0.3); }
-    .resource-entry .title-line .main-title .external-icon { color: rgba(255,216,160,0.4); font-size: 0.7rem; margin-left: 5px; transition: all 0.2s; }
-    .resource-entry .title-line .main-title:hover .external-icon { color: #FFD8A0; transform: translateX(2px); }
-
-    .resource-entry .badge-line { display: block; margin-bottom: 0.1rem; }
-    .resource-entry .badge-line .badge {
-      font-weight: 400;
+    .resource-card .card-title:hover {
+      color: #fff;
+    }
+    .resource-card .card-title .external-icon {
+      color: rgba(255,216,160,0.4);
       font-size: 0.7rem;
+      margin-left: 4px;
+    }
+    
+    .resource-card .card-badge {
+      display: inline-block;
+      font-weight: 400;
+      font-size: 0.65rem;
       color: rgba(255,255,255,0.85);
       background: rgba(255,255,255,0.12);
-      padding: 0.1rem 0.8rem;
+      padding: 0.1rem 0.7rem;
       border-radius: 40px;
       border: 1px solid rgba(255,255,255,0.08);
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
     }
-    .resource-entry .subtitle { display: block; color: rgba(255,255,255,0.85); font-size: 0.95rem; margin-bottom: 0.1rem; text-shadow: 0 1px 8px rgba(0,0,0,0.2); }
-    .resource-entry .desc { display: block; color: rgba(255,255,255,0.85); font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.1rem; text-shadow: 0 1px 8px rgba(0,0,0,0.2); }
+    
+    .resource-card .card-subtitle {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .resource-card .card-desc {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    /* Section wrapper - no background */
+    .section-wrapper {
+      margin-bottom: 2.5rem;
+    }
 
     .hero-vatican {
       width: 100%;
@@ -311,6 +390,12 @@
     @media (min-width: 1024px) {
       .hero-vatican { height: 400px; }
       .hero-vatican .hero-text h1 { font-size: 5rem; }
+    }
+
+    /* Key icon flip */
+    .key-icon-flip {
+      display: inline-block;
+      transform: scale(-1, -1);
     }
   </style>
 </head>
@@ -377,7 +462,7 @@
       <div class="hero-text">
         <span class="flag">🇻🇦</span>
         <h1>CATHOLIC RESOURCES</h1>
-        <p>Scripture · Catechism · Apologetics · Catholic News</p>
+        <p>Scripture · Catechism · Apologetics · Catholic News · Catholic Creators</p>
       </div>
     </div>
 
@@ -389,56 +474,58 @@
         </span>
       </div>
 
-      <!-- SCRIPTURE -->
-      <div class="glass-panel fade-up mb-8">
+      <!-- ===== SCRIPTURE ===== -->
+      <div class="section-wrapper fade-up">
         <div class="section-header">
           <span class="main-icon"><i class="fas fa-bible"></i></span>
           <span class="section-title">Scripture</span>
           <span class="section-desc">God's Word, made accessible</span>
         </div>
-
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-play"></i></span>
-            <a href="https://youtube.com/playlist?list=PLeXS0cAkuTPqFMtZQ379qdEmcfxO1SvXc&si=tymdrm-IEYVHuZi_" target="_blank" class="main-title">
+        
+        <div class="scroll-container" id="scroll-scripture">
+          <!-- Card 1 - Bible in a Year (English) -->
+          <div class="resource-card active">
+            <img src="https://drive.google.com/thumbnail?id=1aKyLF24AZj-1X3wdDFVtkbmixj6hoF3m&sz=w600" alt="Bible in a Year" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-play"></i></span>
+            <a href="https://youtube.com/playlist?list=PLeXS0cAkuTPqFMtZQ379qdEmcfxO1SvXc&si=tymdrm-IEYVHuZi_" target="_blank" class="card-title">
               The Bible in a Year (English)
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Starting Off</span></span>
-          <span class="subtitle">Ascension Presents with Fr. Mike Schmitz</span>
-          <span class="desc">A daily podcast that takes you through the entire Bible in 365 days.</span>
-        </div>
+            <span class="card-badge">Starting Off</span>
+            <div class="card-subtitle">Ascension Presents with Fr. Mike Schmitz</div>
+            <div class="card-desc">A daily podcast that takes you through the entire Bible in 365 days.</div>
+          </div>
 
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-play"></i></span>
-            <a href="http://www.youtube.com/@biy-malayalam" target="_blank" class="main-title">
+          <!-- Card 2 - Bible in a Year (Malayalam) -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1MhrpZvqekFd0ZDpz29Fwv6pmtNI0kTsS&sz=w600" alt="Bible in a Year Malayalam" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-play"></i></span>
+            <a href="http://www.youtube.com/@biy-malayalam" target="_blank" class="card-title">
               The Bible in a Year (മലയാളം)
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Starting Off</span></span>
-          <span class="subtitle">Fr. Daniel Poovannathil</span>
-          <span class="desc">The Bible in a Year in Malayalam, helping you grow in God's Word.</span>
-        </div>
+            <span class="card-badge">Starting Off</span>
+            <div class="card-subtitle">Fr. Daniel Poovannathil</div>
+            <div class="card-desc">The Bible in a Year in Malayalam, helping you grow in God's Word.</div>
+          </div>
 
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-book-open"></i></span>
-            <a href="https://www.agapebiblestudy.com" target="_blank" class="main-title">
+          <!-- Card 3 - Agape Bible Study -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1f3Pu0n6FYYwwu0y1QbUen-NZ4Fx2se1N&sz=w600" alt="Agape Bible Study" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-book-open"></i></span>
+            <a href="https://www.agapebiblestudy.com" target="_blank" class="card-title">
               Agape Bible Study
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">In-Depth</span></span>
-          <span class="subtitle">Agape Catholic Bible Study</span>
-          <span class="desc">Comprehensive Catholic Bible studies with historical context, theology, and verse by verse analysis.</span>
+            <span class="card-badge">In-Depth</span>
+            <div class="card-subtitle">Agape Catholic Bible Study</div>
+            <div class="card-desc">Comprehensive Catholic Bible studies with historical context, theology, and verse by verse analysis.</div>
+          </div>
         </div>
       </div>
 
-      <!-- CATECHISM - CUSTOM PNG ICON -->
-      <div class="glass-panel fade-up mb-8">
+      <!-- ===== CATECHISM ===== -->
+      <div class="section-wrapper fade-up">
         <div class="section-header">
           <span class="main-icon">
             <img src="catechism-icon.png" alt="Catechism" class="custom-icon" />
@@ -446,119 +533,200 @@
           <span class="section-title">Catechism of the Catholic Church</span>
           <span class="section-desc">The faith, handed on</span>
         </div>
-
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-play"></i></span>
-            <a href="https://media.ascensionpress.com/category/ascension-podcasts/catechisminayear/" target="_blank" class="main-title">
+        
+        <div class="scroll-container" id="scroll-catechism">
+          <!-- Card 1 - Catechism in a Year -->
+          <div class="resource-card active">
+            <img src="https://drive.google.com/thumbnail?id=19LsL9LYAVUqnF_2wXwViJXY-OGr9_lVU&sz=w600" alt="Catechism in a Year" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-play"></i></span>
+            <a href="https://ascensionpress.com/pages/catechisminayear" target="_blank" class="card-title">
               The Catechism in a Year (English)
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Starting Off</span></span>
-          <span class="subtitle">Ascension Presents with Fr. Mike Schmitz</span>
-          <span class="desc">A daily journey through the entire Catechism of the Catholic Church.</span>
-        </div>
+            <span class="card-badge">Starting Off</span>
+            <div class="card-subtitle">Ascension Presents with Fr. Mike Schmitz</div>
+            <div class="card-desc">A daily journey through the entire Catechism of the Catholic Church.</div>
+          </div>
 
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-book"></i></span>
-            <a href="https://usccb.cld.bz/Catechism-of-the-Catholic-Church2" target="_blank" class="main-title">
+          <!-- Card 2 - Read the Catechism Online -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1eiG__9XNAsY9pb1qhR0zmdXT7yNRo2ep&sz=w600" alt="Read the Catechism Online" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-book"></i></span>
+            <a href="https://usccb.cld.bz/Catechism-of-the-Catholic-Church2/10/" target="_blank" class="card-title">
               Read the Catechism Online
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Full Text</span></span>
-          <span class="subtitle">USCCB</span>
-          <span class="desc">A well presented and easy to navigate online edition of the Catechism.</span>
+            <span class="card-badge">Full Text</span>
+            <div class="card-subtitle">USCCB</div>
+            <div class="card-desc">A well presented and easy to navigate online edition of the Catechism.</div>
+          </div>
         </div>
       </div>
 
-      <!-- APOLOGETICS -->
-      <div class="glass-panel fade-up mb-8">
+      <!-- ===== APOLOGETICS ===== -->
+      <div class="section-wrapper fade-up">
         <div class="section-header">
           <span class="main-icon"><i class="fas fa-shield-alt"></i></span>
           <span class="section-title">Apologetics &amp; the Catholic Faith</span>
           <span class="section-desc">Reason for our hope</span>
         </div>
-
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-question-circle"></i></span>
-            <a href="https://www.catholic.com" target="_blank" class="main-title">
+        
+        <div class="scroll-container" id="scroll-apologetics">
+          <!-- Card 1 - Catholic Answers -->
+          <div class="resource-card active">
+            <img src="https://drive.google.com/thumbnail?id=1dWJM92isQAnot1ki6fb4vyAdG-1zsCjZ&sz=w600" alt="Catholic Answers" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-question-circle"></i></span>
+            <a href="https://www.catholic.com" target="_blank" class="card-title">
               Got Questions? Catholic Answers
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Apologetics</span></span>
-          <span class="subtitle">Catholic Answers</span>
-          <span class="desc">Answers to thousands of questions about Catholic beliefs, Scripture, Church history, morality, and apologetics.</span>
-        </div>
+            <span class="card-badge">Apologetics</span>
+            <div class="card-subtitle">Catholic Answers</div>
+            <div class="card-desc">Answers to thousands of questions about Catholic beliefs, Scripture, Church history, morality, and apologetics.</div>
+          </div>
 
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-scroll"></i></span>
-            <a href="https://www.newadvent.org/fathers/" target="_blank" class="main-title">
+          <!-- Card 2 - Church Fathers -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1QMJwA8GNcoTmffviCqdE-l81ROzKW5X2&sz=w600" alt="Church Fathers" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-scroll"></i></span>
+            <a href="https://www.newadvent.org/fathers/" target="_blank" class="card-title">
               Writings of the Church Fathers
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Historical</span></span>
-          <span class="subtitle">New Advent</span>
-          <span class="desc">A vast collection of writings from the earliest Christian centuries.</span>
+            <span class="card-badge">Historical</span>
+            <div class="card-subtitle">New Advent</div>
+            <div class="card-desc">A vast collection of writings from the earliest Christian centuries.</div>
+          </div>
         </div>
       </div>
 
-      <!-- CATHOLIC NEWS -->
-      <div class="glass-panel fade-up mb-8">
+      <!-- ===== CATHOLIC NEWS ===== -->
+      <div class="section-wrapper fade-up">
         <div class="section-header">
           <span class="main-icon"><i class="fas fa-newspaper"></i></span>
           <span class="section-title">Catholic News</span>
           <span class="section-desc">Stay informed, stay connected</span>
         </div>
-
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-globe-americas"></i></span>
-            <a href="https://www.catholicnewsagency.com" target="_blank" class="main-title">
+        
+        <div class="scroll-container" id="scroll-news">
+          <!-- Card 1 - Catholic News Agency -->
+          <div class="resource-card active">
+            <img src="https://drive.google.com/thumbnail?id=1UXDtFrwdSgxywAdq8GoGA_BOznKOIio6&sz=w600" alt="Catholic News Agency" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-globe-americas"></i></span>
+            <a href="https://www.catholicnewsagency.com" target="_blank" class="card-title">
               Catholic News Agency
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">News</span></span>
-          <span class="subtitle">CNA</span>
-          <span class="desc">Trusted Catholic journalism from around the world.</span>
-        </div>
+            <span class="card-badge">News</span>
+            <div class="card-subtitle">CNA</div>
+            <div class="card-desc">Trusted Catholic journalism from around the world.</div>
+          </div>
 
-        <div class="resource-entry">
-          <span class="title-line">
-            <span class="sub-icon"><i class="fas fa-globe"></i></span>
-            <a href="https://www.ncregister.com" target="_blank" class="main-title">
+          <!-- Card 2 - National Catholic Register -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1CCK6qwKOGwU43cvuaA0pZ8R88Gjls1P_&sz=w600" alt="National Catholic Register" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-globe"></i></span>
+            <a href="https://www.ncregister.com" target="_blank" class="card-title">
               National Catholic Register
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">News</span></span>
-          <span class="subtitle">NCRegister</span>
-          <span class="desc">In-depth reporting and commentary on the life of the Church.</span>
-        </div>
+            <span class="card-badge">News</span>
+            <div class="card-subtitle">NCRegister</div>
+            <div class="card-desc">In-depth reporting and commentary on the life of the Church.</div>
+          </div>
 
-        <!-- VATICAN NEWS - CUSTOM PNG ICON -->
-        <div class="resource-entry">
-          <span class="title-line">
-            <img src="vatican-news-icon.png" alt="Vatican" class="custom-icon-sm" />
-            <a href="https://www.vaticannews.va" target="_blank" class="main-title">
+          <!-- Card 3 - Vatican News -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1rBqBkonyiZ71LU-FudIulxUJ2QAvgWYX&sz=w600" alt="Vatican News" class="card-thumbnail">
+            <span class="card-icon"><i class="fa fa-key key-icon-flip" aria-hidden="true"></i></span>
+            <a href="https://www.vaticannews.va" target="_blank" class="card-title">
               Vatican News
               <i class="fas fa-external-link-alt external-icon"></i>
             </a>
-          </span>
-          <span class="badge-line"><span class="badge">Official</span></span>
-          <span class="subtitle">Holy See</span>
-          <span class="desc">Official news from the Holy See.</span>
+            <span class="card-badge">Official</span>
+            <div class="card-subtitle">Holy See</div>
+            <div class="card-desc">Official news from the Holy See.</div>
+          </div>
         </div>
       </div>
 
-      <!-- BIBLE VERSE WITH FROSTED EFFECT - BLACKER BACKGROUND -->
+      <!-- ===== CATHOLIC CREATORS & MINISTRIES ===== -->
+      <div class="section-wrapper fade-up">
+        <div class="section-header">
+          <span class="main-icon"><i class="fas fa-users"></i></span>
+          <span class="section-title">Catholic Creators &amp; Ministries</span>
+          <span class="section-desc">Discover Catholic voices for the digital age</span>
+        </div>
+        
+        <div class="scroll-container" id="scroll-creators">
+          <!-- Card 1 - Truthly AI -->
+          <div class="resource-card active">
+            <img src="https://drive.google.com/thumbnail?id=1QQSLDMPOwlKBJA7wna5fAB8MgVT7b_4h&sz=w600" alt="Truthly AI" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-robot"></i></span>
+            <a href="https://www.instagram.com/truthly.ai/" target="_blank" class="card-title">
+              Truthly AI
+              <i class="fas fa-external-link-alt external-icon"></i>
+            </a>
+            <span class="card-badge">Catholic AI</span>
+            <div class="card-subtitle">Catholic content powered by AI</div>
+            <div class="card-desc">Dedicated to evangelization, faith formation, and digital outreach.</div>
+          </div>
+
+          <!-- Card 2 - Damascus Mission -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1DHPoFSZ1CuCVoJzPy9KNBEVDEvjZT1AP&sz=w600" alt="Damascus Mission" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-cross"></i></span>
+            <a href="https://www.instagram.com/damascusmission/" target="_blank" class="card-title">
+              Damascus Mission
+              <i class="fas fa-external-link-alt external-icon"></i>
+            </a>
+            <span class="card-badge">Youth Ministry</span>
+            <div class="card-subtitle">Evangelization and discipleship</div>
+            <div class="card-desc">Inspiring young hearts to encounter Christ and live out their faith.</div>
+          </div>
+
+          <!-- Card 3 - Catholic Video Marketing -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1U-03QHvdKNMa6YxMIkgT9SZGTGNj8y2T&sz=w600" alt="Catholic Video Marketing" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-video"></i></span>
+            <a href="https://www.instagram.com/catholicvideomarketing/" target="_blank" class="card-title">
+              Catholic Video Marketing
+              <i class="fas fa-external-link-alt external-icon"></i>
+            </a>
+            <span class="card-badge">Media</span>
+            <div class="card-subtitle">Catholic media and digital outreach</div>
+            <div class="card-desc">Creating impactful media content to spread the Catholic faith online.</div>
+          </div>
+
+          <!-- Card 4 - CTM Catholic -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1aJ73kMclYGjw0sNOejgE_41fLrnOc7uN&sz=w600" alt="CTM Catholic" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-pray"></i></span>
+            <a href="https://www.instagram.com/ctmcatholic/" target="_blank" class="card-title">
+              CTM Catholic
+              <i class="fas fa-external-link-alt external-icon"></i>
+            </a>
+            <span class="card-badge">Faith</span>
+            <div class="card-subtitle">Faith formation and spirituality</div>
+            <div class="card-desc">Deepening faith through spiritual resources and formation.</div>
+          </div>
+
+          <!-- Card 5 - The Devout Life -->
+          <div class="resource-card">
+            <img src="https://drive.google.com/thumbnail?id=1_B0djmL0ZJL5Eo79r4Ryc1eXzRDiH0Jl&sz=w600" alt="The Devout Life" class="card-thumbnail">
+            <span class="card-icon"><i class="fas fa-spa"></i></span>
+            <a href="https://www.instagram.com/thedevoutlife/" target="_blank" class="card-title">
+              The Devout Life
+              <i class="fas fa-external-link-alt external-icon"></i>
+            </a>
+            <span class="card-badge">Faith</span>
+            <div class="card-subtitle">Spirituality and Catholic living</div>
+            <div class="card-desc">Living out the Catholic faith in everyday life with practical spirituality.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIBLE VERSE -->
       <div class="text-center mt-10 fade-up">
         <div class="bible-verse-glass">
           <p class="text-white/95 text-sm max-w-xl mx-auto">
@@ -627,6 +795,47 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ===== IMPROVED ACTIVE CARD ON SCROLL =====
+    document.querySelectorAll('.scroll-container').forEach(container => {
+      // Set initial active state
+      const initialCards = container.querySelectorAll('.resource-card');
+      initialCards.forEach((card, index) => {
+        if (index === 0) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+
+      container.addEventListener('scroll', function() {
+        const cards = this.querySelectorAll('.resource-card');
+        const containerRect = this.getBoundingClientRect();
+        const centerX = containerRect.left + containerRect.width / 2;
+        
+        let closestCard = null;
+        let closestDistance = Infinity;
+        
+        cards.forEach(card => {
+          const cardRect = card.getBoundingClientRect();
+          const cardCenter = cardRect.left + cardRect.width / 2;
+          const distance = Math.abs(cardCenter - centerX);
+          
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestCard = card;
+          }
+        });
+        
+        cards.forEach(card => {
+          if (card === closestCard) {
+            card.classList.add('active');
+          } else {
+            card.classList.remove('active');
+          }
+        });
+      });
+    });
   </script>
 
 </body>
