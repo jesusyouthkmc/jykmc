@@ -15,7 +15,9 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: 20px 0;
+      padding: 30px 0;
+      /* Prevent body from shifting */
+      position: relative;
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
@@ -112,6 +114,9 @@
       width: 100%;
       max-width: 560px;
       padding: 0 20px;
+      margin-top: 20px;
+      /* Smooth transition for position changes */
+      transition: transform 0.3s ease;
     }
     .glass-card-inner {
       padding: 20px 28px !important;
@@ -172,10 +177,15 @@
     #bibleVerseContainer .text-sm {
       font-size: 0.75rem;
     }
+
+    /* When input is focused, keep the container stable */
+    .input-field:focus {
+      position: relative;
+    }
   </style>
 </head>
 <body>
-  <div class="compact-container">
+  <div class="compact-container" id="mainContainer">
     <!-- Prayer Request Form -->
     <div class="glass-card shadow-xl glass-card-inner">
       <!-- Back button as orange pill inside container -->
@@ -276,7 +286,67 @@
     const errorDiv = document.getElementById('errorMessage');
     const verseText = document.getElementById('verseText');
     const verseRef = document.getElementById('verseRef');
+    const mainContainer = document.getElementById('mainContainer');
 
+    // Store the original position
+    let originalPosition = 0;
+
+    // Function to reset scroll position
+    function resetScrollPosition() {
+      window.scrollTo(0, 0);
+      // Also reset any transform on the container
+      mainContainer.style.transform = 'translateY(0)';
+    }
+
+    // Function to handle focus on inputs
+    function handleInputFocus() {
+      // Store current scroll position
+      originalPosition = window.pageYOffset || document.documentElement.scrollTop;
+    }
+
+    // Function to handle blur on inputs (when keyboard is dismissed)
+    function handleInputBlur() {
+      // Small delay to allow keyboard to fully dismiss
+      setTimeout(() => {
+        resetScrollPosition();
+      }, 100);
+    }
+
+    // Add event listeners to all input fields
+    const inputs = document.querySelectorAll('.input-field');
+    inputs.forEach(input => {
+      input.addEventListener('focus', handleInputFocus);
+      input.addEventListener('blur', handleInputBlur);
+    });
+
+    // Also handle window resize events (keyboard appearing/disappearing triggers this)
+    let lastHeight = window.innerHeight;
+    window.addEventListener('resize', () => {
+      const currentHeight = window.innerHeight;
+      // If the keyboard was dismissed (height increased back to original)
+      if (currentHeight > lastHeight) {
+        setTimeout(resetScrollPosition, 150);
+      }
+      lastHeight = currentHeight;
+    });
+
+    // Prevent the page from jumping when inputs are focused
+    document.addEventListener('scroll', function() {
+      // If the page is scrolled more than 100px and it's not from user interaction
+      // This helps prevent the page from staying scrolled up
+      if (window.pageYOffset > 100) {
+        // Check if any input is focused
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+          // Allow it to scroll while typing
+        } else {
+          // Reset position if no input is focused
+          resetScrollPosition();
+        }
+      }
+    });
+
+    // Form submission handler
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -325,6 +395,9 @@
         form.reset();
         successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
+        // Reset scroll after success message appears
+        setTimeout(resetScrollPosition, 500);
+
       } catch (error) {
         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Unable to submit. Please try again later.';
         errorDiv.classList.remove('hidden');
@@ -333,6 +406,9 @@
         submitBtn.disabled = false;
       }
     });
+
+    // Initial reset on page load
+    window.addEventListener('load', resetScrollPosition);
   </script>
 </body>
 </html>
