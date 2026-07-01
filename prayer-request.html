@@ -10,16 +10,18 @@
     body {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
       font-family: system-ui, 'Segoe UI', sans-serif;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-y: auto;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+      padding: 20px 0;
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 30px;
+      position: relative;
     }
     .input-field {
       width: 100%;
@@ -78,38 +80,44 @@
     .fade-in-up {
       animation: fadeInUp 0.4s ease forwards;
     }
-    /* Back button on the right */
-    .back-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 0.75rem;
-    }
-    .back-btn {
+    /* Back button as orange pill inside container */
+    .back-pill {
+      position: absolute;
+      top: 16px;
+      right: 16px;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      color: rgba(255,255,255,0.8);
-      transition: color 0.2s;
-      font-weight: 500;
-      background: none;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #FF8C42, #FF6B35);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.85rem;
       border: none;
       cursor: pointer;
-      font-size: 0.9rem;
-      padding: 4px 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+      z-index: 10;
     }
-    .back-btn:hover {
-      color: white;
+    .back-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    }
+    .back-pill i {
+      font-size: 0.8rem;
     }
     /* Compact everything */
     .compact-container {
       width: 100%;
       max-width: 560px;
       padding: 0 20px;
-      /* Move everything up by approximately 1cm */
+      /* Move everything up by approximately 0.5cm */
       transform: translateY(-0.5cm);
     }
     .glass-card-inner {
       padding: 20px 28px !important;
+      padding-top: 60px !important; /* Space for the back button */
     }
     .form-title {
       margin-bottom: 16px;
@@ -170,15 +178,13 @@
 </head>
 <body>
   <div class="compact-container">
-    <!-- Back button: on the right -->
-    <div class="back-wrapper">
-      <button onclick="window.history.back()" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Back
-      </button>
-    </div>
-
     <!-- Prayer Request Form -->
     <div class="glass-card shadow-xl glass-card-inner">
+      <!-- Back button as orange pill inside container -->
+      <button onclick="window.history.back()" class="back-pill">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+
       <div class="text-center form-title">
         <i class="fas fa-hands-praying text-orange-600"></i>
         <h1 class="font-bold text-gray-800">Prayer Request</h1>
