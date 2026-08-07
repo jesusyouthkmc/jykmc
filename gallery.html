@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Jesus Youth KMC | Gallery</title>
 
     <!-- Tailwind CSS -->
@@ -1271,8 +1274,38 @@
                     return;
                 }
 
+                // ============================================================
+                // SORT SECTIONS: "JY THROUGH THE YEARS" first, then years descending
+                // ============================================================
+                function getSectionOrder(sectionName) {
+                    // "JY THROUGH THE YEARS" always first (case-insensitive)
+                    if (sectionName.toUpperCase() === 'JY THROUGH THE YEARS') {
+                        return 0;
+                    }
+
+                    // Check if it's a year (4 digits like 2024, 2025, 2026)
+                    if (/^\d{4}$/.test(sectionName)) {
+                        const year = parseInt(sectionName);
+                        // Years in descending order (2026 → 1, 2025 → 2, 2024 → 3, etc.)
+                        return 1 + (2026 - year);
+                    }
+
+                    // Everything else goes to the end
+                    return 100;
+                }
+
+                // Sort the sections
+                const sortedSections = [...root.children].sort((a, b) => {
+                    const orderA = getSectionOrder(a.name);
+                    const orderB = getSectionOrder(b.name);
+                    return orderA - orderB;
+                });
+
+                // Debug: Check the order in console
+                console.log('📁 Section order:', sortedSections.map(s => s.name));
+
                 // Loop through each SECTION (top-level folder)
-                root.children.forEach((sectionFolder, sectionIndex) => {
+                sortedSections.forEach((sectionFolder, sectionIndex) => {
                     const section = document.createElement('div');
                     section.className = 'year-section';
                     const sectionId = 'section-' + sectionIndex;
@@ -1312,10 +1345,10 @@
                     headerEl.className = 'year-header';
                     const totalInSection = countImagesInFolder(sectionFolder);
                     headerEl.innerHTML = `
-                        <h2 class="year-title"><span class="gold">✦</span> ${sectionName}</h2>
-                        <div class="year-divider"></div>
-                        <span class="year-meta"><i class="far fa-image"></i> ${totalInSection}</span>
-                    `;
+                                <h2 class="year-title"><span class="gold">✦</span> ${sectionName}</h2>
+                                <div class="year-divider"></div>
+                                <span class="year-meta"><i class="far fa-image"></i> ${totalInSection}</span>
+                            `;
                     section.appendChild(headerEl);
 
                     // Render each subsection
@@ -1327,10 +1360,10 @@
                         const subHeader = document.createElement('div');
                         subHeader.className = 'subsection-header';
                         subHeader.innerHTML = `
-                            <div class="subsection-title">${sub.name}</div>
-                            <div class="subsection-divider"></div>
-                            <span class="subsection-meta">${sub.images.length} photo${sub.images.length > 1 ? 's' : ''}</span>
-                        `;
+                                    <div class="subsection-title">${sub.name}</div>
+                                    <div class="subsection-divider"></div>
+                                    <span class="subsection-meta">${sub.images.length} photo${sub.images.length > 1 ? 's' : ''}</span>
+                                `;
                         subsection.appendChild(subHeader);
 
                         const masonryGrid = document.createElement('div');
@@ -1395,10 +1428,10 @@
                         const subHeader = document.createElement('div');
                         subHeader.className = 'subsection-header';
                         subHeader.innerHTML = `
-                            <div class="subsection-title">${sectionName}</div>
-                            <div class="subsection-divider"></div>
-                            <span class="subsection-meta">${directImages.length} photo${directImages.length > 1 ? 's' : ''}</span>
-                        `;
+                                    <div class="subsection-title">${sectionName}</div>
+                                    <div class="subsection-divider"></div>
+                                    <span class="subsection-meta">${directImages.length} photo${directImages.length > 1 ? 's' : ''}</span>
+                                `;
                         subsection.appendChild(subHeader);
 
                         const masonryGrid = document.createElement('div');
@@ -1569,7 +1602,7 @@
                                 .id);
                             if (target) target.scrollIntoView({ behavior: 'smooth' });
                             sectionNav.querySelectorAll('.nav-subsections a').forEach(a => a.classList.remove(
-                            'active'));
+                                'active'));
                             directLink.classList.add('active');
                             header.classList.add('active');
                         });
