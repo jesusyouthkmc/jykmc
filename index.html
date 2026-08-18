@@ -266,7 +266,7 @@
     }
     .prayer-btn.loading .loading-bar-fill { 
       width: 100% !important; 
-      transition: width 14s linear;
+      transition: width 10.5s linear; /* Total prayer duration */
     }
     .prayer-btn.loading .btn-text { 
       opacity: 0 !important; 
@@ -706,11 +706,12 @@
 
     let currentLineIndex = -1;
     let isPraying = false;
-    let prayerInterval = null;
     let isTransitioning = false;
     let processing = false;
     let audioUnlocked = false;
-    let apiPromise = null;
+    let currentCount = 0;
+    let pendingCount = null;
+    let apiCompleted = false;
 
     // Preload audio
     if (audio) {
@@ -804,29 +805,28 @@
         currentLineIndex = 0;
         showPrayerLine(0);
 
-        let apiCalled = false;
-
-        prayerInterval = setInterval(() => {
+        const totalLines = PRAYER_LINES.length;
+        
+        function showNextLine() {
           currentLineIndex++;
           
-          if (currentLineIndex < PRAYER_LINES.length) {
+          if (currentLineIndex < totalLines) {
             showPrayerLine(currentLineIndex);
             
-            if (currentLineIndex === 6 && !apiCalled) {
-              apiCalled = true;
-              apiPromise = callApi();
+            // IMMEDIATELY resolve when Amen appears
+            if (currentLineIndex === totalLines - 1) {
+              isPraying = false;
+              setTimeout(() => {
+                resolve();
+              }, 100);
+              return;
             }
             
-            if (currentLineIndex === PRAYER_LINES.length - 1) {
-              fill.style.width = '100%';
-            }
-          } else {
-            clearInterval(prayerInterval);
-            prayerInterval = null;
-            isPraying = false;
-            resolve();
+            setTimeout(showNextLine, 1500);
           }
-        }, 1500);
+        }
+        
+        setTimeout(showNextLine, 1500);
       });
     }
 
@@ -849,6 +849,7 @@
       try {
         let res = await fetch(API);
         let data = await res.json();
+        currentCount = data.count;
         updateDisplayDirect(data.count);
       } catch (e) {
         if (display) display.innerHTML = '<span class="counter-wrapper">—</span>';
@@ -888,7 +889,6 @@
       
       btn.classList.add('loading');
       btn.disabled = true;
-      fill.style.width = '100%';
       
       // Unlock audio on first click
       if (audio && !audioUnlocked) {
@@ -900,41 +900,60 @@
         audio.load();
       }
 
-      apiPromise = null;
+      // 🔥 CALL API IMMEDIATELY (at 0.0s)
+      apiCompleted = false;
+      pendingCount = null;
+      
+      callApi().then(data => {
+        // Store the REAL value from API when it completes
+        pendingCount = data.count;
+        apiCompleted = true;
+      }).catch(() => {
+        // API failed
+        apiCompleted = false;
+        pendingCount = null;
+      });
 
+      // Wait for the prayer animation to complete (loading bar fills)
       await animatePrayer();
 
-      try {
-        let data;
-        if (apiPromise) {
-          data = await apiPromise;
-        } else {
-          data = await callApi();
+      // ⏰ ADD 1 SECOND DELAY before showing the results
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // NOW update the counter with the REAL API value (after 1s delay)
+      if (apiCompleted && pendingCount !== null) {
+        // ✅ Use the REAL value from the server
+        currentCount = pendingCount;
+        updateDisplayDirect(currentCount);
+      } else {
+        // ⏳ API hasn't finished or failed - try one more time
+        try {
+          let res = await fetch(API);
+          let data = await res.json();
+          currentCount = data.count;
+          updateDisplayDirect(currentCount);
+        } catch (e) {
+          // ❌ Only if API completely fails - increment locally as last resort
+          currentCount++;
+          updateDisplayDirect(currentCount);
         }
-        
-        updateDisplayDirect(data.count);
-        showThankYou();
-        
-        if (audio) {
-          audio.currentTime = 0;
-          audio.play().catch(() => {});
-        }
-        
-        setTimeout(() => {
-          resetButton();
-        }, 2500);
-        
-      } catch (e) {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        fill.style.width = '0%';
-        alert('Unable to save your prayer. Please try again later.');
-        currentLineIndex = -1;
-        showPrayerLine(-1);
-        showVine('visible');
-      } finally {
-        processing = false;
       }
+      
+      // Show "Thank You"
+      showThankYou();
+      
+      // Play the sound
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+      
+      // Wait 2.5 seconds, then reset
+      setTimeout(() => {
+        resetButton();
+      }, 2500);
+      
+      processing = false;
     }
 
     // Initialize prayer counter
