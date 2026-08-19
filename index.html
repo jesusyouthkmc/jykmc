@@ -14,14 +14,19 @@
     html, body {
       font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
       scroll-behavior: smooth;
+      margin: 0;
+      min-height: 100%;
     }
     
     /* Make sure emojis render properly */
     .fade-up { opacity: 0; transform: translateY(25px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
+    
     .glossy-orange-bg {
       background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 50%, #F25E2C 100%);
+      background-attachment: fixed;
       position: relative;
+      min-height: 100vh;
     }
     .glossy-orange-bg::before {
       content: '';
@@ -452,11 +457,35 @@
     .emoji-fix {
       font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
     }
+
+    /* Fireworks overlay - FULLY TRANSPARENT background */
+    #fireworks-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #fireworks-container canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      background: transparent !important;
+      background-color: transparent !important;
+    }
   </style>
 </head>
 <body class="glossy-orange-bg">
   
   <img src="logo.png" alt="Jesus Youth KMC" class="bg-logo">
+
+  <!-- Fireworks Container - Transparent overlay -->
+  <div id="fireworks-container">
+    <canvas id="fireworks-canvas"></canvas>
+  </div>
 
   <header class="fixed top-0 left-0 w-full curved-glass-header z-50 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-5 md:px-8 py-3 flex justify-between items-center">
@@ -653,36 +682,238 @@
   <audio id="prayerSound" preload="auto" style="display: none;"></audio>
 
   <script>
-    // ============ CAROUSEL & MENU ============
-    const carouselSlides = document.querySelectorAll('.carousel-slide');
-    let currentIdx = 0, autoInterval;
-    function startAutoRotate() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(() => { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx+1)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }, 3000); }
-    function goToNextSlide() { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx+1)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }
-    function goToPrevSlide() { carouselSlides[currentIdx].classList.remove('active'); currentIdx = (currentIdx-1+carouselSlides.length)%carouselSlides.length; carouselSlides[currentIdx].classList.add('active'); }
-    const carouselContainer = document.getElementById('carouselContainer');
-    let isSwiping=false;
-    if(carouselContainer){
-      carouselContainer.addEventListener('click',(e)=>{ if(!isSwiping) window.location.href='gallery.html'; });
-      let touchStartX=0, touchEndX=0, mouseStartX=0, isMouseDown=false;
-      carouselContainer.addEventListener('touchstart',(e)=>{ touchStartX=e.changedTouches[0].screenX; isSwiping=false; if(autoInterval) clearInterval(autoInterval); });
-      carouselContainer.addEventListener('touchend',(e)=>{ touchEndX=e.changedTouches[0].screenX; let dist = touchEndX-touchStartX; if(Math.abs(dist)>50){ isSwiping=true; dist>0?goToPrevSlide():goToNextSlide(); setTimeout(()=>{isSwiping=false;},500); } else isSwiping=false; startAutoRotate(); });
-      carouselContainer.addEventListener('mousedown',(e)=>{ isMouseDown=true; mouseStartX=e.clientX; if(autoInterval) clearInterval(autoInterval); e.preventDefault(); });
-      carouselContainer.addEventListener('mouseup',(e)=>{ if(!isMouseDown) return; isMouseDown=false; let dist=e.clientX-mouseStartX; if(Math.abs(dist)>50){ isSwiping=true; dist>0?goToPrevSlide():goToNextSlide(); setTimeout(()=>{isSwiping=false;},500); } else isSwiping=false; startAutoRotate(); });
-      carouselContainer.addEventListener('mouseleave',()=>{ if(isMouseDown){ isMouseDown=false; isSwiping=false; startAutoRotate(); } });
-      carouselContainer.addEventListener('dragstart',(e)=>e.preventDefault());
-    }
-    startAutoRotate();
-    function addRippleEffect(btn){ btn.addEventListener('click',function(e){ let ripple=document.createElement('span'); ripple.classList.add('ripple'); let rect=btn.getBoundingClientRect(); let size=Math.max(rect.width,rect.height); ripple.style.width=ripple.style.height=`${size}px`; ripple.style.left=`${e.clientX-rect.left-size/2}px`; ripple.style.top=`${e.clientY-rect.top-size/2}px`; btn.appendChild(ripple); setTimeout(()=>ripple.remove(),600); }); }
-    const needBtn=document.getElementById('needPrayerBtn'); if(needBtn) addRippleEffect(needBtn);
-    const spiritualBtn=document.getElementById('spiritualAdoptionBtn'); if(spiritualBtn){ addRippleEffect(spiritualBtn); spiritualBtn.addEventListener('click',(e)=>{ e.preventDefault(); let isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent); window.location.href=isIOS?'https://apps.apple.com/us/app/army-for-life/id1557521454':'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN'; }); }
-    const menuBtn=document.getElementById('menuBtn'), mobileMenu=document.getElementById('mobileMenu'), closeMenuBtn=document.getElementById('closeMenu'), menuOverlay=document.getElementById('menuOverlay');
-    function openMenu(){ mobileMenu.classList.add('open'); menuOverlay.classList.add('active'); document.body.style.overflow='hidden'; }
-    function closeMenuFunction(){ mobileMenu.classList.remove('open'); menuOverlay.classList.remove('active'); document.body.style.overflow=''; }
-    if(menuBtn) menuBtn.addEventListener('click',openMenu); if(closeMenuBtn) closeMenuBtn.addEventListener('click',closeMenuFunction); if(menuOverlay) menuOverlay.addEventListener('click',closeMenuFunction); document.querySelectorAll('.mobile-nav-link').forEach(l=>l.addEventListener('click',closeMenuFunction));
-    const observer=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } }); },{threshold:0.1});
-    document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+    // ============================================
+    // FIREWORKS SYSTEM - WITH PROPER TRANSPARENCY
+    // ============================================
+    const fireworksCanvas = document.getElementById('fireworks-canvas');
+    // CRITICAL: Get context with alpha channel enabled
+    const fwCtx = fireworksCanvas.getContext('2d', { alpha: true });
+    // ALSO: Make sure the canvas element itself is transparent
+    fireworksCanvas.style.background = 'transparent';
+    
+    let fwParticles = [];
+    let fwAnimationId = null;
+    let fwRunning = false;
+    let fwStartTime = 0;
+    let fwBurstInterval = null;
 
-    // ============ PRAYER COUNTER WITH IMMERSIVE EXPERIENCE ============
+    // Resize canvas
+    function resizeFireworksCanvas() {
+      fireworksCanvas.width = window.innerWidth;
+      fireworksCanvas.height = window.innerHeight;
+    }
+    resizeFireworksCanvas();
+    window.addEventListener('resize', resizeFireworksCanvas);
+
+    // Create a single burst
+    function createFireworksBurst(x, y, count = 80) {
+      const colors = [
+        '#FF6B35', '#FF4500', '#FFD700', '#FF1493', '#FF69B4',
+        '#00CED1', '#00BFFF', '#7B68EE', '#9370DB', '#32CD32',
+        '#00FF7F', '#FF6347', '#4169E1', '#FF8C00', '#FF00FF',
+        '#00FFFF', '#FF6B6B', '#4ECDC4', '#45B7D1', '#F7DC6F'
+      ];
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 7;
+        const size = 4 + Math.random() * 6;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        fwParticles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 3,
+          size: size,
+          color: color,
+          life: 1,
+          decay: 0.005 + Math.random() * 0.008,
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          shape: Math.random() > 0.5 ? 'circle' : 'rect'
+        });
+      }
+    }
+
+    // Random burst
+    function randomFireworksBurst() {
+      const x = 50 + Math.random() * (fireworksCanvas.width - 100);
+      const y = 50 + Math.random() * (fireworksCanvas.height - 100);
+      const count = 60 + Math.floor(Math.random() * 40);
+      createFireworksBurst(x, y, count);
+    }
+
+    // MILESTONE BURST - Epic fireworks
+    function milestoneFireworksBurst() {
+      // 5 initial bursts
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const x = 100 + Math.random() * (fireworksCanvas.width - 200);
+          const y = 100 + Math.random() * (fireworksCanvas.height - 200);
+          createFireworksBurst(x, y, 80 + Math.floor(Math.random() * 40));
+        }, i * 80);
+      }
+      
+      // Golden ring burst in center
+      setTimeout(() => {
+        const x = fireworksCanvas.width / 2;
+        const y = fireworksCanvas.height / 2;
+        const goldColors = ['#FFD700', '#FFA500', '#FF8C00', '#FFB347', '#FF6B35'];
+        for (let i = 0; i < 100; i++) {
+          const angle = (i / 100) * Math.PI * 2;
+          const speed = 3 + Math.random() * 5;
+          const color = goldColors[Math.floor(Math.random() * goldColors.length)];
+          fwParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 2,
+            size: 4 + Math.random() * 5,
+            color: color,
+            life: 1,
+            decay: 0.004 + Math.random() * 0.006,
+            rotation: Math.random() * 360,
+            rotSpeed: (Math.random() - 0.5) * 8,
+            shape: Math.random() > 0.5 ? 'circle' : 'rect'
+          });
+        }
+      }, 200);
+    }
+
+    // MAIN FUNCTION - Launch fireworks
+    function launchFireworks(isMilestone = true) {
+      // Clear existing
+      clearFireworks();
+      
+      // Reset particles
+      fwParticles = [];
+      fwRunning = true;
+      fwStartTime = Date.now();
+      
+      if (isMilestone) {
+        // Epic firework show (5 seconds)
+        milestoneFireworksBurst();
+        
+        fwBurstInterval = setInterval(() => {
+          const elapsed = Date.now() - fwStartTime;
+          if (elapsed < 5000) {
+            for (let i = 0; i < 3; i++) {
+              setTimeout(randomFireworksBurst, i * 100);
+            }
+          } else {
+            clearInterval(fwBurstInterval);
+            fwBurstInterval = null;
+          }
+        }, 400);
+      } else {
+        // Single burst (quick)
+        randomFireworksBurst();
+        setTimeout(() => {
+          fwRunning = false;
+        }, 2000);
+      }
+      
+      // Start animation
+      if (!fwAnimationId) {
+        animateFireworks();
+      }
+    }
+
+    // Animate particles - uses clearRect for transparency
+    function animateFireworks() {
+      // CRITICAL: Clear with transparency so background shows through
+      fwCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      
+      let hasAliveParticles = false;
+      
+      for (let i = fwParticles.length - 1; i >= 0; i--) {
+        const p = fwParticles[i];
+        
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05;
+        p.vx *= 0.99;
+        p.life -= p.decay;
+        p.rotation += p.rotSpeed;
+        
+        if (p.life <= 0) {
+          fwParticles.splice(i, 1);
+          continue;
+        }
+        
+        hasAliveParticles = true;
+        
+        fwCtx.save();
+        fwCtx.translate(p.x, p.y);
+        fwCtx.rotate((p.rotation * Math.PI) / 180);
+        fwCtx.globalAlpha = Math.max(0, p.life);
+        fwCtx.fillStyle = p.color;
+        
+        const size = p.size * (0.3 + p.life * 0.7);
+        
+        if (p.shape === 'circle') {
+          fwCtx.beginPath();
+          fwCtx.arc(0, 0, size, 0, Math.PI * 2);
+          fwCtx.fill();
+        } else {
+          fwCtx.fillRect(-size/2, -size/4, size, size/2);
+        }
+        
+        fwCtx.restore();
+      }
+      
+      if (hasAliveParticles || fwRunning) {
+        fwAnimationId = requestAnimationFrame(animateFireworks);
+      } else {
+        fwAnimationId = null;
+        fwCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      }
+    }
+
+    // Clear fireworks
+    function clearFireworks() {
+      if (fwBurstInterval) {
+        clearInterval(fwBurstInterval);
+        fwBurstInterval = null;
+      }
+      if (fwAnimationId) {
+        cancelAnimationFrame(fwAnimationId);
+        fwAnimationId = null;
+      }
+      fwParticles = [];
+      fwRunning = false;
+      fwCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+    }
+
+    // Check if a number is a multiple of 50
+    function isMilestoneNumber(num) {
+      return num > 0 && num % 50 === 0;
+    }
+
+    // Store the last milestone we celebrated to avoid duplicate fireworks
+    let lastMilestoneCelebrated = 0;
+
+    function checkAndCelebrateMilestone(count) {
+      // Check if the current count is a milestone (multiple of 50)
+      // And we haven't already celebrated this milestone
+      if (isMilestoneNumber(count) && count !== lastMilestoneCelebrated) {
+        lastMilestoneCelebrated = count;
+        console.log(`🎆 MILESTONE REACHED: ${count} prayers! Launching fireworks!`);
+        
+        // Launch fireworks after a slight delay so the counter updates first
+        setTimeout(() => {
+          launchFireworks(true);
+        }, 300);
+        
+        return true;
+      }
+      return false;
+    }
+
+    // ============================================
+    // MAIN PRAYER COUNTER CODE
+    // ============================================
     const PRAYER_LINES = [
       "Hail Mary, full of grace",
       "The Lord is with you",
@@ -851,6 +1082,8 @@
         let data = await res.json();
         currentCount = data.count;
         updateDisplayDirect(data.count);
+        // Check if initial count is a milestone
+        checkAndCelebrateMilestone(data.count);
       } catch (e) {
         if (display) display.innerHTML = '<span class="counter-wrapper">—</span>';
       }
@@ -900,7 +1133,7 @@
         audio.load();
       }
 
-      // 🔥 CALL API IMMEDIATELY (at 0.0s)
+      // CALL API IMMEDIATELY (at 0.0s)
       apiCompleted = false;
       pendingCount = null;
       
@@ -917,25 +1150,30 @@
       // Wait for the prayer animation to complete (loading bar fills)
       await animatePrayer();
 
-      // ⏰ ADD 1 SECOND DELAY before showing the results
+      // 1 SECOND DELAY before showing the results
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // NOW update the counter with the REAL API value (after 1s delay)
       if (apiCompleted && pendingCount !== null) {
-        // ✅ Use the REAL value from the server
+        // Use the REAL value from the server
         currentCount = pendingCount;
         updateDisplayDirect(currentCount);
+        
+        // Check if we hit a milestone (multiple of 50)
+        checkAndCelebrateMilestone(currentCount);
       } else {
-        // ⏳ API hasn't finished or failed - try one more time
+        // API hasn't finished or failed - try one more time
         try {
           let res = await fetch(API);
           let data = await res.json();
           currentCount = data.count;
           updateDisplayDirect(currentCount);
+          checkAndCelebrateMilestone(currentCount);
         } catch (e) {
-          // ❌ Only if API completely fails - increment locally as last resort
+          // Only if API completely fails - increment locally as last resort
           currentCount++;
           updateDisplayDirect(currentCount);
+          // Don't check milestone for local increments (avoids false positives)
         }
       }
       
@@ -968,6 +1206,36 @@
     if (btn) {
       btn.addEventListener('click', increment);
     }
+
+    // ============ CAROUSEL & MENU ============
+    const carouselSlides = document.querySelectorAll('.carousel-slide');
+    let carouselIdx = 0, carouselInterval;
+    function startAutoRotate() { if(carouselInterval) clearInterval(carouselInterval); carouselInterval = setInterval(() => { carouselSlides[carouselIdx].classList.remove('active'); carouselIdx = (carouselIdx+1)%carouselSlides.length; carouselSlides[carouselIdx].classList.add('active'); }, 3000); }
+    function goToNextSlide() { carouselSlides[carouselIdx].classList.remove('active'); carouselIdx = (carouselIdx+1)%carouselSlides.length; carouselSlides[carouselIdx].classList.add('active'); }
+    function goToPrevSlide() { carouselSlides[carouselIdx].classList.remove('active'); carouselIdx = (carouselIdx-1+carouselSlides.length)%carouselSlides.length; carouselSlides[carouselIdx].classList.add('active'); }
+    const carouselContainerEl = document.getElementById('carouselContainer');
+    let isSwiping=false;
+    if(carouselContainerEl){
+      carouselContainerEl.addEventListener('click',(e)=>{ if(!isSwiping) window.location.href='gallery.html'; });
+      let touchStartX=0, touchEndX=0, mouseStartX=0, isMouseDown=false;
+      carouselContainerEl.addEventListener('touchstart',(e)=>{ touchStartX=e.changedTouches[0].screenX; isSwiping=false; if(carouselInterval) clearInterval(carouselInterval); });
+      carouselContainerEl.addEventListener('touchend',(e)=>{ touchEndX=e.changedTouches[0].screenX; let dist = touchEndX-touchStartX; if(Math.abs(dist)>50){ isSwiping=true; dist>0?goToPrevSlide():goToNextSlide(); setTimeout(()=>{isSwiping=false;},500); } else isSwiping=false; startAutoRotate(); });
+      carouselContainerEl.addEventListener('mousedown',(e)=>{ isMouseDown=true; mouseStartX=e.clientX; if(carouselInterval) clearInterval(carouselInterval); e.preventDefault(); });
+      carouselContainerEl.addEventListener('mouseup',(e)=>{ if(!isMouseDown) return; isMouseDown=false; let dist=e.clientX-mouseStartX; if(Math.abs(dist)>50){ isSwiping=true; dist>0?goToPrevSlide():goToNextSlide(); setTimeout(()=>{isSwiping=false;},500); } else isSwiping=false; startAutoRotate(); });
+      carouselContainerEl.addEventListener('mouseleave',()=>{ if(isMouseDown){ isMouseDown=false; isSwiping=false; startAutoRotate(); } });
+      carouselContainerEl.addEventListener('dragstart',(e)=>e.preventDefault());
+    }
+    startAutoRotate();
+
+    function addRippleEffect(btnElement){ btnElement.addEventListener('click',function(e){ let ripple=document.createElement('span'); ripple.classList.add('ripple'); let rect=btnElement.getBoundingClientRect(); let size=Math.max(rect.width,rect.height); ripple.style.width=ripple.style.height=`${size}px`; ripple.style.left=`${e.clientX-rect.left-size/2}px`; ripple.style.top=`${e.clientY-rect.top-size/2}px`; btnElement.appendChild(ripple); setTimeout(()=>ripple.remove(),600); }); }
+    const needBtn=document.getElementById('needPrayerBtn'); if(needBtn) addRippleEffect(needBtn);
+    const spiritualBtn=document.getElementById('spiritualAdoptionBtn'); if(spiritualBtn){ addRippleEffect(spiritualBtn); spiritualBtn.addEventListener('click',(e)=>{ e.preventDefault(); let isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent); window.location.href=isIOS?'https://apps.apple.com/us/app/army-for-life/id1557521454':'https://play.google.com/store/apps/details?id=org.prolifearmy.spiritualadoption&hl=en_IN'; }); }
+    const menuBtnEl=document.getElementById('menuBtn'), mobileMenuEl=document.getElementById('mobileMenu'), closeMenuBtnEl=document.getElementById('closeMenu'), menuOverlayEl=document.getElementById('menuOverlay');
+    function openMenu(){ mobileMenuEl.classList.add('open'); menuOverlayEl.classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeMenuFunction(){ mobileMenuEl.classList.remove('open'); menuOverlayEl.classList.remove('active'); document.body.style.overflow=''; }
+    if(menuBtnEl) menuBtnEl.addEventListener('click',openMenu); if(closeMenuBtnEl) closeMenuBtnEl.addEventListener('click',closeMenuFunction); if(menuOverlayEl) menuOverlayEl.addEventListener('click',closeMenuFunction); document.querySelectorAll('.mobile-nav-link').forEach(l=>l.addEventListener('click',closeMenuFunction));
+    const observerEl=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observerEl.unobserve(e.target); } }); },{threshold:0.1});
+    document.querySelectorAll('.fade-up').forEach(el=>observerEl.observe(el));
 
     // ============ MAP ============
     document.addEventListener('DOMContentLoaded', function() {
