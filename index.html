@@ -886,31 +886,6 @@
       fwCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
     }
 
-    // Check if a number is a multiple of 50
-    function isMilestoneNumber(num) {
-      return num > 0 && num % 50 === 0;
-    }
-
-    // Store the last milestone we celebrated to avoid duplicate fireworks
-    let lastMilestoneCelebrated = 0;
-
-    function checkAndCelebrateMilestone(count) {
-      // Check if the current count is a milestone (multiple of 50)
-      // And we haven't already celebrated this milestone
-      if (isMilestoneNumber(count) && count !== lastMilestoneCelebrated) {
-        lastMilestoneCelebrated = count;
-        console.log(`🎆 MILESTONE REACHED: ${count} prayers! Launching fireworks!`);
-        
-        // Launch fireworks after a slight delay so the counter updates first
-        setTimeout(() => {
-          launchFireworks(true);
-        }, 300);
-        
-        return true;
-      }
-      return false;
-    }
-
     // ============================================
     // MAIN PRAYER COUNTER CODE
     // ============================================
@@ -925,7 +900,7 @@
       "Amen &#x1F64F;"
     ];
 
-    const API = 'https://script.google.com/macros/s/AKfycbwNdwXUGx00p_KbCIZ54-q--bjdphMtluDq6k9_3ym-XlQhPF0EN7K0uj-y20JvP9rggg/exec';
+    const API = 'https://script.google.com/macros/s/AKfycbzLc73S5Y_93m5Q3jvBqomKDXDC2IRXAkTpWiF98uHum37-YeNJUhSyAmXG8D3bVyQSHw/exec';
 
     const display = document.getElementById('prayerCountDisplay');
     const btn = document.getElementById('prayerButton');
@@ -1014,16 +989,19 @@
       });
     }
 
+    // UPDATED: callApi now returns the POST response directly
     async function callApi() {
-      try {
-        await fetch(API, { method: 'POST' });
-        await new Promise(r => setTimeout(r, 300));
-        let res = await fetch(API);
-        let data = await res.json();
-        return data;
-      } catch (e) {
-        throw e;
+      const res = await fetch(API, {
+        method: 'POST'
+      });
+
+      const data = await res.json();
+
+      if (data.status !== 'success') {
+        throw new Error(data.message || 'Prayer count failed');
       }
+
+      return data;
     }
 
     function animatePrayer() {
@@ -1076,14 +1054,14 @@
       }
     }
 
+    // UPDATED: fetchCount only displays the counter, NEVER launches fireworks
     async function fetchCount() {
       try {
         let res = await fetch(API);
         let data = await res.json();
         currentCount = data.count;
         updateDisplayDirect(data.count);
-        // Check if initial count is a milestone
-        checkAndCelebrateMilestone(data.count);
+        // NO fireworks on page load - fetchCount NEVER calls launchFireworks
       } catch (e) {
         if (display) display.innerHTML = '<span class="counter-wrapper">—</span>';
       }
@@ -1133,57 +1111,40 @@
         audio.load();
       }
 
-      // CALL API IMMEDIATELY (at 0.0s)
-      apiCompleted = false;
-      pendingCount = null;
-      
-      callApi().then(data => {
-        // Store the REAL value from API when it completes
-        pendingCount = data.count;
-        apiCompleted = true;
-      }).catch(() => {
-        // API failed
-        apiCompleted = false;
-        pendingCount = null;
-      });
-
       // Wait for the prayer animation to complete (loading bar fills)
       await animatePrayer();
 
       // 1 SECOND DELAY before showing the results
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // NOW update the counter with the REAL API value (after 1s delay)
-      if (apiCompleted && pendingCount !== null) {
-        // Use the REAL value from the server
-        currentCount = pendingCount;
+      try {
+        // Make ONE POST request - get the response directly
+        const data = await callApi();
+        
+        // Update the counter with the value from the response
+        currentCount = data.count;
         updateDisplayDirect(currentCount);
         
-        // Check if we hit a milestone (multiple of 50)
-        checkAndCelebrateMilestone(currentCount);
-      } else {
-        // API hasn't finished or failed - try one more time
-        try {
-          let res = await fetch(API);
-          let data = await res.json();
-          currentCount = data.count;
-          updateDisplayDirect(currentCount);
-          checkAndCelebrateMilestone(currentCount);
-        } catch (e) {
-          // Only if API completely fails - increment locally as last resort
-          currentCount++;
-          updateDisplayDirect(currentCount);
-          // Don't check milestone for local increments (avoids false positives)
+        // If the API says this was a milestone, launch fireworks
+        if (data.milestone === true) {
+          launchFireworks(true);
         }
-      }
-      
-      // Show "Thank You"
-      showThankYou();
-      
-      // Play the sound
-      if (audio) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
+        
+        // Show "Thank You"
+        showThankYou();
+        
+        // Play the sound
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+        
+      } catch (e) {
+        // Error handling - show error but don't disrupt the experience
+        console.error('Prayer submission failed:', e);
+        // Show "Thank You" anyway so the user isn't left hanging
+        showThankYou();
+        // Don't update counter if API failed
       }
       
       // Wait 2.5 seconds, then reset
